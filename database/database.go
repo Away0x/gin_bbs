@@ -10,6 +10,11 @@ import (
 	"gin_bbs/config"
 )
 
+/*
+ERROR: Incorrect datetime value: '0000-00-00 00:00:00' for column 'hr519799901' at row 1
+解决: 把 NO_ZERO_IN_DATE,NO_ZERO_DATE 去掉，然后重新设置
+*/
+
 // DB gorm
 var DB *gorm.DB
 

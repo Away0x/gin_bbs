@@ -1,0 +1,9 @@
+{% if validatorMessage %}
+<div class="alert alert-danger">
+    <ul>
+      {% for msg in validatorMessage %}
+        <li>{{ msg }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"errors"
 	"fmt"
+	"gin_bbs/app/models/user"
 	"gin_bbs/config"
 	"gin_bbs/database"
 
@@ -14,8 +15,9 @@ func SetupDB(needMock bool) (*gorm.DB, error) {
 	db := database.InitDB()
 
 	// db migrate
-	// db.AutoMigrate(
-	// )
+	db.AutoMigrate(
+		&user.User{},
+	)
 
 	// mock data
 	if do := factoryMake(needMock); do {

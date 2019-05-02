@@ -16462,6 +16462,10 @@ body {
   margin-bottom: 60px;
 }
 
+.alert ul {
+  margin-bottom: 0;
+}
+
 .footer {
   position: absolute;
   bottom: 0;

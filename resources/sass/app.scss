@@ -1,4 +1,5 @@
 // Variables
+@import 'reset';
 @import 'variables';
 
 // Bootstrap
@@ -38,6 +39,10 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+}
+
+.alert ul {
+  margin-bottom: 0;
 }
 
 .footer {

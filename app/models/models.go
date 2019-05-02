@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"strconv"
+	"time"
+)
 
 const (
 	// TrueTinyint true
@@ -17,4 +20,9 @@ type BaseModel struct {
 	UpdatedAt time.Time `gorm:"column:updated_at"`
 	// 有 DeletedAt(类型需要是 *time.Time) 即支持 gorm 软删除
 	DeletedAt *time.Time `gorm:"column:deleted_at" sql:"index"`
+}
+
+// GetIDstring 获取字符串形式的 id
+func (m *BaseModel) GetIDstring() string {
+	return strconv.Itoa(int(m.ID))
 }

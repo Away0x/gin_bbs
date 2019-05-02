@@ -8,6 +8,9 @@ import (
 	"gin_bbs/pkg/ginutils/validate"
 	"net/http"
 
+	"gin_bbs/app/auth"
+	viewmodels "gin_bbs/app/view_models"
+
 	"github.com/flosch/pongo2"
 	"github.com/gin-gonic/gin"
 )
@@ -44,6 +47,10 @@ func Render(c *gin.Context, tplPath string, data renderObj) {
 			obj[csrfMetaHTML], _, _ = csrf.CsrfMeta(c)
 			obj[csrfTokenName] = csrfToken
 		}
+	}
+	// 获取当前登录的用户 (如果用户登录了的话，中间件中会通过 session 存储用户数据)
+	if user, err := auth.GetCurrentUserFromContext(c); err == nil {
+		obj[config.AppConfig.ContextCurrentUserDataKey] = viewmodels.NewUserViewModelSerializer(user)
 	}
 
 	// 填充传递进来的数据
