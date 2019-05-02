@@ -1,17 +1,14 @@
 package controllers
 
 import (
-	"fmt"
-	"gin_weibo/app/helpers"
-	"gin_weibo/config"
-	"gin_weibo/pkg/flash"
-	"gin_weibo/routes/named"
-	"html/template"
+	"gin_bbs/app/helpers"
+	"gin_bbs/config"
+	"gin_bbs/pkg/flash"
+	"gin_bbs/routes/named"
 	"net/http"
 	"strconv"
 
-	"gin_weibo/app/auth"
-	viewmodels "gin_weibo/app/view_models"
+	"gin_bbs/pkg/ginutils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,15 +37,10 @@ func Render(c *gin.Context, tplPath string, data renderObj) {
 	obj[flash.ValidateContextAndCookieKeyName] = validateMsgArr
 	// csrf
 	if config.AppConfig.EnableCsrf {
-		if csrfHTML, csrfToken, ok := csrfField(c); ok {
+		if csrfHTML, csrfToken, ok := ginutils.CsrfField(c, config.AppConfig.CsrfParamName); ok {
 			obj[csrfInputHTML] = csrfHTML
 			obj[csrfTokenName] = csrfToken
 		}
-	}
-
-	// 获取当前登录的用户 (如果用户登录了的话，中间件中会通过 session 存储用户数据)
-	if user, err := auth.GetCurrentUserFromContext(c); err == nil {
-		obj[config.AppConfig.ContextCurrentUserDataKey] = viewmodels.NewUserViewModelSerializer(user)
 	}
 
 	// 填充传递进来的数据
@@ -87,15 +79,4 @@ func Render404(c *gin.Context) {
 // RenderUnauthorized -
 func RenderUnauthorized(c *gin.Context) {
 	Render403(c, "很抱歉，您没有权限访问该页面")
-}
-
-// private ---------------------
-func csrfField(c *gin.Context) (template.HTML, string, bool) {
-	token := c.Keys[config.AppConfig.CsrfParamName]
-	tokenStr, ok := token.(string)
-	if !ok {
-		return "", "", false
-	}
-
-	return template.HTML(fmt.Sprintf(`<input type="hidden" name="%s" value="%s">`, config.AppConfig.CsrfParamName, tokenStr)), tokenStr, true
 }

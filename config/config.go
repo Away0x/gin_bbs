@@ -20,7 +20,7 @@ const (
 	// 配置文件路径
 	configFilePath = "./config.yaml"
 	// 日志文件路径
-	logFilePath = "storage/logs/gin_weibo.log"
+	logFilePath = "storage/logs/gin_bbs.log"
 	// 配置文件格式
 	configFileType = "yaml"
 )

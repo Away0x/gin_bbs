@@ -6,6 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	// PageQueryName query 中 page 参数命名
+	PageQueryName = "page"
+	// PageLineQueryName query 中 pageline 参数命名
+	PageLineQueryName = "pageline"
+)
+
 type paginationRenderData struct {
 	URL          string // 分页的 root url
 	CurrentPage  int    // 当前页码
@@ -20,10 +27,10 @@ type paginationRenderData struct {
 }
 
 // CreatePaginationFillToTplData : 生成分页模板所需的数据
-func CreatePaginationFillToTplData(c *gin.Context, pageQueryKeyName string, currentPage, totalPage int, otherData map[string]interface{}) map[string]interface{} {
+func CreatePaginationFillToTplData(c *gin.Context, currentPage, totalPage int, otherData map[string]interface{}) map[string]interface{} {
 	queryValues := url.Values{}
 	for k, v := range c.Request.URL.Query() {
-		if k != pageQueryKeyName {
+		if k != PageQueryName {
 			queryValues.Add(k, v[0])
 		}
 	}
@@ -33,7 +40,7 @@ func CreatePaginationFillToTplData(c *gin.Context, pageQueryKeyName string, curr
 	}
 
 	pageData := paginationRenderData{
-		URL:          c.Request.URL.Path + "?" + query + pageQueryKeyName + "=",
+		URL:          c.Request.URL.Path + "?" + query + PageQueryName + "=",
 		CurrentPage:  currentPage,
 		OnFirstPage:  currentPage == 1,
 		HasMorePages: currentPage != totalPage,

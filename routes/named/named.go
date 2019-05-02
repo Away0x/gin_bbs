@@ -3,8 +3,8 @@ package named
 
 import (
 	"fmt"
-	"gin_weibo/config"
-	"gin_weibo/pkg/utils"
+	"gin_bbs/config"
+	"gin_bbs/pkg/utils"
 	"os"
 	"strconv"
 	"strings"

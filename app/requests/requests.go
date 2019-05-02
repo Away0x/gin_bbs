@@ -1,7 +1,7 @@
 package requests
 
 import (
-	"gin_weibo/pkg/utils"
+	"gin_bbs/pkg/utils"
 	"regexp"
 	"strconv"
 	"strings"

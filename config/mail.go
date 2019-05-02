@@ -14,12 +14,12 @@ type mailConfig struct {
 
 func newMailConfig() *mailConfig {
 	// 默认配置
-	viper.SetDefault("MAIL.MAIL_DRIVER", "gin_weibo")
+	viper.SetDefault("MAIL.MAIL_DRIVER", "gin_bbs")
 	viper.SetDefault("MAIL.MAIL_HOST", "")
 	viper.SetDefault("MAIL.MAIL_PORT", 25)
 	viper.SetDefault("MAIL.MAIL_USERNAME", "")
 	viper.SetDefault("MAIL.MAIL_PASSWORD", "")
-	viper.SetDefault("MAIL.MAIL_FROM_NAME", "gin_weibo")
+	viper.SetDefault("MAIL.MAIL_FROM_NAME", "gin_bbs")
 
 	return &mailConfig{
 		Driver:   viper.GetString("MAIL.MAIL_DRIVER"),

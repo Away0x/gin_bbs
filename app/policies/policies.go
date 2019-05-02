@@ -1,7 +1,7 @@
 package policies
 
 import (
-	"gin_weibo/app/controllers"
+	"gin_bbs/app/controllers"
 
 	"github.com/gin-gonic/gin"
 )

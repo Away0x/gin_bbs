@@ -1,15 +1,15 @@
 package helpers
 
 import (
-	"gin_weibo/config"
-	"gin_weibo/pkg/file"
-	"gin_weibo/pkg/mail"
+	"gin_bbs/config"
+	"gin_bbs/pkg/mail"
+	"gin_bbs/pkg/utils"
 )
 
 // SendMail 发送邮件
 func SendMail(mailTo []string, subject string, templatePath string, tplData map[string]interface{}) error {
 	filePath := config.AppConfig.ViewsPath + "/" + templatePath
-	body, err := file.ReadTemplateToString(templatePath, filePath, tplData)
+	body, err := utils.ReadTemplateToString(templatePath, filePath, tplData)
 	if err != nil {
 		return err
 	}

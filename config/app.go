@@ -39,7 +39,7 @@ type appConfig struct {
 
 func newAppConfig() *appConfig {
 	// 默认配置
-	viper.SetDefault("APP.NAME", "gin_weibo")
+	viper.SetDefault("APP.NAME", "gin_bbs")
 	viper.SetDefault("APP.RUNMODE", "release")
 	viper.SetDefault("APP.ADDR", ":8080")
 	viper.SetDefault("APP.URL", "")

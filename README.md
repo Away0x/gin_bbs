@@ -1,7 +1,4 @@
-# Gin Weibo App
-参考 [L01 Laravel 教程 - Web 开发实战入门](https://learnku.com/courses/laravel-essential-training/5.8)，使用 Golang (Gin、Gorm) 改写。
-
-项目结构和风格模仿 Laravel。
+# Gin BBS App
 
 ## 项目目录结构
 <details>
@@ -61,23 +58,5 @@
 - [x] 用户权限模块
 - [x] 日志
 - [x] 前端构建 (typescript、sass ...)
-
-![1](readme/1.png)
-
-![2](readme/2.png)
-
-![3](readme/3.png)
-
-![4](readme/4.png)
-
-![5](readme/5.png)
-
-![6](readme/6.png)
-
-![7](readme/7.png)
-
-![8](readme/8.png)
-
-![9](readme/9.png)
 
 ***

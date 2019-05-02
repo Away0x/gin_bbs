@@ -9,16 +9,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"gin_weibo/app/helpers"
-	followerModel "gin_weibo/app/models/follower"
-	passwordResetModel "gin_weibo/app/models/password_reset"
-	statusModel "gin_weibo/app/models/status"
-	userModel "gin_weibo/app/models/user"
-	"gin_weibo/config"
-	"gin_weibo/database"
-	"gin_weibo/database/factory"
-	"gin_weibo/routes"
-	"gin_weibo/routes/named"
+	"gin_bbs/app/helpers"
+	"gin_bbs/config"
+	"gin_bbs/database"
+	"gin_bbs/routes"
+	"gin_bbs/routes/named"
 
 	"github.com/spf13/pflag"
 )
@@ -42,12 +37,8 @@ func main() {
 	// db config
 	db := database.InitDB()
 	// db migrate
-	db.AutoMigrate(
-		&userModel.User{},
-		&passwordResetModel.PasswordReset{},
-		&statusModel.Status{},
-		&followerModel.Follower{},
-	)
+	// db.AutoMigrate(
+	// )
 	// mock data
 	if do := factoryMake(); do {
 		return
@@ -102,9 +93,6 @@ func factoryMake() (do bool) {
 	}
 
 	fmt.Print("\n\n-------------------------------------------------- MOCK --------------------------------------------------\n\n")
-	factory.UsersTableSeeder(true)
-	factory.StatusTableSeeder(true)
-	factory.FollowerTableSeeder(true)
 	return true
 }
 

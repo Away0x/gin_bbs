@@ -5,7 +5,7 @@ import (
 	"os"
 	"path"
 
-	"gin_weibo/config"
+	"gin_bbs/config"
 )
 
 var (

@@ -4,9 +4,16 @@ import (
 	"crypto/rand"
 	r "math/rand"
 	"time"
+
+	"github.com/teris-io/shortid"
 )
 
 var alphaNum = []byte(`0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`)
+
+// GenShortId shortid
+func GenShortId() (string, error) {
+	return shortid.Generate()
+}
 
 // RandomCreateBytes generate random []byte by specify chars.
 func RandomCreateBytes(n int, alphabets ...byte) []byte {

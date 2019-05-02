@@ -1,7 +1,7 @@
 package factory
 
 import (
-	"gin_weibo/database"
+	"gin_bbs/database"
 )
 
 // DropAndCreateTable - 清空表

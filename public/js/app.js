@@ -17792,12 +17792,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bootstrap__WEBPACK_IMPORTED_MODULE_0__);
 
-var A = /** @class */ (function () {
-    function A() {
-    }
-    A.aa = function () { };
-    return A;
-}());
 
 
 /***/ }),
@@ -17820,8 +17814,8 @@ var A = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\playground\goPlayground\gin_weibo\resources\js\app.ts */"./resources/js/app.ts");
-module.exports = __webpack_require__(/*! E:\playground\goPlayground\gin_weibo\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/wutong/Desktop/workspace/goPlayground/gin_bbs/resources/js/app.ts */"./resources/js/app.ts");
+module.exports = __webpack_require__(/*! /Users/wutong/Desktop/workspace/goPlayground/gin_bbs/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

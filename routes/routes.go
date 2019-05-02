@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"gin_weibo/app/controllers"
-	"gin_weibo/middleware"
+	"gin_bbs/app/controllers"
+	"gin_bbs/middleware"
 
 	"github.com/gin-gonic/gin"
 	ginSessions "github.com/tommy351/gin-sessions"

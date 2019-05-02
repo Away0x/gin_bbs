@@ -7,7 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/lexkong/log"
 
-	"gin_weibo/config"
+	"gin_bbs/config"
 )
 
 // DB gorm

@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"gin_weibo/pkg/flash"
+	"gin_bbs/pkg/flash"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
