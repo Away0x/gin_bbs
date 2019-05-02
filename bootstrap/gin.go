@@ -47,7 +47,9 @@ func setupTemplate(g *gin.Engine) {
 	})
 
 	// 注册模板全局变量
-	// pongo2.Globals["text"] = "demo"
+	pongo2.Globals["flashMessage"] = []string{
+		"danger", "warning", "success", "info",
+	}
 
 	// 注册模板全局 filter
 	// pongo2.RegisterFilter("static", helpers.Static)

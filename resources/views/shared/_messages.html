@@ -1,0 +1,28 @@
+{% if flash.danger %}
+  <div class="flash-message">
+    <p class="alert alert-danger">
+      {{ flash.danger }}
+    </p>
+  </div>
+{% endif %}
+{% if flash.warning %}
+  <div class="flash-message">
+    <p class="alert alert-warning">
+      {{ flash.warning }}
+    </p>
+  </div>
+{% endif %}
+{% if flash.success %}
+  <div class="flash-message">
+    <p class="alert alert-success">
+      {{ flash.success }}
+    </p>
+  </div>
+{% endif %}
+{% if flash.info %}
+  <div class="flash-message">
+    <p class="alert alert-info">
+      {{ flash.info }}
+    </p>
+  </div>
+{% endif %}

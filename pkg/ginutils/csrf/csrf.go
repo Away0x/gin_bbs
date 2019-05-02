@@ -10,7 +10,8 @@ import (
 )
 
 // CsrfInput csrf input html
-func CsrfInput(c *gin.Context, inputName string) (template.HTML, string, bool) {
+func CsrfInput(c *gin.Context) (template.HTML, string, bool) {
+	inputName := ginutils.GetGinUtilsConfig().CsrfParamName
 	token := c.Keys[inputName]
 	tokenStr, ok := token.(string)
 	if !ok {
@@ -18,6 +19,18 @@ func CsrfInput(c *gin.Context, inputName string) (template.HTML, string, bool) {
 	}
 
 	return template.HTML(fmt.Sprintf(`<input type="hidden" name="%s" value="%s">`, inputName, tokenStr)), tokenStr, true
+}
+
+// CsrfMeta csrf meta html
+func CsrfMeta(c *gin.Context) (template.HTML, string, bool) {
+	inputName := ginutils.GetGinUtilsConfig().CsrfParamName
+	token := c.Keys[inputName]
+	tokenStr, ok := token.(string)
+	if !ok {
+		return "", "", false
+	}
+
+	return template.HTML(fmt.Sprintf(`<meta name="csrf-token" content="%s">`, tokenStr)), tokenStr, true
 }
 
 // 从 cookie 中获取 csrf token

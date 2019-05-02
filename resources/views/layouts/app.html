@@ -1,13 +1,46 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title></title>
-</head>
-<body>
-    <h1>Hello World!</h1>
-    {% block mainbody %}
+<html lang="zh-CN">
 
-    {% endblock %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- CSRF Token -->
+  {{ csrfMeta | safe }}
+
+  <title>
+  {% block title %}
+    LaraBBS
+  {% endblock %}
+  - Laravel 进阶教程
+  </title>
+
+  <!-- Styles -->
+  <link href='{% mix "css/app.css" %}' rel="stylesheet">
+
+</head>
+
+<body>
+  <div id="app" class="{{ tpl_name }}-page">
+
+    {% include "_header.html" %}
+
+    <div class="container">
+
+      {% include "../shared/_messages.html" %}
+
+
+      {% block content %}
+      {% endblock %}
+
+    </div>
+
+    {% include "_footer.html" %}
+  </div>
+
+  <!-- Scripts -->
+  <script src='{% mix "js/app.js" %}'></script>
 </body>
+
 </html>
