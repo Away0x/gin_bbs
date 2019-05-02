@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/flosch/pongo2"
+
 	"gin_bbs/pkg/ginutils"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +26,7 @@ const (
 
 // Render : 渲染 html
 func Render(c *gin.Context, tplPath string, data renderObj) {
-	obj := make(renderObj)
+	obj := make(pongo2.Context)
 	flashStore := flash.Read(c)
 	oldValueStore := flash.ReadOldFormValue(c)
 	validateMsgArr := flash.ReadValidateMessage(c)
@@ -58,7 +60,7 @@ func RenderError(c *gin.Context, code int, msg string) {
 		errorCode = 403
 	}
 
-	c.HTML(code, "error/error.html", gin.H{
+	c.HTML(code, "error/error.html", pongo2.Context{
 		"errorMsg":  msg,
 		"errorCode": errorCode,
 		"errorImg":  helpers.Static("/svg/" + strconv.Itoa(code) + ".svg"),

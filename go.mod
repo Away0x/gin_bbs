@@ -3,6 +3,7 @@ module gin_bbs
 require (
 	github.com/denisenkom/go-mssqldb v0.0.0-20190423183735-731ef375ac02 // indirect
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
+	github.com/flosch/pongo2 v0.0.0-20181225140029-79872a7b2769
 	github.com/fsnotify/fsnotify v1.4.7
 	github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3 // indirect
 	github.com/gin-gonic/gin v1.3.0
@@ -14,7 +15,6 @@ require (
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
 	github.com/jinzhu/now v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.6 // indirect
-	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lexkong/log v0.0.0-20180607165131-972f9cd951fc
 	github.com/lib/pq v1.1.0 // indirect
 	github.com/mattn/go-isatty v0.0.7 // indirect
