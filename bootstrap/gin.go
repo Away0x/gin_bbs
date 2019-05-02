@@ -52,9 +52,10 @@ func setupTemplate(g *gin.Engine) {
 	}
 
 	// 注册模板全局 filter
-	// pongo2.RegisterFilter("static", helpers.Static)
+	// pongo2.RegisterFilter("demo", demo)
 
 	// 注册模板全局 tag
-	pongo2.RegisterTag("static", pongo2utils.StaticTag)
-	pongo2.RegisterTag("mix", pongo2utils.MixTag)
+	pongo2.RegisterTag("static", pongo2utils.StaticTag) // 获取静态文件地址
+	pongo2.RegisterTag("mix", pongo2utils.MixTag)       // 配合 laravel-mix 使用
+	pongo2.RegisterTag("route", pongo2utils.RouteTag)   // 获取命名路由 path
 }

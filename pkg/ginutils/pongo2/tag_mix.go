@@ -59,13 +59,13 @@ func MixTag(doc *pongo2.Parser, start *pongo2.Token, arguments *pongo2.Parser) (
 		return nil, arguments.Error("mix tag error: path 必须为 string.", nil)
 	}
 
-	nowNode := &tagMixTag{
+	node := &tagMixTag{
 		path: pathToken.Val,
 	}
 
 	if arguments.Remaining() > 0 {
-		return nil, arguments.Error("Malformed static-tag arguments.", nil)
+		return nil, arguments.Error("Malformed mix-tag arguments.", nil)
 	}
 
-	return nowNode, nil
+	return node, nil
 }

@@ -22,7 +22,7 @@ func StaticTag(doc *pongo2.Parser, start *pongo2.Token, arguments *pongo2.Parser
 		return nil, arguments.Error("static tag error: path 必须为 string.", nil)
 	}
 
-	nowNode := &tagStaticTag{
+	node := &tagStaticTag{
 		path: pathToken.Val,
 	}
 
@@ -30,5 +30,5 @@ func StaticTag(doc *pongo2.Parser, start *pongo2.Token, arguments *pongo2.Parser
 		return nil, arguments.Error("Malformed static-tag arguments.", nil)
 	}
 
-	return nowNode, nil
+	return node, nil
 }

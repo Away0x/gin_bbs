@@ -25,6 +25,8 @@ const (
 // Render : 渲染 html
 func Render(c *gin.Context, tplPath string, data renderObj) {
 	obj := make(pongo2.Context)
+	// 想要获取消息闪现的话，得用 redirect，不能重新 render
+	// 因为这里会消费掉上次的 flash
 	flashStore := flash.Read(c)
 	oldValueStore := oldvalue.ReadOldFormValue(c)
 	validateMsgArr := validate.ReadValidateMessage(c)
