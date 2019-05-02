@@ -36,7 +36,11 @@ func (node *tagMixTag) Execute(ctx *pongo2.ExecutionContext, writer pongo2.Templ
 			return nil
 		}
 
-		result = manifests[staticFilePath]
+		if string(staticFilePath[0]) == "/" {
+			result = manifests[staticFilePath]
+		} else {
+			result = manifests["/"+staticFilePath]
+		}
 	}
 
 	if result == "" {

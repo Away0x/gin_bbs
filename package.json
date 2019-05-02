@@ -13,13 +13,14 @@
     "@types/node": "^11.13.4",
     "cross-env": "^5.2.0",
     "laravel-mix": "^4.0.15",
-    "resolve-url-loader": "^3.1.0",
+    "resolve-url-loader": "^2.3.1",
     "sass": "^1.18.0",
     "sass-loader": "^7.1.0",
     "ts-loader": "^5.3.3",
     "typescript": "^3.4.3"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.8.1",
     "@types/bootstrap": "^4.3.0",
     "bootstrap": "^4.3.1",
     "jquery": "^3.4.0",
