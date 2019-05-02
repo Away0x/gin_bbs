@@ -1,10 +1,9 @@
-// Package named : 命名路由
-package named
+package router
 
 import (
 	"fmt"
-	"gin_bbs/config"
-	"gin_bbs/pkg/utils"
+	"gin_bbs/pkg/ginutils"
+	"gin_bbs/pkg/ginutils/utils"
 	"os"
 	"strconv"
 	"strings"
@@ -20,7 +19,7 @@ var (
 
 // Name : 注册路由
 // 动态参数目前只支持 :xx 形式
-func Name(g gin.IRouter, name string, method string, path string) {
+func Name(g gin.IRoutes, name string, method string, path string) {
 	s := path
 	if group, ok := g.(*gin.RouterGroup); ok {
 		s = group.BasePath() + path
@@ -41,7 +40,7 @@ func Name(g gin.IRouter, name string, method string, path string) {
 // Name(g, "users.create", "GET", "/users/create/:id")
 //     -> G("users.create", 1) 得到 "/users/create/1"
 func G(name string, values ...interface{}) string {
-	return config.AppConfig.URL + getRoute(name, values...)
+	return ginutils.GetGinUtilsConfig().URL + getRoute(name, values...)
 }
 
 // GR : 根据 name 获取路由 path (相对于网站根路径)

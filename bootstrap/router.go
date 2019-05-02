@@ -2,8 +2,8 @@ package bootstrap
 
 import (
 	"gin_bbs/config"
+	"gin_bbs/pkg/ginutils/router"
 	"gin_bbs/routes"
-	"gin_bbs/routes/named"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,5 +20,5 @@ func printRoute() {
 		return
 	}
 
-	named.PrintRoutes()
+	router.PrintRoutes()
 }

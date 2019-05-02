@@ -5,14 +5,8 @@
 <summary>展开查看</summary>
 <pre><code>
 ├── app              项目核心逻辑代码
-│    ├── auth        用户相关
 │    ├── controllers 控制器
-│    ├── helpers     工具方法
 │    ├── models      模型
-│    ├── policies    权限校验
-│    ├── requests    参数校验
-│    ├── services    复杂查询
-│    └── view_models 数据转换
 │
 ├── bootstrap        各组件初始化
 │
@@ -20,9 +14,6 @@
 │
 ├── database         数据库
 │    └── factory     数据 mock
-│
-├── middleware       中间件
-│    └── wrapper     controller 包裹函数
 │
 ├── pkg              项目依赖
 │
@@ -32,10 +23,10 @@
 │    └── view        go 模板文件
 │
 ├── routes           路由
+│    └── middleware  中间件
 │    └── routes.go   路由注册
 │    └── api.go      api 路由注册
 │    └── web.go      页面路由注册
-│    └── named       命名路由模块
 │
 ├── storage          存放日志等文件
 │

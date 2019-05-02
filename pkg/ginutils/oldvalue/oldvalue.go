@@ -1,14 +1,13 @@
-package middleware
+package oldvalue
 
 import (
-	"gin_bbs/pkg/flash"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-// OldValue - 存储表单提交时数据的中间件
-func OldValue() gin.HandlerFunc {
+// OldValue 存储表单提交时数据的中间件
+func OldValueMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.Method == http.MethodPost {
 			req := c.Request
@@ -21,7 +20,7 @@ func OldValue() gin.HandlerFunc {
 			for k, v := range req.Form {
 				olaValue[k] = v[0]
 			}
-			flash.SaveOldFormValue(c, olaValue)
+			SaveOldFormValue(c, olaValue)
 		}
 
 		c.Next()

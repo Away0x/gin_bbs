@@ -85,12 +85,12 @@ func (fd *FlashData) Danger(msg string, args ...interface{}) {
 
 // Save flash
 func (fd *FlashData) Save(c *gin.Context) {
-	fd.save(c, FlashInContextAndCookieKeyName)
+	fd.SaveByName(c, FlashInContextAndCookieKeyName)
 }
 
 // Read 从 request 中的 cookie 里解析出 flash 数据
 func Read(c *gin.Context) *FlashData {
-	return read(c, FlashInContextAndCookieKeyName)
+	return ReadByName(c, FlashInContextAndCookieKeyName)
 }
 
 // NewSuccessFlash : 新建一条 success flash，并保存
@@ -121,9 +121,8 @@ func NewDangerFlash(c *gin.Context, msg string, args ...interface{}) {
 	f.Save(c)
 }
 
-// ------------------ private
 // 将 flash 数据保存到 gin context keys 中和 cookie 中
-func (fd *FlashData) save(c *gin.Context, keyName string) {
+func (fd *FlashData) SaveByName(c *gin.Context, keyName string) {
 	c.Keys[keyName] = fd.Data
 
 	var flashValue string
@@ -134,7 +133,7 @@ func (fd *FlashData) save(c *gin.Context, keyName string) {
 }
 
 // 从 request 中的 cookie 里解析出 flash 数据
-func read(c *gin.Context, keyName string) *FlashData {
+func ReadByName(c *gin.Context, keyName string) *FlashData {
 	flash := NewFlashByName(keyName)
 	if cookie, err := c.Request.Cookie(keyName); err == nil {
 		v, _ := url.QueryUnescape(cookie.Value)

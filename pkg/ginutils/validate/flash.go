@@ -1,7 +1,9 @@
-package flash
+package validate
 
 import (
 	"strings"
+
+	"gin_bbs/pkg/ginutils/flash"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,16 +15,16 @@ const (
 
 // SaveValidateMessage 存储参数验证的错误信息
 func SaveValidateMessage(c *gin.Context, msgArr []string) {
-	f := NewFlashByName(ValidateContextAndCookieKeyName)
+	f := flash.NewFlashByName(ValidateContextAndCookieKeyName)
 	f.Data = map[string]string{
 		"errors": strings.Join(msgArr, ValidateSeparator),
 	}
-	f.save(c, ValidateContextAndCookieKeyName)
+	f.SaveByName(c, ValidateContextAndCookieKeyName)
 }
 
 // SaveValidateMessage 读取参数验证的错误信息
 func ReadValidateMessage(c *gin.Context) []string {
-	errorStr := read(c, ValidateContextAndCookieKeyName).Data["errors"]
+	errorStr := flash.ReadByName(c, ValidateContextAndCookieKeyName).Data["errors"]
 
 	if errorStr == "" {
 		return []string{}

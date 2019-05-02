@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
+	"gin_bbs/pkg/ginutils/router"
 )
 
-func registerApi(g *gin.Engine) {
+func registerApi(r *router.MyRoute) {
 
 }

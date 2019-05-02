@@ -1,7 +1,7 @@
-package requests
+package validate
 
 import (
-	"gin_bbs/pkg/utils"
+	"gin_bbs/pkg/ginutils/utils"
 	"regexp"
 	"strconv"
 	"strings"

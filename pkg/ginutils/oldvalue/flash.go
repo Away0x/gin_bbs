@@ -1,6 +1,8 @@
-package flash
+package oldvalue
 
 import (
+	"gin_bbs/pkg/ginutils/flash"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,12 +13,12 @@ const (
 
 // SaveOldFormValue : 存储上次表单 post 的数据
 func SaveOldFormValue(c *gin.Context, obj map[string]string) {
-	f := NewFlashByName(OldValueInContextAndCookieKeyName)
+	f := flash.NewFlashByName(OldValueInContextAndCookieKeyName)
 	f.Data = obj
-	f.save(c, OldValueInContextAndCookieKeyName)
+	f.SaveByName(c, OldValueInContextAndCookieKeyName)
 }
 
 // ReadOldFormValue : 读取上次表单 post 的数据
-func ReadOldFormValue(c *gin.Context) *FlashData {
-	return read(c, OldValueInContextAndCookieKeyName)
+func ReadOldFormValue(c *gin.Context) *flash.FlashData {
+	return flash.ReadByName(c, OldValueInContextAndCookieKeyName)
 }
