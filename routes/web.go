@@ -38,12 +38,14 @@ func registerWeb(r *router.MyRoute) {
 	}
 
 	// Email 认证相关路由
-	verificationRouter := r.Group("/email")
+	verificationRouter := r.Group("/email", middleware.Auth())
 	{
-		verificationRouter.Register("GET", "verification.notice", "/verify", verification.Show)
-		verificationRouter.Register("GET", "verification.verify", "/verify/:token", verification.Verify)
-		verificationRouter.Register("GET", "verification.resend", "/resend",
+		verificationRouter.Register("GET", "verification.notice", "/verify", wrapper.GetUser(verification.Show))
+		verificationRouter.Register("GET", "verification.verify", "/verify/:token",
 			middleware.RateLimiter(1*time.Minute, 6), // 1 分钟最多 6 次请求
+			verification.Verify)
+		verificationRouter.Register("GET", "verification.resend", "/resend",
+			middleware.RateLimiter(1*time.Minute, 6),
 			wrapper.GetUser(verification.Resend))
 	}
 }

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"gin_bbs/pkg/ginutils/csrf"
+	"gin_bbs/pkg/ginutils/last"
 	"gin_bbs/pkg/ginutils/oldvalue"
 	"gin_bbs/pkg/ginutils/session"
 
@@ -19,6 +20,7 @@ func Register(g *gin.Engine) *gin.Engine {
 	g.Use(gin.Recovery())
 	g.Use(gin.Logger())
 	// 自定义全局中间件
+	g.Use(last.LastMiddleware())              // 记录上一次请求信息
 	g.Use(session.SessionMiddleware())        // session
 	g.Use(csrf.CsrfMiddleware())              // csrf
 	g.Use(oldvalue.OldValueMiddleware())      // 记忆上次表单提交的内容，消费即消失

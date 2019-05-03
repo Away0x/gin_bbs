@@ -43,6 +43,8 @@ func Register(c *gin.Context) {
 	auth.Login(c, user)
 	if err := helpers.SendVerifyEmail(user); err != nil {
 		flash.NewDangerFlash(c, "邮件发送失败: "+err.Error())
+	} else {
+		flash.NewSuccessFlash(c, "新的验证链接已发送到您的 E-mail")
 	}
 	controllers.RedirectRouter(c, "root")
 }

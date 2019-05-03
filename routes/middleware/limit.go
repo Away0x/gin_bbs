@@ -13,7 +13,7 @@ import (
 func RateLimiter(duration time.Duration, n int) gin.HandlerFunc {
 	// 默认 5m 过期，每 10m 清除缓冲中的过期 key
 	// 定期清除缓存中的过期 key，是通过一个常驻 goroutine 实现的
-	var limiterCache = cache.New(5*time.Minute, 10*time.Minute)
+	limiterCache := cache.New(5*time.Minute, 10*time.Minute)
 
 	return func(c *gin.Context) {
 		k := c.ClientIP() // limit rate by client ip
