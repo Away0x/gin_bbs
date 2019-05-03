@@ -28,10 +28,6 @@ func (*Validate) IsStrict() bool {
 	return false
 }
 
-func (*Validate) WriteToFlash() bool {
-	return true
-}
-
 // RegisterValidators: 注册验证器
 // 验证器数组按顺序验证，一旦验证没通过，即结束该字段的验证
 func (*Validate) RegisterValidators() ValidatorMap {
@@ -44,9 +40,12 @@ func (*Validate) RegisterMessages() MessagesMap {
 }
 
 // 执行验证
-func Run(v IValidate) (ok bool, errArr []string, errMap map[string][]string) {
-	validatorMap := v.RegisterValidators()
-	messageMap := v.RegisterMessages()
+func Run(v IValidate) (bool, []string, map[string][]string) {
+	return RunInParams(v.IsStrict(), v.RegisterValidators(), v.RegisterMessages())
+}
+
+// 执行验证
+func RunInParams(strict bool, validatorMap ValidatorMap, messageMap MessagesMap) (ok bool, errArr []string, errMap map[string][]string) {
 	errArr = make([]string, 0)
 	errMap = make(map[string][]string)
 	ok = true
@@ -75,7 +74,7 @@ func Run(v IValidate) (ok bool, errArr []string, errMap map[string][]string) {
 				errArr = append(errArr, errMsg)
 				errMap[key] = append(errMap[key], errMsg)
 
-				if v.IsStrict() {
+				if strict {
 					return // 严格模式: 结束所有验证
 				} else {
 					break // 进行下一个字段的验证

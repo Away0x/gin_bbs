@@ -20,16 +20,16 @@ func registerWeb(r *router.MyRoute) {
 
 	// ------------------------------------- Auth -------------------------------------
 	// 用户身份验证相关的路由
-	r.Register("GET", "login.show", "/login", login.ShowLoginForm)
-	r.Register("POST", "login", "/login", login.Login)
+	r.Register("GET", "login.show", "/login", middleware.Guest(), login.ShowLoginForm)
+	r.Register("POST", "login", "/login", middleware.Guest(), login.Login)
 	r.Register("POST", "logout", "/logout", login.Logout)
 
 	// 用户注册相关路由
-	r.Register("GET", "register.show", "/register", register.ShowRegistrationForm)
-	r.Register("POST", "register", "/register", register.Register)
+	r.Register("GET", "register.show", "/register", middleware.Guest(), register.ShowRegistrationForm)
+	r.Register("POST", "register", "/register", middleware.Guest(), register.Register)
 
 	// 密码重置相关路由
-	pwdRouter := r.Group("/password")
+	pwdRouter := r.Group("/password", middleware.Guest())
 	{
 		pwdRouter.Register("GET", "password.request", "/reset", password.ShowLinkRequestForm)
 		pwdRouter.Register("POST", "password.email", "/email", password.SendResetLinkEmail)

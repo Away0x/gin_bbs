@@ -6,6 +6,7 @@ import (
 	"gin_bbs/pkg/ginutils/router"
 	"path"
 
+	passwordResetModel "gin_bbs/app/models/password_reset"
 	userModel "gin_bbs/app/models/user"
 
 	"github.com/flosch/pongo2"
@@ -43,4 +44,13 @@ func SendVerifyEmail(u *userModel.User) error {
 	verifyURL := router.G("verification.verify", "token", u.ActivationToken)
 
 	return SendMail([]string{u.Email}, subject, tpl, map[string]interface{}{"URL": verifyURL})
+}
+
+// 发送重置密码邮件
+func SendResetPasswordEmail(pwd *passwordResetModel.PasswordReset) error {
+	subject := "重置密码！请确认你的邮箱。"
+	tpl := "mail/reset_password.html"
+	resetPasswordURL := router.G("password.reset", "token", pwd.Token)
+
+	return SendMail([]string{pwd.Email}, subject, tpl, map[string]interface{}{"URL": resetPasswordURL})
 }

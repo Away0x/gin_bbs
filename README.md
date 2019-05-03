@@ -52,6 +52,8 @@
 - [x] 日志
 - [x] 前端构建 (typescript、sass ...)
 - [x] 验证码
+- [x] pongo2 template
+- [ ] 基于 Vue 的管理员后台系统
 
 
 ### 角色

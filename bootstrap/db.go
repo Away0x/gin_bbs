@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"errors"
 	"fmt"
+	passwordreset "gin_bbs/app/models/password_reset"
 	"gin_bbs/app/models/user"
 	"gin_bbs/config"
 	"gin_bbs/database"
@@ -17,6 +18,7 @@ func SetupDB(needMock bool) (*gorm.DB, error) {
 	// db migrate
 	db.AutoMigrate(
 		&user.User{},
+		&passwordreset.PasswordReset{},
 	)
 
 	// mock data

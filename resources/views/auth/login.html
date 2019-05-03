@@ -10,7 +10,6 @@
         <div class="card-header">登录</div>
 
         <div class="card-body">
-          {% include "../shared/_errors.html" %}
           <form method="POST" action="{% route 'login' %}">
             {{ csrfInput | safe }}
 

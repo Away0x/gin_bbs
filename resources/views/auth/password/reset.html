@@ -1,50 +1,45 @@
 {% extends "../../layouts/app.html" %}
 
-{% block title %}用户激活{% endblock %}
+{% block title %}密码重置{% endblock %}
 
 {% block content %}
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="card">
-        <div class="card-header">{{ __('Reset Password') }}</div>
+        <div class="card-header">密码重置</div>
 
         <div class="card-body">
-          <form method="POST" action="{{ route('password.update') }}">
-            @csrf
+          <form method="POST" action="{% route 'password.update' %}">
+            {{ csrfInput | safe }}
 
-            <input type="hidden" name="token" value="{{ $token }}">
+            <input type="hidden" name="token" value="{{ token }}">
 
             <div class="form-group row">
-              <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+              <label for="email" class="col-md-4 col-form-label text-md-right">E-Mail</label>
 
               <div class="col-md-6">
-                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $email ?? old('email') }}" required autofocus>
-
-                @if ($errors->has('email'))
-                  <span class="invalid-feedback" role="alert">
-                      <strong>{{ $errors->first('email') }}</strong>
-                  </span>
-                @endif
+                <input id="email" type="email" class="form-control" name="email" value="{{ email }}" disabled>
               </div>
             </div>
 
             <div class="form-group row">
-              <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+              <label for="password" class="col-md-4 col-form-label text-md-right">密码</label>
 
               <div class="col-md-6">
-                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                <input id="password" type="password" class="form-control {% if validatorMessageMap.password %} is-invalid {% endif %}"
+                  name="password" value="{{ oldValue.password }}" required>
 
-                @if ($errors->has('password'))
+                {% if validatorMessageMap.password %}
                   <span class="invalid-feedback" role="alert">
-                    <strong>{{ $errors->first('password') }}</strong>
+                    <strong>{{ validatorMessageMap.password.0 }}</strong>
                   </span>
-                @endif
+                {% endif %}
               </div>
             </div>
 
             <div class="form-group row">
-              <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
+              <label for="password-confirm" class="col-md-4 col-form-label text-md-right">确认密码</label>
 
               <div class="col-md-6">
                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
@@ -54,7 +49,7 @@
             <div class="form-group row mb-0">
               <div class="col-md-6 offset-md-4">
                 <button type="submit" class="btn btn-primary">
-                  {{ __('Reset Password') }}
+                  重置密码
                 </button>
               </div>
             </div>

@@ -91,7 +91,6 @@ func (*UserCreateForm) RegisterMessages() validate.MessagesMap {
 // ValidateAndSave 验证参数并且创建用户
 func (u *UserCreateForm) ValidateAndSave(c *gin.Context) (bool, *userModel.User) {
 	ok, errArr, errMap := validate.Run(u)
-
 	if !ok {
 		validate.SaveValidateMessage(c, errArr, errMap)
 		return false, nil
@@ -105,8 +104,10 @@ func (u *UserCreateForm) ValidateAndSave(c *gin.Context) (bool, *userModel.User)
 	}
 
 	if err := user.Create(); err != nil {
+		msg := "用户创建失败: " + err.Error()
 		errMap["other"] = make([]string, 0)
-		errMap["other"] = append(errMap["other"], "用户创建失败: "+err.Error())
+		errMap["other"] = append(errMap["other"], msg)
+		errArr = append(errArr, msg)
 		validate.SaveValidateMessage(c, errArr, errMap)
 		return false, nil
 	}

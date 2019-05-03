@@ -52,13 +52,17 @@ func (u *UserLoginForm) ValidateAndGetUser(c *gin.Context) (bool, *userModel.Use
 	// 通过邮箱获取用户，并且判断密码是否正确
 	user, err := userModel.GetByEmail(u.Email)
 	if err != nil {
-		errMap["email"] = append(errMap["email"], "该邮箱没有注册过用户: "+err.Error())
+		msg := "该邮箱没有注册过用户: " + err.Error()
+		errMap["email"] = append(errMap["email"], msg)
+		errArr = append(errArr, msg)
 		validate.SaveValidateMessage(c, errArr, errMap)
 		return false, nil
 	}
 
 	if err := user.Compare(u.Password); err != nil {
-		errMap["email"] = append(errMap["email"], "很抱歉，您的邮箱和密码不匹配: "+err.Error())
+		msg := "很抱歉，您的邮箱和密码不匹配: " + err.Error()
+		errMap["email"] = append(errMap["email"], msg)
+		errArr = append(errArr, msg)
 		validate.SaveValidateMessage(c, errArr, errMap)
 		return false, nil
 	}
