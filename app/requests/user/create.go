@@ -3,6 +3,8 @@ package user
 import (
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/pkg/ginutils/validate"
+
+	"github.com/gin-gonic/gin"
 )
 
 // 以后可以改为 tag 来调用验证器函数
@@ -66,11 +68,12 @@ func (*UserCreateForm) RegisterMessages() validate.MessagesMap {
 }
 
 // ValidateAndSave 验证参数并且创建用户
-func (u *UserCreateForm) ValidateAndSave() (*userModel.User, []string) {
-	ok, errArr, _ := validate.Run(u)
+func (u *UserCreateForm) ValidateAndSave(c *gin.Context) (bool, *userModel.User) {
+	ok, errArr, errMap := validate.Run(u)
 
 	if !ok {
-		return nil, errArr
+		validate.SaveValidateMessage(c, errArr, errMap)
+		return false, nil
 	}
 
 	// 创建用户
@@ -81,9 +84,11 @@ func (u *UserCreateForm) ValidateAndSave() (*userModel.User, []string) {
 	}
 
 	if err := user.Create(); err != nil {
-		errArr = append(errArr, "用户创建失败: "+err.Error())
-		return nil, errArr
+		errMap["other"] = make([]string, 0)
+		errMap["other"] = append(errMap["other"], "用户创建失败: "+err.Error())
+		validate.SaveValidateMessage(c, errArr, errMap)
+		return false, nil
 	}
 
-	return nil, errArr
+	return true, user
 }

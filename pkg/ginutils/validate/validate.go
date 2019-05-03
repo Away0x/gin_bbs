@@ -28,6 +28,10 @@ func (*Validate) IsStrict() bool {
 	return false
 }
 
+func (*Validate) WriteToFlash() bool {
+	return true
+}
+
 // RegisterValidators: 注册验证器
 // 验证器数组按顺序验证，一旦验证没通过，即结束该字段的验证
 func (*Validate) RegisterValidators() ValidatorMap {

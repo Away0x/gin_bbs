@@ -32,14 +32,15 @@ func Render(c *gin.Context, tplPath string, data renderObj) {
 	// 因为这里会消费掉上次的 flash
 	flashStore := flash.Read(c)
 	oldValueStore := oldvalue.ReadOldFormValue(c)
-	validateMsgArr := validate.ReadValidateMessage(c)
 
 	// flash 数据
 	obj[flash.FlashInContextAndCookieKeyName] = flashStore.Data
 	// 上次 post form 的数据，用于回填
 	obj[oldvalue.OldValueInContextAndCookieKeyName] = oldValueStore.Data
 	// 上次表单的验证信息
-	obj[validate.ValidateContextAndCookieKeyName] = validateMsgArr
+	errArr, errMap := validate.ReadValidateMessage(c)
+	obj[validate.ValidateMessageArrKeyName] = errArr
+	obj[validate.ValidateMessageMapKeyName] = errMap
 	// csrf
 	if config.AppConfig.EnableCsrf {
 		if csrfHTML, csrfToken, ok := csrf.CsrfInput(c); ok {

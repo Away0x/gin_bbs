@@ -1,9 +1,22 @@
-{% if validatorMessage %}
+{% if validatorMessageArr %}
 <div class="alert alert-danger">
     <ul>
-      {% for msg in validatorMessage %}
+      {% for msg in validatorMessageArr %}
         <li>{{ msg }}</li>
       {% endfor %}
     </ul>
   </div>
 {% endif %}
+<hr>
+
+{% comment %} {% for key, val in validatorMessageMap %}
+  {% if val %}
+    <div class="alert alert-danger">
+      <ul>
+        {% for msg in val %}
+          <li>{{ msg }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endfor %} {% endcomment %}

@@ -41,24 +41,27 @@ func (*UserLoginForm) RegisterMessages() validate.MessagesMap {
 }
 
 // ValidateAndLogin 验证参数并且获取用户
-func (u *UserLoginForm) ValidateAndGetUser(c *gin.Context) (*userModel.User, []string) {
-	ok, errArr, _ := validate.Run(u)
+func (u *UserLoginForm) ValidateAndGetUser(c *gin.Context) (bool, *userModel.User) {
+	ok, errArr, errMap := validate.Run(u)
 
 	if !ok {
-		return nil, errArr
+		validate.SaveValidateMessage(c, errArr, errMap)
+		return false, nil
 	}
 
 	// 通过邮箱获取用户，并且判断密码是否正确
 	user, err := userModel.GetByEmail(u.Email)
 	if err != nil {
-		errArr = append(errArr, "该邮箱没有注册过用户: "+err.Error())
-		return nil, errArr
+		errMap["email"] = append(errMap["email"], "该邮箱没有注册过用户: "+err.Error())
+		validate.SaveValidateMessage(c, errArr, errMap)
+		return false, nil
 	}
 
 	if err := user.Compare(u.Password); err != nil {
-		errArr = append(errArr, "很抱歉，您的邮箱和密码不匹配: "+err.Error())
-		return nil, errArr
+		errMap["email"] = append(errMap["email"], "很抱歉，您的邮箱和密码不匹配: "+err.Error())
+		validate.SaveValidateMessage(c, errArr, errMap)
+		return false, nil
 	}
 
-	return user, errArr
+	return true, user
 }

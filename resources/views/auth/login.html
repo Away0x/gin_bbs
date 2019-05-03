@@ -18,7 +18,14 @@
               <label for="email" class="col-md-4 col-form-label text-md-right">E-mail</label>
 
               <div class="col-md-6">
-                <input id="email" type="email" class="form-control" name="email" value="{{ oldValue.email }}" required autofocus>
+                <input id="email" type="email" class="form-control {% if validatorMessageMap.email %} is-invalid {% endif %}"
+                  name="email" value="{{ oldValue.email }}" required autofocus>
+
+                {% if validatorMessageMap.email %}
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ validatorMessageMap.email.0 }}</strong>
+                  </span>
+                {% endif %}
               </div>
             </div>
 
@@ -26,7 +33,14 @@
               <label for="password" class="col-md-4 col-form-label text-md-right">密码</label>
 
               <div class="col-md-6">
-                <input id="password" type="password" class="form-control" name="password" required>
+                <input id="password" type="password" class="form-control {% if validatorMessageMap.password %} is-invalid {% endif %}"
+                  name="password" required>
+
+                 {% if validatorMessageMap.password %}
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ validatorMessageMap.password.0 }}</strong>
+                  </span>
+                {% endif %}
               </div>
             </div>
 

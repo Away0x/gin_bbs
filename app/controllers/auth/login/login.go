@@ -6,7 +6,6 @@ import (
 	"gin_bbs/pkg/ginutils/flash"
 
 	userRequest "gin_bbs/app/requests/user"
-	"gin_bbs/pkg/ginutils/validate"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,10 +20,9 @@ func Login(c *gin.Context) {
 		Email:    c.PostForm("email"),
 		Password: c.PostForm("password"),
 	}
-	user, errors := userLoginForm.ValidateAndGetUser(c)
+	ok, user := userLoginForm.ValidateAndGetUser(c)
 
-	if len(errors) != 0 || user == nil {
-		validate.SaveValidateMessage(c, errors)
+	if !ok || user == nil {
 		controllers.RedirectRouter(c, "login")
 		return
 	}

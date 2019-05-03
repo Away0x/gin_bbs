@@ -10,8 +10,6 @@
         <div class="card-header">注册</div>
 
         <div class="card-body">
-          {% include "../shared/_errors.html" %}
-
           <form method="POST" action="{% route 'register' %}">
             {{ csrfInput | safe }}
 
@@ -19,7 +17,14 @@
               <label for="name" class="col-md-4 col-form-label text-md-right">姓名</label>
 
               <div class="col-md-6">
-                <input id="name" type="text" class="form-control" name="name" value="{{ oldValue.name }}" required autofocus>
+                <input id="name" type="text" class="form-control {% if validatorMessageMap.name %} is-invalid {% endif %}"
+                  name="name" value="{{ oldValue.name }}" required autofocus>
+
+                  {% if validatorMessageMap.name %}
+                    <span class="invalid-feedback" role="alert">
+                      <strong>{{ validatorMessageMap.name.0 }}</strong>
+                    </span>
+                  {% endif %}
               </div>
             </div>
 
@@ -27,7 +32,14 @@
               <label for="email" class="col-md-4 col-form-label text-md-right">E-mail</label>
 
               <div class="col-md-6">
-                <input id="email" type="email" class="form-control" name="email" value="{{ oldValue.email }}" required>
+                <input id="email" type="email" class="form-control {% if validatorMessageMap.email %} is-invalid {% endif %}"
+                  name="email" value="{{ oldValue.email }}" required>
+
+                {% if validatorMessageMap.email %}
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ validatorMessageMap.email.0 }}</strong>
+                  </span>
+                {% endif %}
               </div>
             </div>
 
@@ -35,7 +47,14 @@
               <label for="password" class="col-md-4 col-form-label text-md-right">密码</label>
 
               <div class="col-md-6">
-                <input id="password" type="password" class="form-control" name="password" required>
+                <input id="password" type="password" class="form-control {% if validatorMessageMap.password %} is-invalid {% endif %}"
+                  name="password" required>
+
+                {% if validatorMessageMap.password %}
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ validatorMessageMap.password.0 }}</strong>
+                  </span>
+                {% endif %}
               </div>
             </div>
 
@@ -51,9 +70,15 @@
               <label for="captcha" class="col-md-4 col-form-label text-md-right">验证码</label>
 
               <div class="col-md-6">
-                <input id="captcha" class="form-control" name="captcha" required>
+                <input id="captcha" class="form-control {% if validatorMessageMap.captcha %} is-invalid {% endif %}"
+                  name="captcha" required>
 
                 <img class="thumbnail captcha mt-3 mb-2" src="{{ captcha_src }}" onclick="this.src='/captcha/flat?'+Math.random()" title="点击图片重新获取验证码">
+                {% if validatorMessageMap.captcha %}
+                  <span class="invalid-feedback" role="alert">
+                    <strong>{{ validatorMessageMap.captcha.0 }}</strong>
+                  </span>
+                {% endif %}
               </div>
             </div>
 

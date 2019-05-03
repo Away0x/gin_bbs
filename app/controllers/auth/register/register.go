@@ -5,8 +5,6 @@ import (
 	"gin_bbs/app/controllers"
 	userRequest "gin_bbs/app/requests/user"
 
-	"gin_bbs/pkg/ginutils/validate"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,10 +20,9 @@ func Register(c *gin.Context) {
 		Password:             c.PostForm("password"),
 		PasswordConfirmation: c.PostForm("password_confirmation"),
 	}
-	user, errors := userCreateForm.ValidateAndSave()
+	ok, user := userCreateForm.ValidateAndSave(c)
 
-	if len(errors) != 0 || user == nil {
-		validate.SaveValidateMessage(c, errors)
+	if !ok || user == nil {
 		controllers.RedirectRouter(c, "register")
 		return
 	}
