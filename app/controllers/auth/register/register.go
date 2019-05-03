@@ -6,10 +6,14 @@ import (
 	userRequest "gin_bbs/app/requests/user"
 
 	"gin_bbs/pkg/ginutils/captcha"
+	"gin_bbs/pkg/ginutils/flash"
+
+	"gin_bbs/app/helpers"
 
 	"github.com/gin-gonic/gin"
 )
 
+// 展示注册页面
 func ShowRegistrationForm(c *gin.Context) {
 	captcha := captcha.New("/captcha")
 
@@ -18,6 +22,7 @@ func ShowRegistrationForm(c *gin.Context) {
 	})
 }
 
+// 注册
 func Register(c *gin.Context) {
 	// 验证参数和创建用户
 	userCreateForm := &userRequest.UserCreateForm{
@@ -36,5 +41,8 @@ func Register(c *gin.Context) {
 	}
 
 	auth.Login(c, user)
+	if err := helpers.SendVerifyEmail(user); err != nil {
+		flash.NewDangerFlash(c, "邮件发送失败: "+err.Error())
+	}
 	controllers.RedirectRouter(c, "root")
 }

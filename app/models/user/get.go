@@ -1,6 +1,7 @@
 package user
 
 import (
+	"gin_bbs/app/models"
 	"gin_bbs/database"
 )
 
@@ -58,4 +59,9 @@ func All() (users []*User, err error) {
 func AllCount() (count int, err error) {
 	err = database.DB.Model(&User{}).Count(&count).Error
 	return
+}
+
+// IsActivated 是否已激活
+func (u *User) IsActivated() bool {
+	return u.Activated == models.TrueTinyint
 }

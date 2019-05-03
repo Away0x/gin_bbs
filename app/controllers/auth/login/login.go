@@ -10,10 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 展示登录页面
 func ShowLoginForm(c *gin.Context) {
 	controllers.Render(c, "auth/login", gin.H{})
 }
 
+// 登录
 func Login(c *gin.Context) {
 	// 验证参数并且获取用户
 	userLoginForm := &userRequest.UserLoginForm{
@@ -31,6 +33,7 @@ func Login(c *gin.Context) {
 	controllers.RedirectRouter(c, "root")
 }
 
+// 登出
 func Logout(c *gin.Context) {
 	auth.Logout(c)
 	flash.NewSuccessFlash(c, "您已成功退出！")

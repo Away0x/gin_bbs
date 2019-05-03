@@ -4,6 +4,7 @@ import (
 	"gin_bbs/pkg/ginutils/captcha"
 	"gin_bbs/pkg/ginutils/router"
 	"gin_bbs/routes/middleware"
+	"gin_bbs/routes/wrapper"
 
 	"gin_bbs/app/controllers/auth/login"
 	"gin_bbs/app/controllers/auth/password"
@@ -40,9 +41,9 @@ func registerWeb(r *router.MyRoute) {
 	verificationRouter := r.Group("/email")
 	{
 		verificationRouter.Register("GET", "verification.notice", "/verify", verification.Show)
-		verificationRouter.Register("GET", "verification.verify", "/verify/:id", verification.Verify)
+		verificationRouter.Register("GET", "verification.verify", "/verify/:token", verification.Verify)
 		verificationRouter.Register("GET", "verification.resend", "/resend",
 			middleware.RateLimiter(1*time.Minute, 6), // 1 分钟最多 6 次请求
-			verification.Resend)
+			wrapper.GetUser(verification.Resend))
 	}
 }

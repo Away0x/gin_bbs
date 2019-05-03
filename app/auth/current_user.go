@@ -9,13 +9,14 @@ import (
 )
 
 // SaveCurrentUserToContext : 保存用户数据到 context 中
-func SaveCurrentUserToContext(c *gin.Context) {
+func SaveCurrentUserToContext(c *gin.Context) *userModel.User {
 	user, err := getCurrentUserFromSession(c)
 	if err != nil {
-		return
+		return nil
 	}
 
 	c.Keys[config.AppConfig.ContextCurrentUserDataKey] = user
+	return user
 }
 
 // GetCurrentUserFromContext : 从 context 中获取用户模型
