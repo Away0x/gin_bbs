@@ -2,6 +2,7 @@ package user
 
 import (
 	userModel "gin_bbs/app/models/user"
+	"gin_bbs/pkg/ginutils/captcha"
 	"gin_bbs/pkg/ginutils/validate"
 
 	"github.com/gin-gonic/gin"
@@ -14,6 +15,9 @@ type UserCreateForm struct {
 	Email                string
 	Password             string
 	PasswordConfirmation string
+	// 验证码
+	Captcha   string
+	CaptchaID string
 }
 
 func (u *UserCreateForm) emailUniqueValidator() validate.ValidatorFunc {
@@ -22,6 +26,15 @@ func (u *UserCreateForm) emailUniqueValidator() validate.ValidatorFunc {
 			return ""
 		}
 		return "邮箱已经被注册过了"
+	}
+}
+
+func (u *UserCreateForm) captchaValidator() validate.ValidatorFunc {
+	return func() (msg string) {
+		if ok := captcha.Verify(u.CaptchaID, u.Captcha); ok {
+			return ""
+		}
+		return "验证码错误"
 	}
 }
 
@@ -43,6 +56,10 @@ func (u *UserCreateForm) RegisterValidators() validate.ValidatorMap {
 			validate.MixLengthValidator(u.Password, 6),
 			validate.EqualValidator(u.Password, u.PasswordConfirmation),
 		},
+		"captcha": {
+			validate.RequiredValidator(u.Name),
+			u.captchaValidator(),
+		},
 	}
 }
 
@@ -63,6 +80,10 @@ func (*UserCreateForm) RegisterMessages() validate.MessagesMap {
 			"密码不能为空",
 			"密码长度不能小于 6 个字符",
 			"两次输入的密码不一致",
+		},
+		"captcha": {
+			"验证码不能为空",
+			"验证码错误",
 		},
 	}
 }

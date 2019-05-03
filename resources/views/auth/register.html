@@ -72,8 +72,9 @@
               <div class="col-md-6">
                 <input id="captcha" class="form-control {% if validatorMessageMap.captcha %} is-invalid {% endif %}"
                   name="captcha" required>
+                <input type="hidden" name="captcha_id" value="{{ captcha.ID }}">
 
-                <img class="thumbnail captcha mt-3 mb-2" src="{{ captcha_src }}" onclick="this.src='/captcha/flat?'+Math.random()" title="点击图片重新获取验证码">
+                <img class="thumbnail captcha mt-3 mb-2" src="{{ captcha.ImageURL }}" onclick="this.src='{{ captcha.ImageURL }}?reload='+Math.random()" title="点击图片重新获取验证码">
                 {% if validatorMessageMap.captcha %}
                   <span class="invalid-feedback" role="alert">
                     <strong>{{ validatorMessageMap.captcha.0 }}</strong>

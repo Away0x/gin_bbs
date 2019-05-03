@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"gin_bbs/pkg/ginutils/captcha"
 	"gin_bbs/pkg/ginutils/router"
 
 	"gin_bbs/app/controllers/auth/login"
@@ -12,6 +13,7 @@ import (
 
 func registerWeb(r *router.MyRoute) {
 	r.Register("GET", "root", "/", page.Root)
+	r.Register("GET", "captcha", "/captcha/:id", captcha.Handler)
 
 	// ------------------------------------- Auth -------------------------------------
 	// 用户身份验证相关的路由
