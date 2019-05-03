@@ -2,11 +2,14 @@ package controllers
 
 import (
 	"gin_bbs/config"
+	"gin_bbs/pkg/ginutils"
 	"gin_bbs/pkg/ginutils/csrf"
 	"gin_bbs/pkg/ginutils/flash"
 	"gin_bbs/pkg/ginutils/oldvalue"
+	"gin_bbs/pkg/ginutils/router"
 	"gin_bbs/pkg/ginutils/validate"
 	"net/http"
+	"strconv"
 
 	"gin_bbs/app/auth"
 	viewmodels "gin_bbs/app/view_models"
@@ -60,4 +63,41 @@ func Render(c *gin.Context, tplPath string, data renderObj) {
 	}
 
 	c.HTML(http.StatusOK, tplPath+".html", obj)
+}
+
+// RenderError : 渲染错误页面
+func RenderError(c *gin.Context, code int, title, msg string) {
+	errorCode := code
+	if code == 419 || code == 403 || code == 429 {
+		errorCode = 403
+	}
+
+	c.HTML(code, "errors/error.html", pongo2.Context{
+		"errorTitle": title,
+		"errorMsg":   msg,
+		"errorCode":  errorCode,
+		"errorImg":   ginutils.StaticPath("/svg/" + strconv.Itoa(errorCode) + ".svg"),
+		"backUrl":    router.G("root"),
+	})
+}
+
+// Render403 -
+func Render403(c *gin.Context, msg string) {
+	RenderError(c, http.StatusForbidden, msg, msg)
+}
+
+// Render404 -
+func Render404(c *gin.Context) {
+	msg := "很抱歉！您浏览的页面不存在。"
+	RenderError(c, http.StatusNotFound, msg, msg)
+}
+
+// RenderUnauthorized -
+func RenderUnauthorized(c *gin.Context) {
+	Render403(c, "很抱歉，您没有权限访问该页面")
+}
+
+// RenderTooManyRequests -
+func RenderTooManyRequests(c *gin.Context) {
+	RenderError(c, 429, "太多请求", "很抱歉！您向我们的服务器发出太多请求了。")
 }

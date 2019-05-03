@@ -3,17 +3,19 @@ package routes
 import (
 	"gin_bbs/pkg/ginutils/captcha"
 	"gin_bbs/pkg/ginutils/router"
+	"gin_bbs/routes/middleware"
 
 	"gin_bbs/app/controllers/auth/login"
 	"gin_bbs/app/controllers/auth/password"
 	"gin_bbs/app/controllers/auth/register"
 	"gin_bbs/app/controllers/auth/verification"
 	"gin_bbs/app/controllers/page"
+	"time"
 )
 
 func registerWeb(r *router.MyRoute) {
 	r.Register("GET", "root", "/", page.Root)
-	r.Register("GET", "captcha", "/captcha/:id", captcha.Handler)
+	r.Register("GET", "captcha", "/captcha/:id", captcha.Handler) // 验证码
 
 	// ------------------------------------- Auth -------------------------------------
 	// 用户身份验证相关的路由
@@ -39,6 +41,8 @@ func registerWeb(r *router.MyRoute) {
 	{
 		verificationRouter.Register("GET", "verification.notice", "/verify", verification.Show)
 		verificationRouter.Register("GET", "verification.verify", "/verify/:id", verification.Verify)
-		verificationRouter.Register("GET", "verification.resend", "/resend", verification.Resend)
+		verificationRouter.Register("GET", "verification.resend", "/resend",
+			middleware.RateLimiter(1*time.Minute, 6), // 1 分钟最多 6 次请求
+			verification.Resend)
 	}
 }

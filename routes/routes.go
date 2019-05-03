@@ -8,6 +8,8 @@ import (
 	"gin_bbs/pkg/ginutils/router"
 	"gin_bbs/routes/middleware"
 
+	"gin_bbs/app/controllers"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,7 +27,7 @@ func Register(g *gin.Engine) *gin.Engine {
 	// ---------------------------------- 注册路由 ----------------------------------
 	// 404
 	g.NoRoute(func(c *gin.Context) {
-		// controllers.Render404(c)
+		controllers.Render404(c)
 	})
 
 	r := &router.MyRoute{Router: g}
