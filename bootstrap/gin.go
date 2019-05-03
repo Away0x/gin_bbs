@@ -1,11 +1,11 @@
 package bootstrap
 
 import (
+	"gin_bbs/app/controllers"
 	"gin_bbs/config"
-	"path"
-
 	"gin_bbs/pkg/ginutils"
 	pongo2utils "gin_bbs/pkg/ginutils/pongo2"
+	"path"
 
 	"github.com/flosch/pongo2"
 	"github.com/gin-gonic/gin"
@@ -23,8 +23,14 @@ func SetupGin(g *gin.Engine) {
 		EnableCsrf:     config.AppConfig.EnableCsrf,
 		CsrfParamName:  config.AppConfig.CsrfParamName,
 		CsrfHeaderName: config.AppConfig.CsrfHeaderName,
-		CsrfErrorHandler: func(c *gin.Context) {
-			c.String(403, "很抱歉！您的 Session 已过期，请刷新后再试一次。")
+		CsrfErrorHandler: func(c *gin.Context, inHeader bool) {
+			if inHeader {
+				c.JSON(403, gin.H{
+					"msg": "很抱歉！您的 Session 已过期，请刷新后再试一次。",
+				})
+			} else {
+				controllers.Render403(c, "很抱歉！您的 Session 已过期，请刷新后再试一次。")
+			}
 		},
 	})
 

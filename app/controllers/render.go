@@ -12,7 +12,7 @@ import (
 	"strconv"
 
 	"gin_bbs/app/auth"
-	viewmodels "gin_bbs/app/view_models"
+	"gin_bbs/app/viewmodels"
 
 	"github.com/flosch/pongo2"
 	"github.com/gin-gonic/gin"

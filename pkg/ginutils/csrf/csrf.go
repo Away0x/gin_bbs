@@ -51,7 +51,7 @@ func getCsrfTokenFromCookie(c *gin.Context) (token string) {
 }
 
 // 从 params 或 headers 中获取 csrf token
-func getCsrfTokenFromParamsOrHeader(c *gin.Context) (token string) {
+func getCsrfTokenFromParamsOrHeader(c *gin.Context) (token string, inHeader bool) {
 	req := c.Request
 
 	if req.Form == nil {
@@ -63,7 +63,8 @@ func getCsrfTokenFromParamsOrHeader(c *gin.Context) (token string) {
 	if token == "" {
 		// 从 headers 中获取
 		token = req.Header.Get(ginutils.GetGinUtilsConfig().CsrfHeaderName)
+		inHeader = true
 	}
 
-	return token
+	return
 }

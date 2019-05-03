@@ -12,7 +12,7 @@ type ConfigOption struct {
 	EnableCsrf       bool
 	CsrfParamName    string
 	CsrfHeaderName   string
-	CsrfErrorHandler func(*gin.Context)
+	CsrfErrorHandler func(*gin.Context, bool) // 二参表示 csrf token 是从 header 中拿到的
 }
 
 var (
@@ -32,7 +32,7 @@ func InitGinUtils(options ConfigOption) {
 	}
 
 	if config.EnableCsrf && config.CsrfErrorHandler == nil {
-		config.CsrfErrorHandler = func(c *gin.Context) {}
+		config.CsrfErrorHandler = func(c *gin.Context, inHeader bool) {}
 	}
 }
 

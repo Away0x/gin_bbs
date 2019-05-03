@@ -14,14 +14,18 @@ func CsrfMiddleware() gin.HandlerFunc {
 		if ginutils.GetGinUtilsConfig().EnableCsrf {
 			// cookie 中获取 csrf token (如没有则设置)
 			csrfToken := getCsrfTokenFromCookie(c)
+			method := c.Request.Method
 
-			// POST 并且开启了 csrf
-			if c.Request.Method == http.MethodPost {
+			// 非 GET 并且开启了 csrf
+			if method == http.MethodPost ||
+				method == http.MethodDelete ||
+				method == http.MethodPut ||
+				method == http.MethodPatch {
 				// params 中获取 csrf token
-				paramCsrfToken := getCsrfTokenFromParamsOrHeader(c)
+				paramCsrfToken, inHeader := getCsrfTokenFromParamsOrHeader(c)
 
 				if paramCsrfToken == "" || paramCsrfToken != csrfToken {
-					ginutils.GetGinUtilsConfig().CsrfErrorHandler(c)
+					ginutils.GetGinUtilsConfig().CsrfErrorHandler(c, inHeader)
 					c.Abort()
 					return
 				}
