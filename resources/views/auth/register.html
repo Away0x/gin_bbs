@@ -75,6 +75,10 @@
                 <input type="hidden" name="captcha_id" value="{{ captcha.ID }}">
 
                 <img class="thumbnail captcha mt-3 mb-2" src="{{ captcha.ImageURL }}" onclick="this.src='{{ captcha.ImageURL }}?reload='+Math.random()" title="点击图片重新获取验证码">
+                <!--音频验证码
+                <audio src="{{ captcha.AudioURL }}?lang=zh" controls="controls">
+                  Your browser does not support the audio tag.
+                </audio>-->
                 {% if validatorMessageMap.captcha %}
                   <span class="invalid-feedback" role="alert">
                     <strong>{{ validatorMessageMap.captcha.0 }}</strong>

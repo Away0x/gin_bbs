@@ -8,6 +8,7 @@ import (
 type Captcha struct {
 	ID       string
 	ImageURL string
+	AudioURL string
 }
 
 // New 获取验证码
@@ -17,6 +18,7 @@ func New(baseURL string) Captcha {
 	return Captcha{
 		ID:       id,
 		ImageURL: baseURL + "/" + id + ".png",
+		AudioURL: baseURL + "/" + id + ".wav",
 	}
 }
 
