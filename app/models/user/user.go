@@ -12,10 +12,11 @@ import (
 // User 用户模型
 type User struct {
 	models.BaseModel
-	Name     string `gorm:"column:name;type:varchar(255);not null"`
-	Email    string `gorm:"column:email;type:varchar(255);unique;not null"`
-	Avatar   string `gorm:"column:avatar;type:varchar(255);not null"`
-	Password string `gorm:"column:password;type:varchar(255);not null"`
+	Name         string `gorm:"column:name;type:varchar(255);not null"`
+	Email        string `gorm:"column:email;type:varchar(255);unique;not null"`
+	Avatar       string `gorm:"column:avatar;type:varchar(255);not null"`
+	Introduction string `gorm:"column:introduction;type:varchar(255);not null"`
+	Password     string `gorm:"column:password;type:varchar(255);not null"`
 	// 是否为管理员
 	IsAdmin uint `gorm:"column:is_admin;type:tinyint(1)"`
 	// 用户激活

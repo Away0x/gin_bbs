@@ -1,0 +1,44 @@
+{% extends "../layouts/app.html" %}
+
+{% block title %}编辑资料{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="col-md-8 offset-md-2">
+
+    <div class="card">
+      <div class="card-header">
+        <h4>
+          <i class="glyphicon glyphicon-edit"></i> 编辑个人资料
+        </h4>
+      </div>
+
+      <div class="card-body">
+
+        <form action="{% route 'users.update' currentUserData.ID %}" method="POST" accept-charset="UTF-8">
+          {{ csrfInput | safe }}
+
+          <div class="form-group">
+            <label for="name-field">用户名</label>
+            <input class="form-control" type="text" name="name" id="name-field"
+              value="{% if oldValue.Name %}{{ oldValue.Name }}{% else %}{{ currentUserData.Name }}{% endif %}" />
+          </div>
+          <div class="form-group">
+            <label for="email-field">邮 箱</label>
+            <input class="form-control" type="text" name="email" id="email-field"
+              value="{% if oldValue.Name %}{{ oldValue.Email }}{% else %}{{ currentUserData.Email }}{% endif %}" />
+          </div>
+          <div class="form-group">
+            <label for="introduction-field">个人简介</label>
+            <textarea name="introduction" id="introduction-field" class="form-control"
+              rows="3">{% if oldValue.Introduction %}{{ oldValue.Introduction }}{% else %}{{ currentUserData.Introduction }}{% endif %}</textarea>
+          </div>
+          <div class="well well-sm">
+            <button type="submit" class="btn btn-primary">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
