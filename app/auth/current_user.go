@@ -4,6 +4,7 @@ import (
 	"errors"
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/config"
+	"gin_bbs/pkg/ginutils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -52,4 +53,14 @@ func GetUserFromContextOrDataBase(c *gin.Context, id int) (*userModel.User, erro
 	}
 
 	return otherUser, nil
+}
+
+// GetUserFromParamIDOrContext : params 中存在 id 参数时，可用该方法去获取 user model
+func GetUserFromParamIDOrContext(c *gin.Context) (*userModel.User, error) {
+	id, err := ginutils.GetIntParam(c, "id")
+	if err != nil {
+		return nil, err
+	}
+
+	return GetUserFromContextOrDataBase(c, id)
 }

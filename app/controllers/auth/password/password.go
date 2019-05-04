@@ -20,15 +20,16 @@ func ShowLinkRequestForm(c *gin.Context) {
 // 发送密码重置链接
 func SendResetLinkEmail(c *gin.Context) {
 	email := c.PostForm("email")
-	ok, errArr, errMap := validate.RunInParams(true,
-		validate.ValidatorMap{"email": {
+	ok, errArr, errMap := validate.RunSingle("email",
+		[]validate.ValidatorFunc{
 			validate.RequiredValidator(email),
 			validate.MaxLengthValidator(email, 255),
 			validate.EmailValidator(email),
 			emailExistValidator(email),
-		}},
-		validate.MessagesMap{"email": {"邮箱不能为空", "邮箱长度不能大于 255 个字符", "邮箱格式错误"}},
+		},
+		[]string{"邮箱不能为空", "邮箱长度不能大于 255 个字符", "邮箱格式错误"},
 	)
+
 	if !ok {
 		validate.SaveValidateMessage(c, errArr, errMap)
 		controllers.RedirectRouter(c, "password.request")

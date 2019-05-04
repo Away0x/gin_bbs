@@ -7,9 +7,18 @@ import (
 
 // Get -
 func Get(id int) (*User, error) {
+	if cachedUser, ok := getFromCache(id); ok {
+		return cachedUser, nil
+	}
+
 	user := &User{}
-	d := database.DB.First(&user, id)
-	return user, d.Error
+	if err := database.DB.First(&user, id).Error; err != nil {
+		return nil, err
+	}
+
+	setToCache(user)
+
+	return user, nil
 }
 
 // GetByEmail -

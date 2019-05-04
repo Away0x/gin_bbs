@@ -41,11 +41,21 @@ func (*Validate) RegisterMessages() MessagesMap {
 
 // 执行验证
 func Run(v IValidate) (bool, []string, map[string][]string) {
-	return RunInParams(v.IsStrict(), v.RegisterValidators(), v.RegisterMessages())
+	return RunByParams(v.IsStrict(), v.RegisterValidators(), v.RegisterMessages())
+}
+
+// 只有一个字段要验证
+func RunSingle(keyName string, validatorFuncs []ValidatorFunc, messages []string) (bool, []string, map[string][]string) {
+	validatorMap := ValidatorMap{}
+	messagesMap := MessagesMap{}
+	validatorMap[keyName] = validatorFuncs
+	messagesMap[keyName] = messages
+
+	return RunByParams(true, validatorMap, messagesMap)
 }
 
 // 执行验证
-func RunInParams(strict bool, validatorMap ValidatorMap, messageMap MessagesMap) (ok bool, errArr []string, errMap map[string][]string) {
+func RunByParams(strict bool, validatorMap ValidatorMap, messageMap MessagesMap) (ok bool, errArr []string, errMap map[string][]string) {
 	errArr = make([]string, 0)
 	errMap = make(map[string][]string)
 	ok = true

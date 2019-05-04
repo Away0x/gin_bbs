@@ -51,6 +51,7 @@ func registerWeb(r *router.MyRoute) {
 	verificationRouter := r.Group("/email", middleware.Auth())
 	{
 		// 展示发送激活用户链接邮件的页面
+		// controller 中获取当前用户可使用 wrapper.GetUser 注入，或者使用 app/auth 里面的方法从 gin.Context 中获取
 		verificationRouter.Register("GET", "verification.notice", "/verify", wrapper.GetUser(verification.Show))
 		// 激活用户
 		verificationRouter.Register("GET", "verification.verify", "/verify/:token",
@@ -66,7 +67,7 @@ func registerWeb(r *router.MyRoute) {
 	userRouter := r.Group("/users")
 	{
 		// 显示用户个人信息页面
-		userRouter.Register("GET", "users.show", "/show/:id", wrapper.GetUser(user.Show))
+		userRouter.Register("GET", "users.show", "/show/:id", user.Show)
 		// 显示编辑个人资料页面
 		userRouter.Register("GET", "users.edit", "/edit/:id", user.Edit)
 		// 处理 edit 页面提交的更改

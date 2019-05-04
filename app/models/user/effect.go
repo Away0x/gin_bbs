@@ -13,6 +13,7 @@ func (u *User) Create() (err error) {
 		return err
 	}
 
+	setToCache(u)
 	return nil
 }
 
@@ -23,6 +24,7 @@ func (u *User) Update() (err error) {
 		return err
 	}
 
+	setToCache(u)
 	return nil
 }
 
@@ -37,5 +39,6 @@ func Delete(id int) (err error) {
 		return err
 	}
 
+	delCache(id)
 	return nil
 }

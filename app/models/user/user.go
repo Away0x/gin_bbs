@@ -6,7 +6,14 @@ import (
 	"errors"
 	"gin_bbs/app/models"
 	"gin_bbs/pkg/ginutils/utils"
+	"strconv"
 	"time"
+
+	"github.com/patrickmn/go-cache"
+)
+
+var (
+	userCache = cache.New(30*time.Minute, 1*time.Hour)
 )
 
 // User 用户模型
@@ -77,4 +84,27 @@ func (u *User) BeforeUpdate() (err error) {
 // ------------ private
 func passwordEncrypted(pwd string) (status bool) {
 	return len(pwd) == 60 // 长度等于 60 说明加密过了
+}
+
+func setToCache(user *User) {
+	key := strconv.Itoa(int(user.ID))
+	userCache.Set(key, user, cache.DefaultExpiration)
+}
+
+func getFromCache(id int) (*User, bool) {
+	cachedUser, ok := userCache.Get(strconv.Itoa(id))
+	if !ok {
+		return nil, false
+	}
+
+	u, ok := cachedUser.(*User)
+	if !ok {
+		return nil, false
+	}
+
+	return u, true
+}
+
+func delCache(id int) {
+	userCache.Delete(strconv.Itoa(id))
 }
