@@ -21,6 +21,13 @@ func Get(id int) (*User, error) {
 	return user, nil
 }
 
+// GetByName -
+func GetByName(name string) (*User, error) {
+	user := &User{}
+	d := database.DB.Where("name = ?", name).First(&user)
+	return user, d.Error
+}
+
 // GetByEmail -
 func GetByEmail(email string) (*User, error) {
 	user := &User{}

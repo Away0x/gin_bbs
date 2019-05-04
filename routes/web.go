@@ -71,6 +71,6 @@ func registerWeb(r *router.MyRoute) {
 		// 显示编辑个人资料页面
 		userRouter.Register("GET", "users.edit", "/edit/:id", user.Edit)
 		// 处理 edit 页面提交的更改
-		userRouter.Register("POST", "users.update", "/update/:id", user.Update)
+		userRouter.Register("POST", "users.update", "/update/:id", wrapper.GetUser(user.Update))
 	}
 }

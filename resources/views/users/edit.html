@@ -14,7 +14,7 @@
       </div>
 
       <div class="card-body">
-
+        {% include "../shared/_errors.html" %}
         <form action="{% route 'users.update' currentUserData.ID %}" method="POST" accept-charset="UTF-8">
           {{ csrfInput | safe }}
 

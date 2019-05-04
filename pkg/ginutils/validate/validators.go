@@ -42,6 +42,31 @@ func MaxLengthValidator(value string, maxStrLen int) ValidatorFunc {
 	}
 }
 
+// BetweenValidator - 限制字段的 string length
+func BetweenValidator(value string, minStrLen, maxStrLen int) ValidatorFunc {
+	return func() (msg string) {
+		l := len(value)
+
+		if l > maxStrLen || l < minStrLen {
+			return "$name 必须介于" + strconv.Itoa(minStrLen) + "-" + strconv.Itoa(maxStrLen) + "个字符之间"
+		}
+
+		return ""
+	}
+}
+
+// RegexpValidator 正则验证
+func RegexpValidator(value string, regexpStr string) ValidatorFunc {
+	return func() (msg string) {
+		ok, err := regexp.MatchString(regexpStr, value)
+		if !ok || err != nil {
+			return "$name 格式错误"
+		}
+
+		return ""
+	}
+}
+
 // EqualValidator -
 func EqualValidator(v1, v2 string, other ...string) ValidatorFunc {
 	return func() (msg string) {
