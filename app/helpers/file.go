@@ -8,6 +8,7 @@ import (
 	"mime/multipart"
 	"path"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -58,7 +59,8 @@ func SaveImage(f *multipart.FileHeader, folderName, file_prefix string) (string,
 	fileName, ext := CreateRandomFileName(f, file_prefix, ".png")
 	fullPath := GetPublicPath(ImagesUploadFolder + folderName + CreateBaseTimeFolderName())
 
-	if ext != ".png" && ext != ".jpg" {
+	ext = strings.ToLower(ext)
+	if ext != ".png" && ext != ".jpg" && ext != ".jpeg" && ext != ".bmp" && ext != ".gif" {
 		return "", errors.New("文件格式错误，不能上传 " + ext + "格式的文件")
 	}
 
