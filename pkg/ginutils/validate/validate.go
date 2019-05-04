@@ -40,12 +40,12 @@ func (*Validate) RegisterMessages() MessagesMap {
 }
 
 // 执行验证
-func Run(v IValidate) (bool, []string, map[string][]string) {
+func Run(v IValidate) (bool, []string, MessagesMap) {
 	return RunByParams(v.IsStrict(), v.RegisterValidators(), v.RegisterMessages())
 }
 
 // 只有一个字段要验证
-func RunSingle(keyName string, validatorFuncs []ValidatorFunc, messages []string) (bool, []string, map[string][]string) {
+func RunSingle(keyName string, validatorFuncs []ValidatorFunc, messages []string) (bool, []string, MessagesMap) {
 	validatorMap := ValidatorMap{}
 	messagesMap := MessagesMap{}
 	validatorMap[keyName] = validatorFuncs
@@ -55,9 +55,9 @@ func RunSingle(keyName string, validatorFuncs []ValidatorFunc, messages []string
 }
 
 // 执行验证
-func RunByParams(strict bool, validatorMap ValidatorMap, messageMap MessagesMap) (ok bool, errArr []string, errMap map[string][]string) {
+func RunByParams(strict bool, validatorMap ValidatorMap, messageMap MessagesMap) (ok bool, errArr []string, errMap MessagesMap) {
 	errArr = make([]string, 0)
-	errMap = make(map[string][]string)
+	errMap = make(MessagesMap)
 	ok = true
 
 	for key, validators := range validatorMap {
@@ -94,4 +94,10 @@ func RunByParams(strict bool, validatorMap ValidatorMap, messageMap MessagesMap)
 	}
 
 	return
+}
+
+// AddMessage 添加错误信息
+func AddMessage(keyName, msg string, errArr []string, errMap MessagesMap) ([]string, MessagesMap) {
+	errMap[keyName] = append(errMap[keyName], msg)
+	return append(errArr, msg), errMap
 }

@@ -2,7 +2,8 @@ package user
 
 import (
 	userModel "gin_bbs/app/models/user"
-	"gin_bbs/pkg/ginutils/captcha"
+	"gin_bbs/app/requests"
+	"gin_bbs/pkg/ginutils/flash"
 	"gin_bbs/pkg/ginutils/validate"
 
 	"github.com/gin-gonic/gin"
@@ -20,24 +21,6 @@ type UserCreateForm struct {
 	CaptchaID string
 }
 
-func (u *UserCreateForm) emailUniqueValidator() validate.ValidatorFunc {
-	return func() (msg string) {
-		if _, err := userModel.GetByEmail(u.Email); err != nil {
-			return ""
-		}
-		return "邮箱已经被注册过了"
-	}
-}
-
-func (u *UserCreateForm) captchaValidator() validate.ValidatorFunc {
-	return func() (msg string) {
-		if ok := captcha.Verify(u.CaptchaID, u.Captcha); ok {
-			return ""
-		}
-		return "验证码错误"
-	}
-}
-
 // RegisterValidators 注册验证器
 func (u *UserCreateForm) RegisterValidators() validate.ValidatorMap {
 	return validate.ValidatorMap{
@@ -49,7 +32,7 @@ func (u *UserCreateForm) RegisterValidators() validate.ValidatorMap {
 			validate.RequiredValidator(u.Email),
 			validate.MaxLengthValidator(u.Email, 255),
 			validate.EmailValidator(u.Email),
-			u.emailUniqueValidator(),
+			requests.EmailUniqueValidator(u.Email),
 		},
 		"password": {
 			validate.RequiredValidator(u.Password),
@@ -57,8 +40,8 @@ func (u *UserCreateForm) RegisterValidators() validate.ValidatorMap {
 			validate.EqualValidator(u.Password, u.PasswordConfirmation),
 		},
 		"captcha": {
-			validate.RequiredValidator(u.Name),
-			u.captchaValidator(),
+			validate.RequiredValidator(u.Captcha),
+			requests.CaptchaValidator(u.CaptchaID, u.Captcha),
 		},
 	}
 }
@@ -104,11 +87,7 @@ func (u *UserCreateForm) ValidateAndSave(c *gin.Context) (bool, *userModel.User)
 	}
 
 	if err := user.Create(); err != nil {
-		msg := "用户创建失败: " + err.Error()
-		errMap["other"] = make([]string, 0)
-		errMap["other"] = append(errMap["other"], msg)
-		errArr = append(errArr, msg)
-		validate.SaveValidateMessage(c, errArr, errMap)
+		flash.NewDangerFlash(c, "用户创建失败: "+err.Error())
 		return false, nil
 	}
 

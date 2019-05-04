@@ -72,12 +72,8 @@ func ReadValidateMessageMap(c *gin.Context) map[string][]string {
 	return data
 }
 
-// RunAndSaveToFlash : 执行验证并且将错误信息写入 flash 中
-func RunAndSaveToFlash(c *gin.Context, v IValidate) {
-	ok, errArr, errMap := Run(v)
-	if ok {
-		return
-	}
-
+// AddMessageAndSaveToFlash 添加错误信息并且保存到 flash 中
+func AddMessageAndSaveToFlash(c *gin.Context, keyName, msg string, errArr []string, errMap MessagesMap) {
+	errArr, errMap = AddMessage(keyName, msg, errArr, errMap)
 	SaveValidateMessage(c, errArr, errMap)
 }
