@@ -40,17 +40,20 @@ func Update(c *gin.Context, currentUser *userModel.User) {
 	}
 
 	// 验证参数并更新用户
+	file, _ := c.FormFile("avatar")
 	userForm := &userRequest.UserUpdateForm{
 		ID:           id,
 		Name:         c.PostForm("name"),
 		Email:        c.PostForm("email"),
 		Introduction: c.PostForm("introduction"),
+		Avatar:       file,
 	}
+
 	if ok := userForm.ValidateAndUpdate(c, currentUser); !ok {
 		controllers.RedirectRouter(c, "users.edit", currentUser.ID)
 		return
 	}
 
 	flash.NewSuccessFlash(c, "个人资料更新成功！")
-	controllers.RedirectRouter(c, "users.edit", currentUser.ID)
+	controllers.RedirectRouter(c, "users.show", currentUser.ID)
 }

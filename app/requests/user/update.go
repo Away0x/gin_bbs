@@ -1,10 +1,12 @@
 package user
 
 import (
+	"gin_bbs/app/helpers"
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/app/requests"
 	"gin_bbs/pkg/ginutils/flash"
 	"gin_bbs/pkg/ginutils/validate"
+	"mime/multipart"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +17,17 @@ type UserUpdateForm struct {
 	Name         string
 	Email        string
 	Introduction string
+	Avatar       *multipart.FileHeader
+}
+
+func avatarValidator(avatar *multipart.FileHeader) validate.ValidatorFunc {
+	return func() string {
+		if avatar == nil {
+			return ""
+		}
+
+		return ""
+	}
 }
 
 // IsStrict 有错误即退出
@@ -39,6 +52,9 @@ func (u *UserUpdateForm) RegisterValidators() validate.ValidatorMap {
 		"introduction": {
 			validate.MaxLengthValidator(u.Introduction, 80),
 		},
+		"avatar": {
+			avatarValidator(u.Avatar),
+		},
 	}
 }
 
@@ -49,6 +65,9 @@ func (*UserUpdateForm) RegisterMessages() validate.MessagesMap {
 			"用户名必须介于 3 - 25 个字符之间",
 			"用户名只支持英文、数字、横杠和下划线。",
 			"用户名已被占用，请重新填写",
+		},
+		"introduction": {
+			"用户介绍不得大于 80 个字",
 		},
 	}
 }
@@ -65,6 +84,15 @@ func (u *UserUpdateForm) ValidateAndUpdate(c *gin.Context, user *userModel.User)
 	user.Name = u.Name
 	user.Email = u.Email
 	user.Introduction = u.Introduction
+	// 如果有上传用户头像
+	if u.Avatar != nil {
+		avatarPath, err := helpers.SaveImage(u.Avatar, "avatars", user.GetIDstring())
+		if err != nil {
+			validate.AddMessageAndSaveToFlash(c, "avatar", "头像上传失败: "+err.Error(), errArr, errMap)
+			return false
+		}
+		user.Avatar = avatarPath
+	}
 
 	if err := user.Update(); err != nil {
 		flash.NewDangerFlash(c, "用户更新失败: "+err.Error())
