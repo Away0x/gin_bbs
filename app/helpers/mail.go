@@ -37,7 +37,7 @@ func SendMail(mailTo []string, subject string, templateName string, tplData map[
 	return mail.Send()
 }
 
-// 发送激活用户的邮件
+// SendVerifyEmail 发送激活用户的邮件
 func SendVerifyEmail(u *userModel.User) error {
 	subject := "感谢注册 Weibo 应用！请确认你的邮箱。"
 	tpl := "mail/verify.html"
@@ -46,7 +46,7 @@ func SendVerifyEmail(u *userModel.User) error {
 	return SendMail([]string{u.Email}, subject, tpl, map[string]interface{}{"URL": verifyURL})
 }
 
-// 发送重置密码邮件
+// SendResetPasswordEmail 发送重置密码邮件
 func SendResetPasswordEmail(pwd *passwordResetModel.PasswordReset) error {
 	subject := "重置密码！请确认你的邮箱。"
 	tpl := "mail/reset_password.html"

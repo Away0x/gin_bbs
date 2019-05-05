@@ -11,7 +11,7 @@ import (
 	"path"
 )
 
-// 判断所给路径文件/文件夹是否存在
+// IsExist 判断所给路径文件/文件夹是否存在
 func IsExist(path string) bool {
 	_, err := os.Stat(path)
 	if err == nil {
@@ -25,7 +25,7 @@ func IsExist(path string) bool {
 	return false
 }
 
-// 会递归创建文件夹
+// CreateDir 会递归创建文件夹
 func CreateDir(dirPath string) error {
 	if !IsExist(dirPath) {
 		return os.MkdirAll(dirPath, os.ModePerm)
@@ -34,7 +34,7 @@ func CreateDir(dirPath string) error {
 	return nil
 }
 
-// 保存文件
+// SaveFile 保存文件
 func SaveFile(file *multipart.FileHeader, filePath, fileName string) error {
 	if err := CreateDir(filePath); err != nil {
 		return err

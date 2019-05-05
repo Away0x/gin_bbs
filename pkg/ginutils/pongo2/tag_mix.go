@@ -3,6 +3,7 @@ package pongo2
 import (
 	"encoding/json"
 	"gin_bbs/pkg/ginutils"
+	ginfile "gin_bbs/pkg/ginutils/file"
 	"os"
 
 	"github.com/flosch/pongo2"
@@ -23,16 +24,16 @@ func (node *tagMixTag) Execute(ctx *pongo2.ExecutionContext, writer pongo2.Templ
 
 	if result == "" {
 		filename := ginutils.GetGinUtilsConfig().MixFilePath
-		file, err := os.Open(filename)
+		f, err := os.Open(filename)
 		if err != nil {
-			writer.WriteString(ginutils.StaticPath(staticFilePath))
+			writer.WriteString(ginfile.StaticPath(staticFilePath))
 			return nil
 		}
-		defer file.Close()
+		defer f.Close()
 
-		dec := json.NewDecoder(file)
+		dec := json.NewDecoder(f)
 		if err := dec.Decode(&manifests); err != nil {
-			writer.WriteString(ginutils.StaticPath(staticFilePath))
+			writer.WriteString(ginfile.StaticPath(staticFilePath))
 			return nil
 		}
 
@@ -44,11 +45,11 @@ func (node *tagMixTag) Execute(ctx *pongo2.ExecutionContext, writer pongo2.Templ
 	}
 
 	if result == "" {
-		writer.WriteString(ginutils.StaticPath(staticFilePath))
+		writer.WriteString(ginfile.StaticPath(staticFilePath))
 		return nil
 	}
 
-	writer.WriteString(ginutils.StaticPath(result))
+	writer.WriteString(ginfile.StaticPath(result))
 	return nil
 }
 

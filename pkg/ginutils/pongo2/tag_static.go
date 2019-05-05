@@ -1,7 +1,7 @@
 package pongo2
 
 import (
-	"gin_bbs/pkg/ginutils"
+	ginfile "gin_bbs/pkg/ginutils/file"
 
 	"github.com/flosch/pongo2"
 )
@@ -21,17 +21,17 @@ func (node *tagStaticTag) Execute(ctx *pongo2.ExecutionContext, writer pongo2.Te
 			return err
 		}
 
-		path = ginutils.StaticPath(val.String())
+		path = ginfile.StaticPath(val.String())
 	} else if node.path != "" {
 		// 之前存储的是字符串
-		path = ginutils.StaticPath(node.path)
+		path = ginfile.StaticPath(node.path)
 	}
 
 	writer.WriteString(path)
 	return nil
 }
 
-// 生成项目静态文件地址
+// StaticTag 生成项目静态文件地址
 func StaticTag(doc *pongo2.Parser, start *pongo2.Token, arguments *pongo2.Parser) (pongo2.INodeTag, *pongo2.Error) {
 	staticNode := &tagStaticTag{path: "", expr: nil}
 

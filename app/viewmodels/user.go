@@ -2,7 +2,7 @@ package viewmodels
 
 import (
 	userModel "gin_bbs/app/models/user"
-	"gin_bbs/pkg/time"
+	gintime "gin_bbs/pkg/ginutils/time"
 )
 
 // UserViewModel 用户
@@ -23,6 +23,6 @@ func NewUserViewModelSerializer(u *userModel.User) *UserViewModel {
 		Email:        u.Email,
 		Avatar:       u.Avatar,
 		Introduction: u.Introduction,
-		CreateAt:     time.SinceForHuman(u.CreatedAt),
+		CreateAt:     gintime.SinceForHuman(u.CreatedAt),
 	}
 }

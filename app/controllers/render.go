@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"gin_bbs/config"
-	"gin_bbs/pkg/ginutils"
 	"gin_bbs/pkg/ginutils/csrf"
+	ginfile "gin_bbs/pkg/ginutils/file"
 	"gin_bbs/pkg/ginutils/flash"
 	"gin_bbs/pkg/ginutils/oldvalue"
 	"gin_bbs/pkg/ginutils/router"
@@ -74,7 +74,7 @@ func RenderError(c *gin.Context, code int, title, msg string) {
 		"errorTitle": title,
 		"errorMsg":   msg,
 		"errorCode":  errorCode,
-		"errorImg":   ginutils.StaticPath("/svg/" + strconv.Itoa(errorCode) + ".svg"),
+		"errorImg":   ginfile.StaticPath("/svg/" + strconv.Itoa(errorCode) + ".svg"),
 		"backUrl":    router.G("root"),
 	})
 }

@@ -44,11 +44,3 @@ func GetGinUtilsConfig() *ConfigOption {
 
 	return config
 }
-
-// StaticPath 生成项目静态文件地址
-func StaticPath(staticFilePath string) string {
-	if string(staticFilePath[0]) == "/" {
-		return "/" + GetGinUtilsConfig().PublicPath + staticFilePath
-	}
-	return "/" + GetGinUtilsConfig().PublicPath + "/" + staticFilePath
-}
