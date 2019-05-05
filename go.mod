@@ -6,7 +6,6 @@ require (
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
 	github.com/flosch/pongo2 v0.0.0-20181225140029-79872a7b2769
 	github.com/fsnotify/fsnotify v1.4.7
-	github.com/gabriel-vasile/mimetype v0.3.6
 	github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3 // indirect
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-sql-driver/mysql v1.4.1

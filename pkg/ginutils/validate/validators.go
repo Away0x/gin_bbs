@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/gabriel-vasile/mimetype"
+	"gin_bbs/pkg/mimetype"
 )
 
 // RequiredValidator : value 必须存在
