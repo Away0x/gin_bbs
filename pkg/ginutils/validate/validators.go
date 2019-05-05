@@ -146,6 +146,14 @@ func ImageDimensionsValidator(f *multipart.FileHeader, options DimensionsOptions
 		if err != nil {
 			return "$name 解码失败"
 		}
+		/* 或者也可这样获取图片宽高
+		   img, _, err := image.Decode(src)
+		   if err != nil {
+		     return "$name 解码失败"
+		   }
+		   imgWidth := img.Bounds().Dx()
+		   imgHeight := img.Bounds().Dy()
+		*/
 
 		if options.MinWidth != 0 {
 			if config.Width < options.MinWidth {

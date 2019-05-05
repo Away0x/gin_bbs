@@ -3,6 +3,7 @@ module gin_bbs
 require (
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/denisenkom/go-mssqldb v0.0.0-20190423183735-731ef375ac02 // indirect
+	github.com/disintegration/imaging v1.6.0
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
 	github.com/flosch/pongo2 v0.0.0-20181225140029-79872a7b2769
 	github.com/fsnotify/fsnotify v1.4.7

@@ -84,7 +84,7 @@ func (u *UserUpdateForm) ValidateAndUpdate(c *gin.Context, user *userModel.User)
 	user.Introduction = u.Introduction
 	// 如果有上传用户头像
 	if u.Avatar != nil {
-		avatarPath, err := helpers.SaveImage(u.Avatar, "avatars", user.GetIDstring())
+		avatarPath, err := helpers.SaveImage(u.Avatar, "avatars", user.GetIDstring(), 416)
 		if err != nil {
 			validate.AddMessageAndSaveToFlash(c, "avatar", "头像上传失败: "+err.Error(), errArr, errMap)
 			return false

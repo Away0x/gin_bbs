@@ -17,9 +17,11 @@ const (
 )
 
 // SaveImage 保存图片
-func SaveImage(f *multipart.FileHeader, folderName, filePrefix string) (string, error) {
+// filePrefix: 文件名前缀
+// maxWidth: 图片最大宽度，0 为不限制
+func SaveImage(f *multipart.FileHeader, folderName, filePrefix string, maxWidth int) (string, error) {
 	fileName, ext := ginfile.CreateRandomFileName(f, filePrefix, ".png")
-	fullPath := ginfile.PublicPath(ImagesUploadFolder + folderName + ginfile.CreateBaseTimeFolderName())
+	folderPath := ginfile.PublicPath(ImagesUploadFolder + folderName + ginfile.CreateBaseTimeFolderName())
 
 	ext = strings.ToLower(ext)
 	if ext != ".png" && ext != ".jpg" && ext != ".jpeg" && ext != ".bmp" && ext != ".gif" {
@@ -33,15 +35,14 @@ func SaveImage(f *multipart.FileHeader, folderName, filePrefix string) (string, 
 	}
 	defer src.Close()
 
-	if err := ginfile.SaveFile(src, fullPath, fileName); err != nil {
+	if err := ginfile.SaveFile(src, folderPath, fileName); err != nil {
 		return "", err
 	}
-	namePath := path.Join(fullPath, fileName)
+	filePath := path.Join(folderPath, fileName)
+	// 需要 resize 图像
+	if maxWidth > 0 {
+		ginfile.ReduceImageSize(filePath, maxWidth)
+	}
 
-	return config.AppConfig.URL + "/" + namePath, nil
-}
-
-// ReduceImageSize 裁剪图片
-func ReduceImageSize() {
-
+	return config.AppConfig.URL + "/" + filePath, nil
 }
