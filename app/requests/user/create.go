@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 以后可以改为 tag 来调用验证器函数
+// UserCreateForm 以后可以改为 tag 来调用验证器函数
 type UserCreateForm struct {
 	validate.Validate
 	Name                 string

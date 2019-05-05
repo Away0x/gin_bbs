@@ -20,16 +20,6 @@ type UserUpdateForm struct {
 	Avatar       *multipart.FileHeader
 }
 
-func avatarValidator(avatar *multipart.FileHeader) validate.ValidatorFunc {
-	return func() string {
-		if avatar == nil {
-			return ""
-		}
-
-		return ""
-	}
-}
-
 // IsStrict 有错误即退出
 func (*UserUpdateForm) IsStrict() bool {
 	return true
@@ -53,11 +43,13 @@ func (u *UserUpdateForm) RegisterValidators() validate.ValidatorMap {
 			validate.MaxLengthValidator(u.Introduction, 80),
 		},
 		"avatar": {
-			avatarValidator(u.Avatar),
+			validate.MimetypeValidator(u.Avatar, []string{"jpeg", "bmp", "png", "gif"}),
+			validate.ImageDimensionsValidator(u.Avatar, validate.DimensionsOptions{MinWidth: 208, MinHeight: 208}),
 		},
 	}
 }
 
+// RegisterMessages 错误信息
 func (*UserUpdateForm) RegisterMessages() validate.MessagesMap {
 	return validate.MessagesMap{
 		"name": {
@@ -68,6 +60,10 @@ func (*UserUpdateForm) RegisterMessages() validate.MessagesMap {
 		},
 		"introduction": {
 			"用户介绍不得大于 80 个字",
+		},
+		"avatar": {
+			"头像必须是 jpeg, bmp, png, gif 格式的图片",
+			"图片的清晰度不够，宽和高需要 208px 以上",
 		},
 	}
 }

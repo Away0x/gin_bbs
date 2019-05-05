@@ -1,6 +1,8 @@
 package validate
 
 import (
+	"image"
+	"mime/multipart"
 	"regexp"
 	"strconv"
 )
@@ -91,6 +93,64 @@ func EmailValidator(value string) ValidatorFunc {
 
 		if !status {
 			return "$name 邮箱格式错误"
+		}
+
+		return ""
+	}
+}
+
+// MimetypeValidator 文件 mimetype 校验
+func MimetypeValidator(file *multipart.FileHeader, mimes []string) ValidatorFunc {
+	return func() string {
+
+		return ""
+	}
+}
+
+// DimensionsOptions -
+type DimensionsOptions struct {
+	MinWidth  int // px
+	MinHeight int // px
+	MaxWidth  int // px
+	MaxHeight int // px
+}
+
+// ImageDimensionsValidator 图片分辨率校验
+func ImageDimensionsValidator(f *multipart.FileHeader, options DimensionsOptions) ValidatorFunc {
+	return func() string {
+		src, err := f.Open()
+		if err != nil {
+			return "$name 打开失败"
+		}
+		defer src.Close()
+
+		config, _, err := image.DecodeConfig(src)
+		if err != nil {
+			return "$name 解码失败"
+		}
+
+		if options.MinWidth != 0 {
+			if config.Width < options.MinWidth {
+				return "$name 宽度不能小于 " + strconv.Itoa(options.MinWidth) + "px"
+			}
+		}
+
+		if options.MinHeight != 0 {
+			if config.Height < options.MinHeight {
+				return "$name 高度不能小于 " + strconv.Itoa(options.MinHeight) + "px"
+			}
+		}
+
+		if options.MaxWidth != 0 {
+			if config.Width > options.MaxWidth {
+				return "$name 宽度不能大于 " + strconv.Itoa(options.MaxWidth) + "px"
+			}
+		}
+
+		if options.MaxHeight != 0 {
+			if config.Height > options.MaxHeight {
+				return "$name 高度不能大于 " + strconv.Itoa(options.MaxHeight) + "px"
+			}
 		}
 
 		return ""

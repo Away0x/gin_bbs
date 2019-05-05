@@ -53,6 +53,7 @@
 - [x] 前端构建 (typescript、sass ...)
 - [x] 验证码
 - [x] pongo2 template
+- [x] 文件上传
 - [ ] 基于 Vue 的管理员后台系统
 
 
