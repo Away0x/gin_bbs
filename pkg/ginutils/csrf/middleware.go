@@ -7,10 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CsrfMiddleware : csrf middleware
-func CsrfMiddleware() gin.HandlerFunc {
+// Middleware : csrf middleware
+// errorFn: csrf 验证不通过时执行的 handler
+func Middleware(errorFn func(*gin.Context, bool)) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		if ginutils.GetGinUtilsConfig().EnableCsrf {
 			// cookie 中获取 csrf token (如没有则设置)
 			csrfToken := getCsrfTokenFromCookie(c)
@@ -25,7 +25,7 @@ func CsrfMiddleware() gin.HandlerFunc {
 				paramCsrfToken, inHeader := getCsrfTokenFromParamsOrHeader(c)
 
 				if paramCsrfToken == "" || paramCsrfToken != csrfToken {
-					ginutils.GetGinUtilsConfig().CsrfErrorHandler(c, inHeader)
+					errorFn(c, inHeader)
 					c.Abort()
 					return
 				}

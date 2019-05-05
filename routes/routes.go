@@ -20,9 +20,16 @@ func Register(g *gin.Engine) *gin.Engine {
 	g.Use(gin.Recovery())
 	g.Use(gin.Logger())
 	// 自定义全局中间件
-	g.Use(last.LastMiddleware())              // 记录上一次请求信息
-	g.Use(session.SessionMiddleware())        // session
-	g.Use(csrf.CsrfMiddleware())              // csrf
+	g.Use(last.LastMiddleware())       // 记录上一次请求信息
+	g.Use(session.SessionMiddleware()) // session
+	// csrf
+	g.Use(csrf.Middleware(func(c *gin.Context, inHeader bool) {
+		if inHeader {
+			c.JSON(403, gin.H{"msg": "很抱歉！您的 Session 已过期，请刷新后再试一次。"})
+		} else {
+			controllers.Render403(c, "很抱歉！您的 Session 已过期，请刷新后再试一次。")
+		}
+	}))
 	g.Use(oldvalue.OldValueMiddleware())      // 记忆上次表单提交的内容，消费即消失
 	g.Use(middleware.CurrentUserMiddleware()) // 中间件中会从 session 中获取到 current user model
 
