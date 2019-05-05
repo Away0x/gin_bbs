@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"io"
 	"io/ioutil"
-	"mime/multipart"
 	"os"
 	"path"
 )
@@ -35,16 +34,10 @@ func CreateDir(dirPath string) error {
 }
 
 // SaveFile 保存文件
-func SaveFile(file *multipart.FileHeader, filePath, fileName string) error {
+func SaveFile(f io.Reader, filePath, fileName string) error {
 	if err := CreateDir(filePath); err != nil {
 		return err
 	}
-
-	src, err := file.Open()
-	if err != nil {
-		return err
-	}
-	defer src.Close()
 
 	out, err := os.Create(path.Join(filePath, fileName))
 	if err != nil {
@@ -52,7 +45,7 @@ func SaveFile(file *multipart.FileHeader, filePath, fileName string) error {
 	}
 	defer out.Close()
 
-	if _, err = io.Copy(out, src); err != nil {
+	if _, err = io.Copy(out, f); err != nil {
 		return err
 	}
 

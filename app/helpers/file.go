@@ -5,6 +5,7 @@ import (
 	"gin_bbs/config"
 	ginfile "gin_bbs/pkg/ginutils/file"
 	"mime/multipart"
+	"path"
 	"strings"
 )
 
@@ -25,9 +26,22 @@ func SaveImage(f *multipart.FileHeader, folderName, filePrefix string) (string, 
 		return "", errors.New("文件格式错误，不能上传 " + ext + "格式的文件")
 	}
 
-	if err := ginfile.SaveFile(f, fullPath, fileName); err != nil {
+	// 保存
+	src, err := f.Open()
+	if err != nil {
 		return "", err
 	}
+	defer src.Close()
 
-	return config.AppConfig.URL + "/" + fullPath + "/" + fileName, nil
+	if err := ginfile.SaveFile(src, fullPath, fileName); err != nil {
+		return "", err
+	}
+	namePath := path.Join(fullPath, fileName)
+
+	return config.AppConfig.URL + "/" + namePath, nil
+}
+
+// ReduceImageSize 裁剪图片
+func ReduceImageSize() {
+
 }
