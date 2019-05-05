@@ -6,6 +6,10 @@ import (
 
 // ReduceImageSize resize 图片
 func ReduceImageSize(imgPath string, maxWidth int) error {
+	if maxWidth <= 0 {
+		return nil
+	}
+
 	img, err := imaging.Open(imgPath)
 	if err != nil {
 		return err

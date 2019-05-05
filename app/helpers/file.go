@@ -38,6 +38,7 @@ func SaveImage(f *multipart.FileHeader, folderName, filePrefix string, maxWidth 
 	if err := ginfile.SaveFile(src, folderPath, fileName); err != nil {
 		return "", err
 	}
+
 	filePath := path.Join(folderPath, fileName)
 	// 需要 resize 图像
 	if maxWidth > 0 {
