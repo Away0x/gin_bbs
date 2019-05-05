@@ -23,7 +23,11 @@ func SetupDB(needMock bool) (*gorm.DB, error) {
 	)
 
 	// 只有非 release 时才可 mock
-	if config.AppConfig.RunMode != config.RunmodeRelease && needMock {
+	if needMock {
+		if config.AppConfig.RunMode == config.RunmodeRelease {
+			panic("[mock] 请在非生产环境中使用")
+		}
+
 		fmt.Print("\n\n-------------------------------------------------- MOCK --------------------------------------------------\n\n")
 		factory.Mock()
 		return db, errors.New("mock data")
