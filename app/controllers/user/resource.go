@@ -10,6 +10,8 @@ import (
 	"gin_bbs/pkg/ginutils"
 	"gin_bbs/pkg/ginutils/flash"
 
+	"gin_bbs/app/policies"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,7 +29,18 @@ func Show(c *gin.Context) {
 }
 
 // 编辑用户信息页面
-func Edit(c *gin.Context) {
+func Edit(c *gin.Context, currentUser *userModel.User) {
+	id, err := ginutils.GetIntParam(c, "id")
+	if err != nil {
+		controllers.Render404(c)
+		return
+	}
+
+	// 只能更新自己
+	if ok := policies.UserPolicyUpdate(c, currentUser, id); !ok {
+		return
+	}
+
 	controllers.Render(c, "users/edit", gin.H{})
 }
 
@@ -36,6 +49,11 @@ func Update(c *gin.Context, currentUser *userModel.User) {
 	id, err := ginutils.GetIntParam(c, "id")
 	if err != nil {
 		controllers.Render404(c)
+		return
+	}
+
+	// 只能更新自己
+	if ok := policies.UserPolicyUpdate(c, currentUser, id); !ok {
 		return
 	}
 
