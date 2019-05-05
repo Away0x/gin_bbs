@@ -4,6 +4,7 @@ import (
 	"gin_bbs/app/helpers"
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/app/requests"
+	"gin_bbs/pkg/constants"
 	"gin_bbs/pkg/ginutils/flash"
 	"gin_bbs/pkg/ginutils/validate"
 	"mime/multipart"
@@ -11,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// UserUpdateForm -
 type UserUpdateForm struct {
 	validate.Validate
 	ID           int
@@ -31,7 +33,7 @@ func (u *UserUpdateForm) RegisterValidators() validate.ValidatorMap {
 		"name": {
 			validate.RequiredValidator(u.Name),
 			validate.BetweenValidator(u.Name, 3, 25),
-			validate.RegexpValidator(u.Name, `^[A-Za-z0-9\-\_]+$`),
+			validate.RegexpValidator(u.Name, constants.UserNameRegex),
 			requests.NameUniqueValidator(u.Name, u.ID),
 		},
 		"email": {
@@ -43,7 +45,7 @@ func (u *UserUpdateForm) RegisterValidators() validate.ValidatorMap {
 			validate.MaxLengthValidator(u.Introduction, 80),
 		},
 		"avatar": {
-			validate.MimetypeValidator(u.Avatar, []string{"jpeg", "bmp", "png", "gif"}),
+			validate.MimetypeValidator(u.Avatar, constants.UploadImageMimetypes),
 			validate.ImageDimensionsValidator(u.Avatar, validate.DimensionsOptions{MinWidth: 208, MinHeight: 208}),
 		},
 	}

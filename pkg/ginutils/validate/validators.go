@@ -5,6 +5,8 @@ import (
 	"mime/multipart"
 	"regexp"
 	"strconv"
+
+	"github.com/gabriel-vasile/mimetype"
 )
 
 // RequiredValidator : value 必须存在
@@ -100,10 +102,26 @@ func EmailValidator(value string) ValidatorFunc {
 }
 
 // MimetypeValidator 文件 mimetype 校验
-func MimetypeValidator(file *multipart.FileHeader, mimes []string) ValidatorFunc {
+func MimetypeValidator(f *multipart.FileHeader, mimes []string) ValidatorFunc {
 	return func() string {
+		src, err := f.Open()
+		if err != nil {
+			return "$name 打开失败"
+		}
+		defer src.Close()
 
-		return ""
+		_, ext, err := mimetype.DetectReader(src)
+		if err != nil {
+			return "$name 解码失败"
+		}
+
+		for _, m := range mimes {
+			if m == ext {
+				return ""
+			}
+		}
+
+		return "$name 格式错误"
 	}
 }
 
