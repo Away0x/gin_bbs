@@ -7,6 +7,7 @@ import (
 	"gin_bbs/app/models/user"
 	"gin_bbs/config"
 	"gin_bbs/database"
+	"gin_bbs/database/factory"
 
 	"github.com/jinzhu/gorm"
 )
@@ -21,22 +22,12 @@ func SetupDB(needMock bool) (*gorm.DB, error) {
 		&passwordreset.PasswordReset{},
 	)
 
-	// mock data
-	if do := factoryMake(needMock); do {
+	// 只有非 release 时才可 mock
+	if config.AppConfig.RunMode != config.RunmodeRelease && needMock {
+		fmt.Print("\n\n-------------------------------------------------- MOCK --------------------------------------------------\n\n")
+		factory.Mock()
 		return db, errors.New("mock data")
 	}
 
 	return db, nil
-}
-
-// 数据 mock
-func factoryMake(needMock bool) (do bool) {
-	// 只有非 release 时才可用该函数
-	if config.AppConfig.RunMode == config.RunmodeRelease || !needMock {
-		return false
-	}
-
-	fmt.Print("\n\n-------------------------------------------------- MOCK --------------------------------------------------\n\n")
-	// factory function
-	return true
 }

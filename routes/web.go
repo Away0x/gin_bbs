@@ -69,8 +69,8 @@ func registerWeb(r *router.MyRoute) {
 		// 显示用户个人信息页面
 		userRouter.Register("GET", "users.show", "/show/:id", user.Show)
 		// 显示编辑个人资料页面
-		userRouter.Register("GET", "users.edit", "/edit/:id", user.Edit)
+		userRouter.Register("GET", "users.edit", "/edit/:id", middleware.Auth(), user.Edit)
 		// 处理 edit 页面提交的更改
-		userRouter.Register("POST", "users.update", "/update/:id", wrapper.GetUser(user.Update))
+		userRouter.Register("POST", "users.update", "/update/:id", middleware.Auth(), wrapper.GetUser(user.Update))
 	}
 }
