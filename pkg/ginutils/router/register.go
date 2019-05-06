@@ -4,8 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// MyRoute -
 type MyRoute struct {
 	Router gin.IRouter
+}
+
+// Middleware 注册中间件
+func (r *MyRoute) Middleware(middlewares ...gin.HandlerFunc) *MyRoute {
+	return &MyRoute{
+		Router: r.Router.Group("/", middlewares...),
+	}
 }
 
 // Group 注册路由组

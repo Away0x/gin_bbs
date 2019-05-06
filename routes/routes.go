@@ -19,31 +19,39 @@ func Register(g *gin.Engine) *gin.Engine {
 	// ---------------------------------- 注册全局中间件 ----------------------------------
 	g.Use(gin.Recovery())
 	g.Use(gin.Logger())
-	// 自定义全局中间件
-	g.Use(last.LastMiddleware())       // 记录上一次请求信息
-	g.Use(session.SessionMiddleware()) // session
-	// csrf
-	g.Use(csrf.Middleware(func(c *gin.Context, inHeader bool) {
-		if inHeader {
-			c.JSON(403, gin.H{"msg": "很抱歉！您的 Session 已过期，请刷新后再试一次。"})
-		} else {
-			controllers.Render403(c, "很抱歉！您的 Session 已过期，请刷新后再试一次。")
-		}
-	}))
-	g.Use(oldvalue.OldValueMiddleware())      // 记忆上次表单提交的内容，消费即消失
-	g.Use(middleware.CurrentUserMiddleware()) // 中间件中会从 session 中获取到 current user model
+	g.Use(last.LastMiddleware()) // 记录上一次请求信息
 
 	// ---------------------------------- 注册路由 ----------------------------------
-	// 404
+	r := &router.MyRoute{Router: g}
+
+	// +++++++++++++++++++ error +++++++++++++++++++
 	g.NoRoute(func(c *gin.Context) {
 		controllers.Render404(c)
 	})
+	g.NoMethod(func(c *gin.Context) {
+		controllers.Render404(c)
+	})
 
-	r := &router.MyRoute{Router: g}
-	// web
-	registerWeb(r)
-	// api
-	registerApi(r)
+	// +++++++++++++++++++ web +++++++++++++++++++
+	registerWeb(r,
+		// session (flash 功能也依赖该 middleware)
+		session.SessionMiddleware(),
+		// csrf
+		csrf.Middleware(func(c *gin.Context, _ bool) {
+			if c.GetHeader("X-Requested-With") == "XMLHttpRequest" {
+				c.JSON(403, gin.H{"msg": "很抱歉！您的 Session 已过期，请刷新后再试一次。"})
+			} else {
+				controllers.Render403(c, "很抱歉！您的 Session 已过期，请刷新后再试一次。")
+			}
+		}),
+		// 记忆上次表单提交的内容，消费即消失
+		oldvalue.OldValueMiddleware(),
+		// 中间件中会从 session 中获取到 current user model
+		middleware.CurrentUserMiddleware(),
+	)
+
+	// +++++++++++++++++++ api +++++++++++++++++++
+	registerAPI(r)
 
 	return g
 }

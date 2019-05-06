@@ -13,26 +13,30 @@ import (
 	"gin_bbs/app/controllers/page"
 	"gin_bbs/app/controllers/user"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
-func registerWeb(r *router.MyRoute) {
-	r.Register("GET", "root", "/", page.Root)
-	r.Register("GET", "captcha", "/captcha/:id", captcha.Handler) // 验证码
+func registerWeb(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
+	r = r.Middleware(middlewares...)
+
+	r.Register("GET", "root", "", page.Root)
+	r.Register("GET", "captcha", "captcha/:id", captcha.Handler) // 验证码
 
 	// ------------------------------------- Auth -------------------------------------
 	// +++++++++++++++ 用户身份验证相关的路由 +++++++++++++++
 	// 展示登录页面
-	r.Register("GET", "login.show", "/login", middleware.Guest(), login.ShowLoginForm)
+	r.Register("GET", "login.show", "login", middleware.Guest(), login.ShowLoginForm)
 	// 登录
-	r.Register("POST", "login", "/login", middleware.Guest(), login.Login)
+	r.Register("POST", "login", "login", middleware.Guest(), login.Login)
 	// 登出
-	r.Register("POST", "logout", "/logout", login.Logout)
+	r.Register("POST", "logout", "logout", login.Logout)
 
 	// +++++++++++++++ 用户注册相关路由 +++++++++++++++
 	// 展示注册页面
-	r.Register("GET", "register.show", "/register", middleware.Guest(), register.ShowRegistrationForm)
+	r.Register("GET", "register.show", "register", middleware.Guest(), register.ShowRegistrationForm)
 	// 注册
-	r.Register("POST", "register", "/register", middleware.Guest(), register.Register)
+	r.Register("POST", "register", "register", middleware.Guest(), register.Register)
 
 	// +++++++++++++++ 密码重置相关路由 +++++++++++++++
 	pwdRouter := r.Group("/password", middleware.Guest())
