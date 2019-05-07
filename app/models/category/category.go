@@ -4,7 +4,7 @@ import (
 	"gin_bbs/app/models"
 )
 
-// Category 用户模型
+// Category 分类
 type Category struct {
 	models.BaseModel
 	Name        string `gorm:"column:name;type:varchar(255);not null" sql:"index"`

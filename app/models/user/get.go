@@ -71,6 +71,21 @@ func All() (users []*User, err error) {
 	return users, nil
 }
 
+// AllID -
+func AllID() (ids []uint, err error) {
+	ids = make([]uint, 0)
+	users, err := All()
+	if err != nil {
+		return ids, err
+	}
+
+	for _, u := range users {
+		ids = append(ids, u.ID)
+	}
+
+	return ids, nil
+}
+
 // AllCount 总用户数
 func AllCount() (count int, err error) {
 	err = database.DB.Model(&User{}).Count(&count).Error

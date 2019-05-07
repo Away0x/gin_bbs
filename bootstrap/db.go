@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gin_bbs/app/models/category"
 	passwordreset "gin_bbs/app/models/password_reset"
+	"gin_bbs/app/models/topic"
 	"gin_bbs/app/models/user"
 	"gin_bbs/config"
 	"gin_bbs/database"
@@ -22,6 +23,7 @@ func SetupDB(needMock bool) (*gorm.DB, error) {
 		&user.User{},
 		&passwordreset.PasswordReset{},
 		&category.Category{},
+		&topic.Topic{},
 	)
 
 	// 只有非 release 时才可 mock
