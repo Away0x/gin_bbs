@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"errors"
 	"fmt"
+	"gin_bbs/app/models/category"
 	passwordreset "gin_bbs/app/models/password_reset"
 	"gin_bbs/app/models/user"
 	"gin_bbs/config"
@@ -20,6 +21,7 @@ func SetupDB(needMock bool) (*gorm.DB, error) {
 	db.AutoMigrate(
 		&user.User{},
 		&passwordreset.PasswordReset{},
+		&category.Category{},
 	)
 
 	// 只有非 release 时才可 mock
