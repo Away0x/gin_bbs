@@ -4,7 +4,7 @@
       <li class="media">
         <div class="media-left">
           <a href="{% route 'users.show' topic.UserID %}">
-            <img class="media-object img-thumbnail mr-3" style="width: 52px; height: 52px;" src="{{ topic.User().Avatar }}" title="{{ topic.User.Name }}">
+            <img class="media-object img-thumbnail mr-3" style="width: 52px; height: 52px;" src="{{ topic.User.Avatar }}" title="{{ topic.User.Name }}">
           </a>
         </div>
 
@@ -21,15 +21,15 @@
 
           <small class="media-body meta text-secondary">
 
-            <a class="text-secondary" href="#" title="{{ topic.Category().Name }}">
+            <a class="text-secondary" href="#" title="{{ topic.Category.Name }}">
               <i class="far fa-folder"></i>
-              {{ topic.Category() }}
+              {{ topic.Category.Name }}
             </a>
 
             <span> • </span>
-            <a class="text-secondary" href="{% route 'users.show' topic.UserID %}" title="{{ topic.User.Name }}">
+            <a class="text-secondary" href="{% route 'users.show' topic.User.ID %}" title="{{ topic.User.Name }}">
               <i class="far fa-user"></i>
-              {{ topic.User().Name }}
+              {{ topic.User.Name }}
             </a>
             <span> • </span>
             <i class="far fa-clock"></i>
@@ -38,8 +38,8 @@
 
         </div>
       </li>
+      <hr>
     {% endfor %}
-    <hr>
   </ul>
 {% else %}
   <div class="empty-block">{% if error %}{{ error }}{% else %}暂无数据 ~_~ {% endif %}</div>

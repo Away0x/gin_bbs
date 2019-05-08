@@ -7,21 +7,22 @@ import (
 	topicModel "gin_bbs/app/models/topic"
 
 	// userModel "gin_bbs/app/models/user"
+	"gin_bbs/app/services"
 
 	"github.com/gin-gonic/gin"
 )
 
 // Index topic 列表
 func Index(c *gin.Context) {
-	renderFunc, err := pagination.CreatePage(c, 10, "topics",
+	renderFunc, err := pagination.CreatePage(c, 30, "topics",
 		topicModel.Count,
 		func(offset, limit, _, _ int) (interface{}, error) {
-			topics, err := topicModel.List(offset, limit)
+			items, err := services.TopicListService(offset, limit)
 			if err != nil {
 				return nil, err
 			}
 
-			return topics, nil
+			return items, nil
 		})
 
 	if err != nil {
