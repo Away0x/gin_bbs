@@ -11,7 +11,7 @@ import (
 )
 
 // TopicListService -
-func TopicListService(offset, limit int) (interface{}, error) {
+func TopicListService(getToipcsFunc func() ([]*topicModel.Topic, error)) (interface{}, error) {
 	var (
 		result = make([]interface{}, 0) // 最终结果
 
@@ -26,7 +26,7 @@ func TopicListService(offset, limit int) (interface{}, error) {
 	)
 
 	// 获取 topic
-	topics, err := topicModel.List(offset, limit)
+	topics, err := getToipcsFunc()
 	if err != nil {
 		return nil, err
 	}

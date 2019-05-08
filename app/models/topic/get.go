@@ -44,6 +44,17 @@ func All() (topics []*Topic, err error) {
 	return topics, nil
 }
 
+// GetByCategoryID 根据 category_id 获取 topics
+func GetByCategoryID(categoryID, offset, limit int) (topics []*Topic, err error) {
+	topics = make([]*Topic, 0)
+
+	if err = database.DB.Where("category_id = ?", categoryID).Offset(offset).Limit(limit).Order("created_at desc").Find(&topics).Error; err != nil {
+		return topics, err
+	}
+
+	return topics, nil
+}
+
 // Category 获取 topic 的 category
 func Category(topicID int) (*category.Category, error) {
 	t, err := Get(topicID)

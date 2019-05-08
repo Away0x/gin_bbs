@@ -6,7 +6,6 @@ import (
 
 	topicModel "gin_bbs/app/models/topic"
 
-	// userModel "gin_bbs/app/models/user"
 	"gin_bbs/app/services"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +16,9 @@ func Index(c *gin.Context) {
 	renderFunc, err := pagination.CreatePage(c, 30, "topics",
 		topicModel.Count,
 		func(offset, limit, _, _ int) (interface{}, error) {
-			items, err := services.TopicListService(offset, limit)
+			items, err := services.TopicListService(func() ([]*topicModel.Topic, error) {
+				return topicModel.List(offset, limit)
+			})
 			if err != nil {
 				return nil, err
 			}
@@ -38,27 +39,27 @@ func Show(c *gin.Context) {
 
 }
 
-// Create 创建 topic 页
-func Create(c *gin.Context) {
+// // Create 创建 topic 页
+// func Create(c *gin.Context) {
 
-}
+// }
 
-// Store 保存新 topic
-func Store(c *gin.Context) {
+// // Store 保存新 topic
+// func Store(c *gin.Context) {
 
-}
+// }
 
-// Edit 编辑 topic 页面
-func Edit(c *gin.Context) {
+// // Edit 编辑 topic 页面
+// func Edit(c *gin.Context) {
 
-}
+// }
 
-// Update 编辑 topic
-func Update(c *gin.Context) {
+// // Update 编辑 topic
+// func Update(c *gin.Context) {
 
-}
+// }
 
-// Destroy 删除 topic
-func Destroy(c *gin.Context) {
+// // Destroy 删除 topic
+// func Destroy(c *gin.Context) {
 
-}
+// }

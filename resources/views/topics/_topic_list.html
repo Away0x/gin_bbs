@@ -21,7 +21,7 @@
 
           <small class="media-body meta text-secondary">
 
-            <a class="text-secondary" href="#" title="{{ topic.Category.Name }}">
+            <a class="text-secondary" href="{% route 'categories.show' topic.Category.ID %}" title="{{ topic.Category.Name }}">
               <i class="far fa-folder"></i>
               {{ topic.Category.Name }}
             </a>
