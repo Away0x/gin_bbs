@@ -34,7 +34,8 @@ func Render(c *gin.Context, tplPath string, data renderObj) {
 	flashStore := flash.Read(c)
 	oldValueStore := oldvalue.ReadOldFormValue(c)
 
-	// flash 数据
+	// flash 数据 (使用 flash 后，应该用 redirect，如果用 render 的话得刷新页面后才会出现 flash 信息)
+	// 因为 flash 使用 session 实现的，需先写入，再读取，所以完整过程依赖两个 request (oldValue、validate 同理)
 	obj[flash.FlashInContextAndCookieKeyName] = flashStore.Data
 	// 上次 post form 的数据，用于回填
 	obj[oldvalue.OldValueInContextAndCookieKeyName] = oldValueStore.Data
@@ -50,6 +51,8 @@ func Render(c *gin.Context, tplPath string, data renderObj) {
 			obj[csrfTokenName] = csrfToken
 		}
 	}
+	// route class
+	obj["route_path"] = c.Request.URL.Path
 	// 获取当前登录的用户 (如果用户登录了的话，中间件中会通过 session 存储用户数据)
 	if user, err := auth.GetCurrentUserFromContext(c); err == nil {
 		obj[config.AppConfig.ContextCurrentUserDataKey] = viewmodels.NewUserViewModelSerializer(user)

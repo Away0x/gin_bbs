@@ -42,5 +42,5 @@
     <hr>
   </ul>
 {% else %}
-  <div class="empty-block">暂无数据 ~_~ </div>
+  <div class="empty-block">{% if error %}{{ error }}{% else %}暂无数据 ~_~ {% endif %}</div>
 {% endif %}

@@ -2,6 +2,7 @@ package topic
 
 import (
 	"gin_bbs/app/controllers"
+	"gin_bbs/pkg/ginutils/pagination"
 
 	topicModel "gin_bbs/app/models/topic"
 
@@ -12,11 +13,23 @@ import (
 
 // Index topic 列表
 func Index(c *gin.Context) {
-	topics, _ := topicModel.All()
+	renderFunc, err := pagination.CreatePage(c, 10, "topics",
+		topicModel.Count,
+		func(offset, limit, _, _ int) (interface{}, error) {
+			topics, err := topicModel.List(offset, limit)
+			if err != nil {
+				return nil, err
+			}
 
-	controllers.Render(c, "topics/index", gin.H{
-		"topics": topics,
-	})
+			return topics, nil
+		})
+
+	if err != nil {
+		controllers.Render(c, "topics/index", gin.H{"error": "错误: " + err.Error()})
+		return
+	}
+
+	controllers.Render(c, "topics/index", renderFunc(gin.H{}))
 }
 
 // Show topic 详情

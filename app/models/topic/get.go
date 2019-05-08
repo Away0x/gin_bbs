@@ -16,6 +16,23 @@ func Get(id int) (*Topic, error) {
 	return t, nil
 }
 
+// List -
+func List(offset, limit int) (topics []*Topic, err error) {
+	topics = make([]*Topic, 0)
+
+	if err = database.DB.Offset(offset).Limit(limit).Order("created_at desc").Find(&topics).Error; err != nil {
+		return topics, err
+	}
+
+	return topics, nil
+}
+
+// Count -
+func Count() (count int, err error) {
+	err = database.DB.Model(&Topic{}).Count(&count).Error
+	return
+}
+
 // All -
 func All() (topics []*Topic, err error) {
 	topics = make([]*Topic, 0)

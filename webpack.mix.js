@@ -19,7 +19,9 @@ if (mix.inProduction()) {
 }
 
 // 自动刷新
-// mix.browserSync('localhost:8889');
+// mix.browserSync({
+//   proxy: 'localhost:8889'
+// });
 
 // 关闭编译提示
 // mix.disableNotifications();

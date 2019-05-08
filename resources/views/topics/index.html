@@ -17,14 +17,13 @@
 
       <div class="card-body">
         <!-- 话题列表 -->
-        {{ len(topics) }}
-        {{ data.0 }}
-        {{users}}
         {% include '_topic_list.html' %}
         <!-- 分页 -->
-        <div class="mt-5">
-          <!-- {!! $topics->appends(Request::except('page'))->render() !!} -->
-        </div>
+        {% if topics %}
+          <div class="mt-5">
+            {% include '../shared/_pagination.html' %}
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
