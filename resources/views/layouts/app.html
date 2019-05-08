@@ -19,6 +19,7 @@
   <!-- Styles -->
   <link href='{% mix "css/font.css" %}' rel="stylesheet">
   <link href='{% mix "css/app.css" %}' rel="stylesheet">
+  {% block style %}{% endblock %}
 
 </head>
 
@@ -41,6 +42,7 @@
 
   <!-- Scripts -->
   <script src='{% mix "js/app.js" %}'></script>
+  {% block script %}{% endblock %}
 </body>
 
 </html>
