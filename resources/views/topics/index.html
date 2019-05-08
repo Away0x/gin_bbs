@@ -1,8 +1,6 @@
 {% extends "../layouts/app.html" %}
 
-{% block title %}
-  话题列表
-{% endblock %}
+{% block title %}话题列表{% endblock %}
 
 {% block content %}
 
@@ -19,6 +17,9 @@
 
       <div class="card-body">
         <!-- 话题列表 -->
+        {{ len(topics) }}
+        {{ data.0 }}
+        {{users}}
         {% include '_topic_list.html' %}
         <!-- 分页 -->
         <div class="mt-5">
@@ -29,7 +30,7 @@
   </div>
 
   <div class="col-lg-3 col-md-3 sidebar">
-    @include('topics._sidebar')
+    {% include '_sidebar.html' %}
   </div>
 </div>
 

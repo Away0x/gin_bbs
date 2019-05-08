@@ -4,6 +4,16 @@ import (
 	"gin_bbs/database"
 )
 
+// Get -
+func Get(id int) (*Category, error) {
+	cat := &Category{}
+	if err := database.DB.First(&cat, id).Error; err != nil {
+		return cat, nil
+	}
+
+	return cat, nil
+}
+
 // All -
 func All() (cats []*Category, err error) {
 	cats = make([]*Category, 0)

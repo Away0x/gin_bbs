@@ -11,6 +11,7 @@ import (
 	"gin_bbs/app/controllers/auth/register"
 	"gin_bbs/app/controllers/auth/verification"
 	"gin_bbs/app/controllers/page"
+	"gin_bbs/app/controllers/topic"
 	"gin_bbs/app/controllers/user"
 	"time"
 
@@ -76,5 +77,17 @@ func registerWeb(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		userRouter.Register("GET", "users.edit", "/edit/:id", middleware.Auth(), wrapper.GetUser(user.Edit))
 		// 处理 edit 页面提交的更改
 		userRouter.Register("POST", "users.update", "/update/:id", middleware.Auth(), wrapper.GetUser(user.Update))
+	}
+
+	// ------------------------------------- topic -------------------------------------
+	topicRouter := r.Group("/topics")
+	{
+		topicRouter.Register("GET", "topics.index", "", topic.Index)
+		topicRouter.Register("GET", "topics.show", "/show/:id", topic.Show)
+		topicRouter.Register("GET", "topics.create", "/create", topic.Create)
+		topicRouter.Register("POST", "topics.store", "", topic.Store)
+		topicRouter.Register("GET", "topics.edit", "/edit/:id", topic.Edit)
+		topicRouter.Register("POST", "topics.update", "/update/:id", topic.Update)
+		topicRouter.Register("POST", "topics.destroy", "/destroy/:id", topic.Destroy)
 	}
 }
