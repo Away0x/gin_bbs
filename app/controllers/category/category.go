@@ -26,16 +26,11 @@ func Show(c *gin.Context) {
 	}
 
 	renderFunc, err := pagination.CreatePage(c, 30, "topics",
-		topicModel.Count,
+		func() (int, error) { return topicModel.CountByCategoryID(int(cat.ID)) },
 		func(offset, limit, _, _ int) (interface{}, error) {
-			items, err := services.TopicListService(func() ([]*topicModel.Topic, error) {
+			return services.TopicListService(func() ([]*topicModel.Topic, error) {
 				return topicModel.GetByCategoryID(int(cat.ID), offset, limit)
 			})
-			if err != nil {
-				return nil, err
-			}
-
-			return items, nil
 		})
 
 	if err != nil {

@@ -3,7 +3,7 @@
     {% for topic in topics %}
       <li class="media">
         <div class="media-left">
-          <a href="{% route 'users.show' topic.UserID %}">
+          <a href="{% route 'users.show' topic.User.ID %}">
             <img class="media-object img-thumbnail mr-3" style="width: 52px; height: 52px;" src="{{ topic.User.Avatar }}" title="{{ topic.User.Name }}">
           </a>
         </div>

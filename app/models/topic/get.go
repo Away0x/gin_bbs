@@ -33,6 +33,18 @@ func Count() (count int, err error) {
 	return
 }
 
+// CountByCategoryID -
+func CountByCategoryID(categoryID int) (count int, err error) {
+	err = database.DB.Model(&Topic{}).Where("category_id = ?", categoryID).Count(&count).Error
+	return
+}
+
+// CountByUserID -
+func CountByUserID(userID int) (count int, err error) {
+	err = database.DB.Model(&Topic{}).Where("user_id = ?", userID).Count(&count).Error
+	return
+}
+
 // All -
 func All() (topics []*Topic, err error) {
 	topics = make([]*Topic, 0)
@@ -49,6 +61,17 @@ func GetByCategoryID(categoryID, offset, limit int) (topics []*Topic, err error)
 	topics = make([]*Topic, 0)
 
 	if err = database.DB.Where("category_id = ?", categoryID).Offset(offset).Limit(limit).Order("created_at desc").Find(&topics).Error; err != nil {
+		return topics, err
+	}
+
+	return topics, nil
+}
+
+// GetByUserID -
+func GetByUserID(userID, offset, limit int) (topics []*Topic, err error) {
+	topics = make([]*Topic, 0)
+
+	if err = database.DB.Where("user_id = ?", userID).Offset(offset).Limit(limit).Order("created_at desc").Find(&topics).Error; err != nil {
 		return topics, err
 	}
 

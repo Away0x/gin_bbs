@@ -4,18 +4,22 @@ import (
 	"gin_bbs/app/controllers"
 
 	"gin_bbs/app/auth"
+	topicModel "gin_bbs/app/models/topic"
 	userModel "gin_bbs/app/models/user"
 	userRequest "gin_bbs/app/requests/user"
 	"gin_bbs/app/viewmodels"
 	"gin_bbs/pkg/ginutils"
 	"gin_bbs/pkg/ginutils/flash"
+	"gin_bbs/pkg/ginutils/pagination"
 
 	"gin_bbs/app/policies"
+
+	"gin_bbs/app/services"
 
 	"github.com/gin-gonic/gin"
 )
 
-// 展示用户信息页面
+// Show 展示用户信息页面
 func Show(c *gin.Context) {
 	user, err := auth.GetUserFromParamIDOrContext(c)
 	if err != nil {
@@ -23,12 +27,28 @@ func Show(c *gin.Context) {
 		return
 	}
 
-	controllers.Render(c, "users/show", gin.H{
+	renderFunc, err := pagination.CreatePage(c, 30, "topics",
+		func() (int, error) { return topicModel.CountByUserID(int(user.ID)) },
+		func(offset, limit, _, _ int) (interface{}, error) {
+			return services.TopicListService(func() ([]*topicModel.Topic, error) {
+				return topicModel.GetByUserID(int(user.ID), offset, limit)
+			})
+		})
+
+	if err != nil {
+		controllers.Render(c, "users/show", gin.H{
+			"user":  viewmodels.NewUserViewModelSerializer(user),
+			"error": "错误: " + err.Error(),
+		})
+		return
+	}
+
+	controllers.Render(c, "users/show", renderFunc(gin.H{
 		"user": viewmodels.NewUserViewModelSerializer(user),
-	})
+	}))
 }
 
-// 编辑用户信息页面
+// Edit 编辑用户信息页面
 func Edit(c *gin.Context, currentUser *userModel.User) {
 	id, err := ginutils.GetIntParam(c, "id")
 	if err != nil {
@@ -44,7 +64,7 @@ func Edit(c *gin.Context, currentUser *userModel.User) {
 	controllers.Render(c, "users/edit", gin.H{})
 }
 
-// 更新用户
+// Update 更新用户
 func Update(c *gin.Context, currentUser *userModel.User) {
 	id, err := ginutils.GetIntParam(c, "id")
 	if err != nil {

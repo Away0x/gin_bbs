@@ -1,0 +1,25 @@
+{% if topics %}
+  <ul class="list-group mt-4 border-0">
+    {% for topic in topics %}
+      <li class="list-group-item pl-2 pr-2 border-right-0 border-left-0 {% ifequal topic.ID topics.0.ID %}border-top-0{% endifequal %}">
+        <a href="{% route 'topics.show' topic.ID %}">
+          {{ topic.Title }}
+        </a>
+        <span class="meta float-right text-secondary">
+          {{ topic.ReplyCount }} 回复
+          <span> ⋅ </span>
+          {{ topic.CreatedAt }}
+        </span>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <div class="empty-block" style="margin-top:20px">{% if error %}{{ error }}{% else %}暂无数据 ~_~ {% endif %}</div>
+{% endif %}
+
+<!-- 分页 -->
+{% if topics %}
+<div class="mt-4 pt-1">
+  {%  include '../shared/_pagination.html' %}
+</div>
+{% endif %}

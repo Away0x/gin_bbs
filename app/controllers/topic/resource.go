@@ -16,14 +16,9 @@ func Index(c *gin.Context) {
 	renderFunc, err := pagination.CreatePage(c, 30, "topics",
 		topicModel.Count,
 		func(offset, limit, _, _ int) (interface{}, error) {
-			items, err := services.TopicListService(func() ([]*topicModel.Topic, error) {
+			return services.TopicListService(func() ([]*topicModel.Topic, error) {
 				return topicModel.List(offset, limit)
 			})
-			if err != nil {
-				return nil, err
-			}
-
-			return items, nil
 		})
 
 	if err != nil {

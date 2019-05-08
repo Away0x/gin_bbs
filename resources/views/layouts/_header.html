@@ -28,17 +28,25 @@
                 {{ currentUserData.Name }}
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{% route 'users.show' currentUserData.ID %}">个人中心</a>
-                <a class="dropdown-item" href="{% route 'users.edit' currentUserData.ID %}">编辑资料</a>
+                <a class="dropdown-item" href="{% route 'users.show' currentUserData.ID %}">
+                  <i class="far fa-user mr-2"></i>
+                  个人中心
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% route 'users.edit' currentUserData.ID %}">
+                  <i class="far fa-edit mr-2"></i>
+                  编辑资料
+                </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" id="logout" href="#">
-                  <form action="{% route 'logout' %}" method="POST">
+                  <form action="{% route 'logout' %}" method="POST" onsubmit="return confirm('您确定要退出吗？');">
                     {{ csrfInput | safe }}
                     <button class="btn btn-block btn-danger" type="submit" name="button">退出</button>
                   </form>
                 </a>
               </div>
             </li>
+
         {% else %}
           <li class="nav-item"><a class="nav-link" href="{% route 'login' %}">登录</a></li>
           <li class="nav-item"><a class="nav-link" href="{% route 'register' %}">注册</a></li>
