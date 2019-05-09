@@ -25,7 +25,6 @@ func Show(c *gin.Context, currentUser *userModel.User) {
 // 激活
 func Verify(c *gin.Context) {
 	token := c.Param("token")
-
 	user, err := userModel.GetByActivationToken(token)
 	if user == nil || err != nil {
 		controllers.Render404(c)

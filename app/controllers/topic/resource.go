@@ -95,11 +95,12 @@ func Edit(c *gin.Context, currentUser *userModel.User) {
 
 // Update 编辑 topic
 func Update(c *gin.Context, currentUser *userModel.User) {
+	// 通过 param 中 id 参数获取 topic (没获取到或没权限会进入 404 page)
 	topic, id, ok := getEditTopic(c, currentUser)
 	if !ok {
 		return
 	}
-
+	// 验证参数
 	ok = validateCreateOrUpdateTopic(c, currentUser, topic)
 	if !ok {
 		controllers.RedirectRouter(c, "topics.edit", id)
@@ -117,7 +118,19 @@ func Update(c *gin.Context, currentUser *userModel.User) {
 	controllers.RedirectRouter(c, "topics.show", topic.ID)
 }
 
-// // Destroy 删除 topic
-// func Destroy(c *gin.Context) {
+// Destroy 删除 topic
+func Destroy(c *gin.Context, currentUser *userModel.User) {
+	_, id, ok := getEditTopic(c, currentUser)
+	if !ok {
+		return
+	}
 
-// }
+	if err := topicModel.Delete(id); err != nil {
+		flash.NewDangerFlash(c, "帖子删除失败: "+err.Error())
+		controllers.RedirectRouter(c, "topics.show", id)
+		return
+	}
+
+	flash.NewSuccessFlash(c, "帖子删除成功")
+	controllers.RedirectRouter(c, "topics.index")
+}

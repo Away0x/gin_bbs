@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// TopicPolicyUpdate : 是否有更新 topic 的权限
-func TopicPolicyUpdate(c *gin.Context, currentUser *userModel.User, targetUserID int) bool {
+// TopicPolicyOwner : 是否有更新、删除 topic 的权限
+func TopicPolicyOwner(c *gin.Context, currentUser *userModel.User, targetUserID int) bool {
 	if currentUser.ID != uint(targetUserID) {
 		Unauthorized(c)
 		return false

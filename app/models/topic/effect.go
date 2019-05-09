@@ -25,3 +25,16 @@ func (t *Topic) Update() (err error) {
 
 	return nil
 }
+
+// Delete -
+func Delete(id int) (err error) {
+	topic := &Topic{}
+	topic.ID = uint(id)
+
+	if err = database.DB.Delete(&topic).Error; err != nil {
+		log.Warnf("topic 删除失败: %v", err)
+		return err
+	}
+
+	return nil
+}

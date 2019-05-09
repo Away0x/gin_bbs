@@ -29,7 +29,7 @@ func getEditTopic(c *gin.Context, currentUser *userModel.User) (*topicModel.Topi
 	}
 
 	// 权限
-	if ok := policies.TopicPolicyUpdate(c, currentUser, int(topic.UserID)); !ok {
+	if ok := policies.TopicPolicyOwner(c, currentUser, int(topic.UserID)); !ok {
 		return nil, id, false
 	}
 
