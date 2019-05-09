@@ -2,6 +2,10 @@ package topic
 
 import (
 	"gin_bbs/app/models"
+	"regexp"
+	"strings"
+
+	strip "github.com/grokify/html-strip-tags-go"
 )
 
 // Topic 话题
@@ -24,9 +28,21 @@ func (Topic) TableName() string {
 	return "topics"
 }
 
-// BeforeUpdate - hook
-func (t *Topic) BeforeUpdate() (err error) {
-	t.Excerpt = t.Body
+// BeforeCreate - hook
+func (t *Topic) BeforeCreate() error {
+	t.Excerpt = makeExcerpt(t.Body, 3)
 
-	return
+	return nil
+}
+
+func makeExcerpt(value string, length int) string {
+	r := regexp.MustCompile(`\r\n|\r|\n+`)
+	v := strip.StripTags(value)
+	v = string(r.ReplaceAll([]byte(v), []byte("")))
+	v = strings.TrimSpace(v)
+
+	if len(v) < length {
+		return v
+	}
+	return v[:length]
 }
