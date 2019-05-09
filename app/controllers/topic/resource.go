@@ -2,8 +2,9 @@ package topic
 
 import (
 	"gin_bbs/app/controllers"
-	"gin_bbs/pkg/ginutils/pagination"
 	"gin_bbs/pkg/ginutils"
+	"gin_bbs/pkg/ginutils/pagination"
+	"gin_bbs/pkg/ginutils/utils"
 	"strconv"
 
 	categoryModel "gin_bbs/app/models/category"
@@ -12,8 +13,8 @@ import (
 
 	"gin_bbs/app/services"
 	"gin_bbs/app/viewmodels"
-	"gin_bbs/pkg/ginutils/validate"
 	"gin_bbs/pkg/ginutils/flash"
+	"gin_bbs/pkg/ginutils/validate"
 
 	"github.com/gin-gonic/gin"
 )
@@ -90,9 +91,9 @@ func Store(c *gin.Context, currentUser *userModel.User) {
 			},
 		},
 		validate.MessagesMap{
-			"title": {"文章标题不能为空", "文章标题长度必须大于 2 个字符"},
+			"title":       {"文章标题不能为空", "文章标题长度必须大于 2 个字符"},
 			"category_id": {"文章分类不能为空", "选择的文章分类不存在"},
-			"body": {"文章内容不能为空", "文章内容长度必须大于 3 个字符"},
+			"body":        {"文章内容不能为空", "文章内容长度必须大于 3 个字符"},
 		})
 
 	if !ok {
@@ -102,13 +103,13 @@ func Store(c *gin.Context, currentUser *userModel.User) {
 	}
 
 	topic := &topicModel.Topic{
-		Title: title,
-		Body: body,
+		Title:      title,
+		Body:       utils.XSSClean(body),
 		CategoryID: uint(catID),
-		UserID: currentUser.ID,
+		UserID:     currentUser.ID,
 	}
 	if err := topic.Create(); err != nil {
-		flash.NewDangerFlash(c, "帖子创建失败: " + err.Error())
+		flash.NewDangerFlash(c, "帖子创建失败: "+err.Error())
 		controllers.RedirectRouter(c, "topics.create")
 		return
 	}
