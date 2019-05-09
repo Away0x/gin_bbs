@@ -8,6 +8,10 @@
   {% endif %}
 {% endblock %}
 
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/simditor.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container">
   <div class="col-md-10 offset-md-1">
@@ -63,4 +67,19 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="{% static 'js/module.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/hotkeys.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/uploader.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/simditor.js' %}"></script>
+
+<script>
+  $(document).ready(function() {
+    var editor = new Simditor({
+      textarea: $('#editor'),
+    });
+  });
+</script>
 {% endblock %}

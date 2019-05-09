@@ -17791,7 +17791,14 @@ module.exports = g;
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bootstrap__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var popper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js");
 
+
+
+window.$ = jquery__WEBPACK_IMPORTED_MODULE_1___default.a;
+window.jQuery = jquery__WEBPACK_IMPORTED_MODULE_1___default.a;
 
 
 /***/ }),
@@ -17814,8 +17821,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\playground\goPlayground\gin_bbs\resources\js\app.ts */"./resources/js/app.ts");
-module.exports = __webpack_require__(/*! E:\playground\goPlayground\gin_bbs\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /Users/wutong/Desktop/workspace/goPlayground/gin_bbs/resources/js/app.ts */"./resources/js/app.ts");
+module.exports = __webpack_require__(/*! /Users/wutong/Desktop/workspace/goPlayground/gin_bbs/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
