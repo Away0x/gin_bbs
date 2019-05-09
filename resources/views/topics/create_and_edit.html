@@ -31,7 +31,6 @@
 
         {% if topic.ID %}
           <form action="{% route 'topics.update' topic.ID %}" method="POST" accept-charset="UTF-8">
-            <input type="hidden" name="_method" value="PUT">
         {% else %}
           <form action="{% route 'topics.store' %}" method="POST" accept-charset="UTF-8">
         {% endif %}
@@ -47,9 +46,9 @@
 
             <div class="form-group">
               <select class="form-control" name="category_id" required>
-                <option value="" hidden disabled selected>请选择分类</option>
+                <option value="" hidden disabled {% if topic.ID %}{% else %}selected{% endif %}>请选择分类</option>
                 {% for cat in categories %}
-                  <option value="{{ cat.ID }}">{{ cat.Name }}</option>
+                  <option value="{{ cat.ID }}" {% if topic.CategoryID == cat.ID %}selected{% endif %}>{{ cat.Name }}</option>
                 {% endfor %}
               </select>
             </div>

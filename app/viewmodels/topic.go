@@ -9,6 +9,8 @@ import (
 func NewTopicViewModelSerializer(t *topicModel.Topic) map[string]interface{} {
 	return map[string]interface{}{
 		"ID":              t.ID,
+		"CategoryID":      t.CategoryID,
+		"UserID":          t.UserID,
 		"Title":           t.Title,
 		"Body":            t.Body,
 		"ReplyCount":      t.ReplyCount,

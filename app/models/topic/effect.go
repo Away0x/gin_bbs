@@ -15,3 +15,13 @@ func (t *Topic) Create() (err error) {
 
 	return nil
 }
+
+// Update -
+func (t *Topic) Update() (err error) {
+	if err = database.DB.Save(&t).Error; err != nil {
+		log.Warnf("topic 更新失败: %v", err)
+		return err
+	}
+
+	return nil
+}
