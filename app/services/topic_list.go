@@ -6,7 +6,6 @@ import (
 	userModel "gin_bbs/app/models/user"
 	viewmodels "gin_bbs/app/viewmodels"
 	"gin_bbs/database"
-	gintime "gin_bbs/pkg/ginutils/time"
 	"gin_bbs/pkg/ginutils/utils"
 )
 
@@ -32,19 +31,7 @@ func TopicListService(getToipcsFunc func() ([]*topicModel.Topic, error)) (interf
 	}
 
 	for _, t := range topics {
-		topicIDMap[t.ID] = map[string]interface{}{
-			"ID":              t.ID,
-			"Title":           t.Title,
-			"Body":            t.Body,
-			"ReplyCount":      t.ReplyCount,
-			"ViewCount":       t.ViewCount,
-			"LastReplyUserID": t.LastReplyUserID,
-			"Order":           t.Order,
-			"Excerpt":         t.Excerpt,
-			"Slug":            t.Slug,
-			"CreatedAt":       gintime.SinceForHuman(t.CreatedAt),
-			"UpdatedAt":       gintime.SinceForHuman(t.UpdatedAt),
-		}
+		topicIDMap[t.ID] = viewmodels.NewTopicViewModelSerializer(t)
 		topicIDs = append(topicIDs, t.ID)
 		usersIDs = append(usersIDs, t.UserID)
 		catIDs = append(catIDs, t.CategoryID)

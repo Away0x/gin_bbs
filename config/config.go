@@ -41,7 +41,7 @@ func InitConfig() {
 	viper.SetConfigType(configFileType)
 
 	if err := viper.ReadInConfig(); err != nil {
-		panic(fmt.Sprintf("读取配置文件失败，请检查: %v", err))
+		panic(fmt.Sprintf("读取配置文件失败，请检查 config.yaml 配置文件是否存在: %v", err))
 	}
 
 	// 初始化日志

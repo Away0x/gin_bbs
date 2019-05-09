@@ -6,6 +6,11 @@ import (
 	"gin_bbs/database"
 )
 
+const (
+	orderDefault = "default"
+	orderRecent  = "recent"
+)
+
 // Get -
 func Get(id int) (*Topic, error) {
 	t := &Topic{}
@@ -17,10 +22,16 @@ func Get(id int) (*Topic, error) {
 }
 
 // List -
-func List(offset, limit int) (topics []*Topic, err error) {
+func List(offset, limit int, order string) (topics []*Topic, err error) {
 	topics = make([]*Topic, 0)
 
-	if err = database.DB.Offset(offset).Limit(limit).Order("created_at desc").Find(&topics).Error; err != nil {
+	if order == orderRecent {
+		order = "created_at"
+	} else {
+		order = "updated_at"
+	}
+
+	if err = database.DB.Offset(offset).Limit(limit).Order(order + " desc").Find(&topics).Error; err != nil {
 		return topics, err
 	}
 
@@ -57,10 +68,16 @@ func All() (topics []*Topic, err error) {
 }
 
 // GetByCategoryID 根据 category_id 获取 topics
-func GetByCategoryID(categoryID, offset, limit int) (topics []*Topic, err error) {
+func GetByCategoryID(categoryID, offset, limit int, order string) (topics []*Topic, err error) {
 	topics = make([]*Topic, 0)
 
-	if err = database.DB.Where("category_id = ?", categoryID).Offset(offset).Limit(limit).Order("created_at desc").Find(&topics).Error; err != nil {
+	if order == orderRecent {
+		order = "created_at"
+	} else {
+		order = "updated_at"
+	}
+
+	if err = database.DB.Where("category_id = ?", categoryID).Offset(offset).Limit(limit).Order(order + " desc").Find(&topics).Error; err != nil {
 		return topics, err
 	}
 

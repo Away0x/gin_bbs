@@ -21,9 +21,9 @@
     <div class="card ">
 
       <div class="card-header bg-transparent">
-        <ul class="nav nav-pills">
-          <li class="nav-item"><a class="nav-link active" href="#">最后回复</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">最新发布</a></li>
+        <ul class="nav nav-pills JS-nav-link-wrapper">
+          <li class="nav-item"><a class="nav-link link-one" href="{{ route_path }}?order=default">最后回复</a></li>
+          <li class="nav-item"><a class="nav-link link-two" href="{{ route_path }}?order=recent">最新发布</a></li>
         </ul>
       </div>
 
@@ -50,6 +50,12 @@
 
 {% block script %}
 <script>
-  console.log(window.location)
+  var href = window.location.href
+  var $nav_wrapper = document.querySelector('.JS-nav-link-wrapper')
+  if (href.indexOf('order=recent') !== -1) {
+    $nav_wrapper.querySelector('.nav-link.link-two').className += ' active'
+  } else {
+    $nav_wrapper.querySelector('.nav-link.link-one').className += ' active'
+  }
 </script>
 {% endblock %}

@@ -13,10 +13,10 @@ import (
 
 // Index topic 列表
 func Index(c *gin.Context) {
-	renderFunc, err := pagination.CreatePage(c, 30, "topics", topicModel.Count,
+	renderFunc, err := pagination.CreatePage(c, 20, "topics", topicModel.Count,
 		func(offset, limit, _, _ int) (interface{}, error) {
 			return services.TopicListService(func() ([]*topicModel.Topic, error) {
-				return topicModel.List(offset, limit)
+				return topicModel.List(offset, limit, c.DefaultQuery("order", "default"))
 			})
 		})
 
