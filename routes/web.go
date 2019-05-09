@@ -90,6 +90,8 @@ func registerWeb(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		// topicRouter.Register("GET", "topics.edit", "/edit/:id", topic.Edit)
 		// topicRouter.Register("POST", "topics.update", "/update/:id", topic.Update)
 		// topicRouter.Register("POST", "topics.destroy", "/destroy/:id", topic.Destroy)
+
+		topicRouter.Register("POST", "topics.upload_image", "/upload_image", middleware.Auth(), wrapper.GetUser(topic.UploadImage))
 	}
 
 	// ------------------------------------- category -------------------------------------
