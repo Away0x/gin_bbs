@@ -2,7 +2,6 @@ package file
 
 import (
 	"bytes"
-	"fmt"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -54,7 +53,6 @@ func SaveFile(f io.Reader, filePath, fileName string) error {
 
 // ReadFile 读取文件内容
 func ReadFile(filePath string) (string, error) {
-	fmt.Println(os.Getwd())
 	f, err := os.Open(filePath)
 	if err != nil {
 		return "", err

@@ -14,6 +14,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	// ApiRoot -
+	ApiRoot = "/api"
+
+	// AdminWebRoot -
+	AdminWebRoot = "/admin"
+	// AdminApiRoot -
+	AdminApiRoot = "/admin-api"
+)
+
 // Register 注册路由和中间件
 func Register(g *gin.Engine) *gin.Engine {
 	// ---------------------------------- 注册全局中间件 ----------------------------------
@@ -23,15 +33,6 @@ func Register(g *gin.Engine) *gin.Engine {
 
 	// ---------------------------------- 注册路由 ----------------------------------
 	r := &router.MyRoute{Router: g}
-
-	// +++++++++++++++++++ error +++++++++++++++++++
-	g.NoRoute(func(c *gin.Context) {
-		controllers.Render404(c)
-	})
-	g.NoMethod(func(c *gin.Context) {
-		controllers.Render404(c)
-	})
-
 	// +++++++++++++++++++ web +++++++++++++++++++
 	registerWeb(r,
 		// session
@@ -55,6 +56,14 @@ func Register(g *gin.Engine) *gin.Engine {
 
 	// +++++++++++++++++++ api +++++++++++++++++++
 	registerAPI(r)
+
+	// ---------------------------------- error ----------------------------------
+	g.NoRoute(func(c *gin.Context) {
+		controllers.Render404(c)
+	})
+	g.NoMethod(func(c *gin.Context) {
+		controllers.Render404(c)
+	})
 
 	return g
 }

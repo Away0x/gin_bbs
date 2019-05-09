@@ -7,7 +7,7 @@ import (
 )
 
 func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
-	r = r.Group("/api", middlewares...)
+	r = r.Group(ApiRoot, middlewares...)
 
 	r.Register("GET", "api.test", "test", func(c *gin.Context) {
 		c.JSON(200, gin.H{"msg": "api test"})
