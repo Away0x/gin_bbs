@@ -23,3 +23,8 @@ npm-debug.log
 yarn-error.log
 config.yaml
 /public/uploads
+/admin-fe/node_modules
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

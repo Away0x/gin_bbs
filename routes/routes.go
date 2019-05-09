@@ -34,7 +34,7 @@ func Register(g *gin.Engine) *gin.Engine {
 
 	// +++++++++++++++++++ web +++++++++++++++++++
 	registerWeb(r,
-		// session (flash 功能也依赖该 middleware)
+		// session
 		session.SessionMiddleware(),
 		// csrf
 		csrf.Middleware(func(c *gin.Context, _ bool) {
@@ -49,6 +49,9 @@ func Register(g *gin.Engine) *gin.Engine {
 		// 中间件中会从 session 中获取到 current user model
 		middleware.CurrentUserMiddleware(),
 	)
+
+	// +++++++++++++++++++ admin +++++++++++++++++++
+	registerAdmin(r)
 
 	// +++++++++++++++++++ api +++++++++++++++++++
 	registerAPI(r)

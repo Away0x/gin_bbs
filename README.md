@@ -30,6 +30,8 @@
 │
 ├── storage          存放日志等文件
 │
+├── admin-fe         管理员后台前端源码
+│
 ├── main.go          项目入口
 │
 ├── config.yaml      项目配置
