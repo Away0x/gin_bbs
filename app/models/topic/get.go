@@ -95,32 +95,32 @@ func GetByUserID(userID, offset, limit int) (topics []*Topic, err error) {
 	return topics, nil
 }
 
-// Category 获取 topic 的 category
-func Category(topicID int) (*category.Category, error) {
+// TopicAndCategory 获取 topic 的 category
+func TopicAndCategory(topicID int) (*Topic,*category.Category, error) {
 	t, err := Get(topicID)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	cat, err := category.Get(int(t.CategoryID))
+	c, err := category.Get(int(t.CategoryID))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return cat, err
+	return t, c, err
 }
 
-// User 获取 topic 的 user
-func User(topicID int) (*user.User, error) {
+// TopicAndUser 获取 topic 的 user
+func TopicAndUser(topicID int) (*Topic, *user.User, error) {
 	t, err := Get(topicID)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	u, err := user.Get(int(t.UserID))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return u, err
+	return t, u, err
 }

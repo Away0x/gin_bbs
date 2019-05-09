@@ -39,3 +39,18 @@ func AllID() (ids []uint, err error) {
 
 	return ids, nil
 }
+
+// AllName -
+func AllName() (names []string, err error) {
+	names = make([]string, 0)
+	cats, err := All()
+	if err != nil {
+		return names, err
+	}
+
+	for _, u := range cats {
+		names = append(names, u.Name)
+	}
+
+	return names, nil
+}

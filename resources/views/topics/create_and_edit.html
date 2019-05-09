@@ -1,0 +1,66 @@
+{% extends "../layouts/app.html" %}
+
+{% block title %}
+  {% if topic %}
+    编辑话题-{{ topic.Name }}
+  {% else %}
+    新建话题
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="col-md-10 offset-md-1">
+    <div class="card ">
+
+      <div class="card-body">
+        <h2 class="">
+          <i class="far fa-edit"></i>
+          {% if topic.ID %}
+            编辑话题
+          {% else %}
+            新建话题
+          {% endif %}
+        </h2>
+
+        <hr>
+
+        {% if topic.ID %}
+          <form action="{% route 'topics.update' topic.ID %}" method="POST" accept-charset="UTF-8">
+            <input type="hidden" name="_method" value="PUT">
+        {% else %}
+          <form action="{% route 'topics.store' %}" method="POST" accept-charset="UTF-8">
+        {% endif %}
+
+            {{ csrfInput | safe }}
+
+            {% include '../shared/_errors.html' %}
+
+            <div class="form-group">
+              <input class="form-control" type="text" name="title" placeholder="请填写标题" required
+                value="{% if oldValue.title %}{{ oldValue.title }}{% else %}{{ topic.Title }}{% endif %}" />
+            </div>
+
+            <div class="form-group">
+              <select class="form-control" name="category_id" required>
+                <option value="" hidden disabled selected>请选择分类</option>
+                {% for cat in categories %}
+                  <option value="{{ cat.ID }}">{{ cat.Name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <textarea name="body" class="form-control" id="editor" rows="6" placeholder="请填入至少三个字符的内容。"
+                required>{% if oldValue.body %}{{ oldValue.body }}{% else %}{{ topic.Body }}{% endif %}</textarea>
+            </div>
+
+            <div class="well well-sm">
+              <button type="submit" class="btn btn-primary"><i class="far fa-save mr-2" aria-hidden="true"></i> 保存</button>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

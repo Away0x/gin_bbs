@@ -1,0 +1,81 @@
+{% extends "../layouts/app.html" %}
+
+@section('title', $topic->title)
+{% block title %}{{ topic.Title }}{% endblock %}
+<!-- @section('description', $topic->excerpt) -->
+
+{% block content %}
+<div class="row">
+
+  <div class="col-lg-3 col-md-3 hidden-sm hidden-xs author-info">
+    <div class="card ">
+      <div class="card-body">
+        <div class="text-center">
+          作者：{{ topic.User.Name }}
+        </div>
+        <hr>
+        <div class="media">
+          <div align="center">
+            <a href="{% route 'users.show' topic.User.ID %}">
+              <img class="thumbnail img-fluid" src="{{ topic.User.Avatar }}" width="300px" height="300px">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 topic-content">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="text-center mt-3 mb-3">
+          {{ topic.Title }}
+        </h1>
+
+        <div class="article-meta text-center text-secondary">
+          {{ topic.CreatedAt }}
+          ⋅
+          <i class="far fa-comment"></i>
+          {{ topic.ReplyCount }}
+        </div>
+
+        <div class="topic-body mt-4 mb-4">
+          {{ topic.Body | safe }}
+        </div>
+
+        {% if currentUserData %}
+          {% ifequal topic.User.ID currentUserData.ID %}
+            <div class="operate">
+              <hr>
+              <a href="{% route 'topics.edit' topic.ID %}" class="btn btn-outline-secondary btn-sm" role="button">
+                <i class="far fa-edit"></i> 编辑
+              </a>
+              <form action="{% route 'topics.destroy' topic.ID %}" method="post"
+                    style="display: inline-block;"
+                    onsubmit="return confirm('您确定要删除吗？');">
+                {{ csrfInput | safe }}
+                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                  <i class="far fa-trash-alt"></i> 删除
+                </button>
+              </form>
+            </div>
+          {% endifequal %}
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- 用户回复列表 -->
+    <div class="card topic-reply mt-4">
+        <div class="card-body">
+          {% comment %} {% if currentUserData %}
+            {% include '_reply_box.html' %}
+          {% endif %}
+
+          {% include '_reply_list.html' %} {% endcomment %}
+        </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

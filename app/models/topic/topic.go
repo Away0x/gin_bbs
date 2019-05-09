@@ -23,3 +23,10 @@ type Topic struct {
 func (Topic) TableName() string {
 	return "topics"
 }
+
+// BeforeUpdate - hook
+func (t *Topic) BeforeUpdate() (err error) {
+	t.Excerpt = t.Body
+
+	return
+}

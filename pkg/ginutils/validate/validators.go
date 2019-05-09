@@ -101,6 +101,19 @@ func EmailValidator(value string) ValidatorFunc {
 	}
 }
 
+// UintRangeValidator value 是否存在于指定的 range 范围内
+func UintRangeValidator(value uint, rg []uint) ValidatorFunc {
+	return func() string {
+		for _, r := range rg {
+			if r == value {
+				return ""
+			}
+		}
+
+		return "$name 不存在于指定范围内"
+	}
+}
+
 // MimetypeValidator 文件 mimetype 校验
 func MimetypeValidator(f *multipart.FileHeader, mimes []string) ValidatorFunc {
 	return func() string {
