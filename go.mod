@@ -15,7 +15,6 @@ require (
 	github.com/gofrs/uuid v3.2.0+incompatible // indirect
 	github.com/golang/protobuf v1.3.1 // indirect
 	github.com/gorilla/sessions v1.1.3 // indirect
-	github.com/grokify/html-strip-tags-go v0.0.0-20190424092004-025bd760b278
 	github.com/jinzhu/gorm v1.9.2
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
 	github.com/jinzhu/now v1.0.0 // indirect

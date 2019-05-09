@@ -2,7 +2,7 @@
 
 @section('title', $topic->title)
 {% block title %}{{ topic.Title }}{% endblock %}
-<!-- @section('description', $topic->excerpt) -->
+{% block description %}{{ topic.Excerpt }}{% endblock %}
 
 {% block content %}
 <div class="row">

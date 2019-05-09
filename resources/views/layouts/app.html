@@ -9,12 +9,8 @@
   <!-- CSRF Token -->
   {{ csrfMeta | safe }}
 
-  <title>
-  {% block title %}
-    LaraBBS
-  {% endblock %}
-  - 进阶教程
-  </title>
+  <title>{% block title %}LaraBBS{% endblock %} - 进阶教程</title>
+  <meta name="description" content="{% block description %}LaraBBS 爱好者社区{% endblock %}" />
 
   <!-- Styles -->
   <link href='{% mix "css/font.css" %}' rel="stylesheet">
