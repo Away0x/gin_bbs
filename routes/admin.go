@@ -11,12 +11,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	adminFeDistFilePath = "admin-fe/dist"
+)
+
 // RenderAdminIndexPage 渲染管理员后台 index.html
 func RenderAdminIndexPage(c *gin.Context) {
 	c.Status(http.StatusOK)
 
-	tplPath := ginfile.PublicPath("admin-index.html")
-	htmlStr, err := ginfile.ReadFile(tplPath)
+	htmlStr, err := ginfile.ReadFile(adminFeDistFilePath + "/index.html")
 	if err != nil {
 		fmt.Println(err)
 		controllers.Render404(c)
@@ -30,7 +33,23 @@ func RenderAdminIndexPage(c *gin.Context) {
 func registerAdmin(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	// 管理员后台静态文件
 	rweb := r.Group(AdminWebRoot, middlewares...)
-	rweb.Router.Static("", "admin-fe/dist") // 如果想 vue 使用 history 模式，需自己实现一个静态文件服务，没有文件就渲染 index.html
+	// rweb.Router.Static("", "admin-fe/dist")
+	rweb.Register("GET", "admin.index", "/*filepath", func(c *gin.Context) {
+		filepath := c.Param("filepath")
+		if filepath == "" || filepath == "/" {
+			RenderAdminIndexPage(c)
+			return
+		}
+
+		allPath := adminFeDistFilePath + filepath
+		if ginfile.IsExist(allPath) {
+			c.File(allPath)
+			return
+		}
+
+		RenderAdminIndexPage(c)
+		return
+	})
 	// 可参考 gin.Context 的 File 方法 (内部是 http.ServeFile)
 
 	// 管理员后台 api
