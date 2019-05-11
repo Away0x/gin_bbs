@@ -3,6 +3,8 @@ package topic
 import (
 	"gin_bbs/app/helpers"
 	"gin_bbs/app/models"
+	"gin_bbs/database"
+	"gin_bbs/pkg/ginutils/utils"
 	"regexp"
 	"strings"
 )
@@ -27,18 +29,22 @@ func (Topic) TableName() string {
 	return "topics"
 }
 
-// BeforeCreate - hook
-func (t *Topic) BeforeCreate() error {
+// BeforeSave - hook
+func (t *Topic) BeforeSave() error {
+	t.Body = utils.XSSClean(t.Body)
 	t.Excerpt = makeExcerpt(t.Body, 200)
-	t.Slug = helpers.SlugTranslate(t.Title)
 
 	return nil
 }
 
-// BeforeUpdate - hook
-func (t *Topic) BeforeUpdate() error {
-	t.Excerpt = makeExcerpt(t.Body, 200)
-	t.Slug = helpers.SlugTranslate(t.Title)
+// AfterSave - hook
+func (t *Topic) AfterSave() error {
+	if t.Slug == "" {
+		go func(t *Topic) {
+			slug := helpers.SlugTranslate(t.Title)
+			database.DB.Model(&t).UpdateColumn("slug", slug)
+		}(t)
+	}
 
 	return nil
 }

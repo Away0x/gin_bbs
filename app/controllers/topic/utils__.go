@@ -7,7 +7,6 @@ import (
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/app/policies"
 	"gin_bbs/pkg/ginutils"
-	"gin_bbs/pkg/ginutils/utils"
 	"gin_bbs/pkg/ginutils/validate"
 	"strconv"
 
@@ -71,7 +70,7 @@ func validateCreateOrUpdateTopic(c *gin.Context, currentUser *userModel.User, to
 	}
 
 	topic.Title = title
-	topic.Body = utils.XSSClean(body)
+	topic.Body = body
 	topic.CategoryID = uint(catID)
 	topic.UserID = currentUser.ID
 
