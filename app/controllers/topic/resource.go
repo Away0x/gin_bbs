@@ -8,6 +8,7 @@ import (
 
 	categoryModel "gin_bbs/app/models/category"
 	topicModel "gin_bbs/app/models/topic"
+	replyModel "gin_bbs/app/models/reply"
 	userModel "gin_bbs/app/models/user"
 
 	"gin_bbs/app/services"
@@ -59,8 +60,14 @@ func Show(c *gin.Context) {
 	topicVM := viewmodels.NewTopicViewModelSerializer(topic)
 	topicVM["User"] = viewmodels.NewUserViewModelSerializer(user)
 
+	// 获取回复
+	replies, _ := services.RpleyListService(func() ([]*replyModel.Reply, error) {
+		return replyModel.TopicReplies(int(topic.ID))
+	})
+
 	controllers.Render(c, "topics/show", gin.H{
 		"topic": topicVM,
+		"replies": replies,
 	})
 }
 

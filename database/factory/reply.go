@@ -34,7 +34,7 @@ func ReplyTableSeeder(needCleanTable bool) {
 	userIDs, _ := user.AllID()
 	topicIDs, _ := topic.AllID()
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 1000; i++ {
 		reply := replyFactory(userIDs, topicIDs)
 		if err := reply.Create(); err != nil {
 			fmt.Printf("mock reply error： %v\n", err)

@@ -4,7 +4,7 @@ import (
 	categoryModel "gin_bbs/app/models/category"
 	topicModel "gin_bbs/app/models/topic"
 	userModel "gin_bbs/app/models/user"
-	viewmodels "gin_bbs/app/viewmodels"
+	"gin_bbs/app/viewmodels"
 	"gin_bbs/database"
 	"gin_bbs/pkg/ginutils/utils"
 )

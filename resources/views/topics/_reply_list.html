@@ -1,0 +1,34 @@
+<ul class="list-unstyled">
+  {% for reply in replies %}
+    <li class=" media" name="reply{{ reply.ID }}" id="reply{{ reply.ID }}">
+      <div class="media-left">
+        <a href="{% route 'users.show' reply.UserID %}">
+          <img class="media-object img-thumbnail mr-3" alt="{{ reply.User.Name }}" src="{{ reply.User.Avatar }}" style="width:48px;height:48px;" />
+        </a>
+      </div>
+
+      <div class="media-body">
+        <div class="media-heading mt-0 mb-1 text-secondary">
+          <a href="{% route 'users.show' reply.UserID %}" title="{{ reply.User.Name }}">
+            {{ reply.User.Name }}
+          </a>
+          <span class="text-secondary"> • </span>
+          <span class="meta text-secondary" title="{{ reply.CreatedAt }}">{{ reply.CreatedAt }}</span>
+
+          {% comment %} 回复删除按钮 {% endcomment %}
+          <span class="meta float-right ">
+            <a title="删除回复">
+              <i class="far fa-trash-alt"></i>
+            </a>
+          </span>
+        </div>
+        <div class="reply-content text-secondary">
+          {{ reply.Content | safe }}
+        </div>
+      </div>
+    </li>
+
+    <hr>
+
+  {% endfor %}
+</ul>

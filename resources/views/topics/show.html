@@ -68,11 +68,11 @@
     <!-- 用户回复列表 -->
     <div class="card topic-reply mt-4">
         <div class="card-body">
-          {% comment %} {% if currentUserData %}
+          {% if currentUserData %}
             {% include '_reply_box.html' %}
           {% endif %}
 
-          {% include '_reply_list.html' %} {% endcomment %}
+          {% include '_reply_list.html' %}
         </div>
     </div>
 

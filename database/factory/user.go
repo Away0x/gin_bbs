@@ -65,7 +65,7 @@ func UsersTableSeeder(needCleanTable bool) {
 		dropAndCreateTable(&userModel.User{})
 	}
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 10; i++ {
 		user := userFactory(i).MustCreate().(*userModel.User)
 		if err := user.Create(); err != nil {
 			fmt.Printf("mock user error： %v\n", err)
