@@ -4,6 +4,7 @@ import (
 	"gin_bbs/app/controllers"
 	"gin_bbs/pkg/ginutils"
 	"gin_bbs/pkg/ginutils/pagination"
+	"strings"
 
 	categoryModel "gin_bbs/app/models/category"
 	topicModel "gin_bbs/app/models/topic"
@@ -47,6 +48,14 @@ func Show(c *gin.Context) {
 		return
 	}
 
+	// url 矫正 (永远带 slug 参数来访问)
+	ReqSlug := c.Param("slug")
+	ReqSlug = strings.Replace(ReqSlug, "/", "", -1) // ReqSlug 参数可能这样 /slug
+	if ReqSlug == "" && topic.Slug != ReqSlug {
+		c.Redirect(301, topic.Link())
+		return
+	}
+
 	topicVM := viewmodels.NewTopicViewModelSerializer(topic)
 	topicVM["User"] = viewmodels.NewUserViewModelSerializer(user)
 
@@ -76,7 +85,7 @@ func Store(c *gin.Context, currentUser *userModel.User) {
 	}
 
 	flash.NewSuccessFlash(c, "帖子创建成功")
-	controllers.RedirectRouter(c, "topics.show", topic.ID)
+	controllers.Redirect(c, topic.Link(), false)
 }
 
 // Edit 编辑 topic 页面
@@ -115,19 +124,19 @@ func Update(c *gin.Context, currentUser *userModel.User) {
 	}
 
 	flash.NewSuccessFlash(c, "帖子编辑成功")
-	controllers.RedirectRouter(c, "topics.show", topic.ID)
+	controllers.Redirect(c, topic.Link(), false)
 }
 
 // Destroy 删除 topic
 func Destroy(c *gin.Context, currentUser *userModel.User) {
-	_, id, ok := getEditTopic(c, currentUser)
+	topic, id, ok := getEditTopic(c, currentUser)
 	if !ok {
 		return
 	}
 
 	if err := topicModel.Delete(id); err != nil {
 		flash.NewDangerFlash(c, "帖子删除失败: "+err.Error())
-		controllers.RedirectRouter(c, "topics.show", id)
+		controllers.Redirect(c, topic.Link(), false)
 		return
 	}
 

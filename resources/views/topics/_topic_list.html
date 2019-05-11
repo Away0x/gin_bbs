@@ -11,10 +11,10 @@
         <div class="media-body">
 
           <div class="media-heading mt-0 mb-1">
-            <a href="{% route 'topics.show' topic.ID %}" title="{{ topic.Title }}">
+            <a href="{{ topic.Link }}" title="{{ topic.Title }}">
               {{ topic.Title }}
             </a>
-            <a class="float-right" href="{% route 'topics.show' topic.ID %}">
+            <a class="float-right" href="{{ topic.Link }}">
               <span class="badge badge-secondary badge-pill"> {{ topic.ReplyCount }} </span>
             </a>
           </div>

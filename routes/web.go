@@ -84,7 +84,7 @@ func registerWeb(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	topicRouter := r.Group("/topics")
 	{
 		topicRouter.Register("GET", "topics.index", "", topic.Index)
-		topicRouter.Register("GET", "topics.show", "/show/:id", topic.Show)
+		topicRouter.Register("GET", "topics.show", "/show/:id/*slug", topic.Show)
 		topicRouter.Register("GET", "topics.create", "/create", middleware.Auth(), wrapper.GetUser(topic.Create))
 		topicRouter.Register("POST", "topics.store", "", middleware.Auth(), wrapper.GetUser(topic.Store))
 		topicRouter.Register("GET", "topics.edit", "/edit/:id", middleware.Auth(), wrapper.GetUser(topic.Edit))

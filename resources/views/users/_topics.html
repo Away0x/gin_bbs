@@ -2,7 +2,7 @@
   <ul class="list-group mt-4 border-0">
     {% for topic in topics %}
       <li class="list-group-item pl-2 pr-2 border-right-0 border-left-0 {% ifequal topic.ID topics.0.ID %}border-top-0{% endifequal %}">
-        <a href="{% route 'topics.show' topic.ID %}">
+        <a href="{{ topic.Link }}">
           {{ topic.Title }}
         </a>
         <span class="meta float-right text-secondary">

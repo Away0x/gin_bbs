@@ -3,6 +3,7 @@ module gin_bbs
 require (
 	github.com/Pallinder/go-randomdata v1.1.0
 	github.com/bluele/factory-go v0.0.0-20181130035244-e6e8633dd3fe
+	github.com/buger/jsonparser v0.0.0-20181115193947-bf1c66bbce23
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/denisenkom/go-mssqldb v0.0.0-20190423183735-731ef375ac02 // indirect
 	github.com/disintegration/imaging v1.6.0
@@ -25,6 +26,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.10.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/mozillazg/go-pinyin v0.15.0
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible

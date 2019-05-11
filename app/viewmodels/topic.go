@@ -21,5 +21,6 @@ func NewTopicViewModelSerializer(t *topicModel.Topic) map[string]interface{} {
 		"Slug":            t.Slug,
 		"CreatedAt":       gintime.SinceForHuman(t.CreatedAt),
 		"UpdatedAt":       gintime.SinceForHuman(t.UpdatedAt),
+		"Link":            t.Link(),
 	}
 }

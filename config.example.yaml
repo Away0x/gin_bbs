@@ -33,3 +33,8 @@ LOG:
   LOG_ROTATE_DATE: 1 # rotate 转存时间，配 合rollingPolicy: daily 使用
   LOG_ROTATE_SIZE: 1 # rotate 转存大小，配合 rollingPolicy: size 使用 (大于 1mb 会压缩为 zip)
   LOG_BACKUP_COUNT: 7 # 当日志文件达到转存标准时，log 系统会将该日志文件进行压缩备份，这里指定了备份文件的最大个数
+
+# 百度翻译
+BAIDU_TRANSLATE:
+  APPID:
+  KEY:

@@ -1,6 +1,7 @@
 package topic
 
 import (
+	"gin_bbs/app/helpers"
 	"gin_bbs/app/models"
 	"regexp"
 	"strings"
@@ -29,6 +30,15 @@ func (Topic) TableName() string {
 // BeforeCreate - hook
 func (t *Topic) BeforeCreate() error {
 	t.Excerpt = makeExcerpt(t.Body, 200)
+	t.Slug = helpers.SlugTranslate(t.Title)
+
+	return nil
+}
+
+// BeforeUpdate - hook
+func (t *Topic) BeforeUpdate() error {
+	t.Excerpt = makeExcerpt(t.Body, 200)
+	t.Slug = helpers.SlugTranslate(t.Title)
 
 	return nil
 }

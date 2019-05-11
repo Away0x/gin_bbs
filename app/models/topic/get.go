@@ -4,6 +4,7 @@ import (
 	"gin_bbs/app/models/category"
 	"gin_bbs/app/models/user"
 	"gin_bbs/database"
+	"gin_bbs/pkg/ginutils/router"
 )
 
 const (
@@ -96,7 +97,7 @@ func GetByUserID(userID, offset, limit int) (topics []*Topic, err error) {
 }
 
 // TopicAndCategory 获取 topic 的 category
-func TopicAndCategory(topicID int) (*Topic,*category.Category, error) {
+func TopicAndCategory(topicID int) (*Topic, *category.Category, error) {
 	t, err := Get(topicID)
 	if err != nil {
 		return nil, nil, err
@@ -123,4 +124,13 @@ func TopicAndUser(topicID int) (*Topic, *user.User, error) {
 	}
 
 	return t, u, err
+}
+
+// Link 生成 topic show link
+func (t *Topic) Link() string {
+	link := router.G("topics.show", t.ID)
+	if t.Slug != "" {
+		return link + t.Slug
+	}
+	return link
 }

@@ -5,6 +5,7 @@ import (
 	"gin_bbs/pkg/ginutils"
 	"gin_bbs/pkg/ginutils/utils"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -78,7 +79,7 @@ func getRoute(name string, values ...interface{}) string {
 		}
 
 		r := strings.NewReplacer(":id", val)
-		return r.Replace(path)
+		return filterStarParam(r.Replace(path))
 	}
 
 	// values[0] 必须为 string，values[1] 必须为 string 或 int(uint)
@@ -103,7 +104,7 @@ func getRoute(name string, values ...interface{}) string {
 		}
 
 		r := strings.NewReplacer(":"+key, val)
-		return r.Replace(path)
+		return filterStarParam(r.Replace(path))
 	}
 
 	return path
@@ -115,4 +116,10 @@ func PrintRoutes() {
 		m := methodMap[k]
 		fmt.Fprintf(os.Stderr, "[Route-Name] "+"%-7s %-25s --> %s\n", m, k, v)
 	}
+}
+
+// 过滤掉 url 中 /*xx 这种不定参
+func filterStarParam(s string) string {
+	re := regexp.MustCompile(`/\*.+/*`)
+	return string(re.ReplaceAll([]byte(s), []byte("/")))
 }
