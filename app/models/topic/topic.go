@@ -40,9 +40,10 @@ func (t *Topic) BeforeSave() error {
 // AfterSave - hook
 func (t *Topic) AfterSave() error {
 	if t.Slug == "" {
+		// SlugTranslate 需要请求百度 api，放到协程中执行
 		go func(t *Topic) {
 			slug := helpers.SlugTranslate(t.Title)
-			database.DB.Model(&t).UpdateColumn("slug", slug)
+			database.DB.Model(&t).UpdateColumn("slug", slug) // 这样更新可避免触发 gorm 钩子，从而导致死循环
 		}(t)
 	}
 

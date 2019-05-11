@@ -43,7 +43,7 @@ func TopicTableSeeder(needCleanTable bool) {
 	for i := 0; i < 100; i++ {
 		topic := topicFactory(userIDs, categoryIDs)
 		if err := topic.Create(); err != nil {
-			fmt.Printf("mock user error： %v\n", err)
+			fmt.Printf("mock topic error： %v\n", err)
 		}
 	}
 }

@@ -68,6 +68,21 @@ func All() (topics []*Topic, err error) {
 	return topics, nil
 }
 
+// AllID -
+func AllID() (ids []uint, err error) {
+	ids = make([]uint, 0)
+	topics, err := All()
+	if err != nil {
+		return ids, err
+	}
+
+	for _, t := range topics {
+		ids = append(ids, t.ID)
+	}
+
+	return ids, nil
+}
+
 // GetByCategoryID 根据 category_id 获取 topics
 func GetByCategoryID(categoryID, offset, limit int, order string) (topics []*Topic, err error) {
 	topics = make([]*Topic, 0)
