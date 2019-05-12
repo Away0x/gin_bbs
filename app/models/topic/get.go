@@ -16,7 +16,7 @@ const (
 func Get(id int) (*Topic, error) {
 	t := &Topic{}
 	if err := database.DB.First(&t, id).Error; err != nil {
-		return t, nil
+		return t, err
 	}
 
 	return t, nil

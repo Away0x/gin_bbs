@@ -10,7 +10,7 @@ import (
 func Get(id int) (*Reply, error) {
 	r := &Reply{}
 	if err := database.DB.First(&r, id).Error; err != nil {
-		return r, nil
+		return r, err
 	}
 
 	return r, nil
@@ -69,5 +69,11 @@ func UserReplies(userID, offset, limit int) ([]*Reply, error) {
 // CountByUserID -
 func CountByUserID(userID int) (count int, err error) {
 	err = database.DB.Model(&Reply{}).Where("user_id = ?", userID).Count(&count).Error
+	return
+}
+
+// CountByTopicID -
+func CountByTopicID(topicID int) (count int, err error) {
+	err = database.DB.Model(&Reply{}).Where("topic_id = ?", topicID).Count(&count).Error
 	return
 }

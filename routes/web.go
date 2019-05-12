@@ -12,6 +12,7 @@ import (
 	"gin_bbs/app/controllers/auth/verification"
 	"gin_bbs/app/controllers/category"
 	"gin_bbs/app/controllers/page"
+	"gin_bbs/app/controllers/reply"
 	"gin_bbs/app/controllers/topic"
 	"gin_bbs/app/controllers/user"
 	"time"
@@ -98,5 +99,12 @@ func registerWeb(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	catRouter := r.Group("/categories")
 	{
 		catRouter.Register("GET", "categories.show", "/show/:id", category.Show)
+	}
+
+	// ------------------------------------- reply -------------------------------------
+	replyRouter := r.Group("/replies", middleware.Auth())
+	{
+		replyRouter.Register("POST", "replies.store", "", wrapper.GetUser(reply.Store))
+		replyRouter.Register("POST", "replies.destroy", "/destroy/:id", wrapper.GetUser(reply.Destroy))
 	}
 }

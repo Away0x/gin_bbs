@@ -8,7 +8,7 @@ import (
 func Get(id int) (*Category, error) {
 	cat := &Category{}
 	if err := database.DB.First(&cat, id).Error; err != nil {
-		return cat, nil
+		return cat, err
 	}
 
 	return cat, nil
