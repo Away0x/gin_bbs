@@ -9,7 +9,7 @@ import (
 	"gin_bbs/pkg/ginutils/utils"
 )
 
-func RpleyListService(getReplyFunc func() ([]*replyModel.Reply, error)) (interface{}, error) {
+func RpleyListService(getReplyFunc func() ([]*replyModel.Reply, error), currentUser *userModel.User) (interface{}, error) {
 	var (
 		result = make([]interface{}, 0) // 最终结果
 
@@ -54,6 +54,16 @@ func RpleyListService(getReplyFunc func() ([]*replyModel.Reply, error)) (interfa
 		for _, t := range topics {
 			if r.TopicID == t.ID {
 				replyIDMap[r.ID]["Topic"] = viewmodels.NewTopicViewModelSerializer(t)
+				// 是否可删除
+				if currentUser != nil && t.UserID == currentUser.ID {
+					replyIDMap[r.ID]["CanDelete"] = true
+				}
+			}
+		}
+		// 是否可删除
+		if currentUser != nil {
+			if r.UserID == currentUser.ID {
+				replyIDMap[r.ID]["CanDelete"] = true
 			}
 		}
 	}

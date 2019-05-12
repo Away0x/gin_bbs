@@ -1,6 +1,7 @@
 package reply
 
 import (
+	"fmt"
 	"gin_bbs/database"
 
 	"github.com/lexkong/log"
@@ -28,8 +29,12 @@ func (r *Reply) Update() (err error) {
 
 // Delete -
 func Delete(id int) (err error) {
-	reply := &Reply{}
-	reply.ID = uint(id)
+	// 注意: 由于这里要触发 delete callback hook，所以先获取到再删除，否则 hook 中得不到 TopicID
+	// 所以这里没用 database.DB.Where("id = ?", id).Delete(&Reply{})
+	reply, err := Get(id)
+	if err != nil {
+		return err
+	}
 
 	if err = database.DB.Delete(&reply).Error; err != nil {
 		log.Warnf("reply 删除失败: %v", err)
@@ -37,4 +42,14 @@ func Delete(id int) (err error) {
 	}
 
 	return nil
+}
+
+// DeleteTopicReplies 删除 topic 下的所有 reply (注意: 要不触发 callback hook)
+func DeleteTopicReplies(topicID int) error {
+	return database.DB.Exec(fmt.Sprintf("delete from %s where topic_id = %d", tableName, topicID)).Error
+}
+
+// DeleteUserReplies 删除 user 的所有 reply (注意: 要不触发 callback hook)
+func DeleteUserReplies(userID int) error {
+	return database.DB.Exec(fmt.Sprintf("delete from %s where user_id = %d", tableName, userID)).Error
 }

@@ -42,10 +42,11 @@ func Show(c *gin.Context) {
 	if tab == "replies" {
 		listKeyName = "replies"
 		fetchListFunc = func() (int, error) { return replyModel.CountByUserID(int(user.ID)) }
+		currentUser, _ := auth.GetCurrentUserFromContext(c)
 		serviceFunc = func(offset, limit, _, _ int) (interface{}, error) {
 			return services.RpleyListService(func() ([]*replyModel.Reply, error) {
 				return replyModel.UserReplies(int(user.ID), offset, limit)
-			})
+			}, currentUser)
 		}
 	}
 

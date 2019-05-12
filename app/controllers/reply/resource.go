@@ -4,8 +4,10 @@ import (
 	replyModel "gin_bbs/app/models/reply"
 	topicModel "gin_bbs/app/models/topic"
 	userModel "gin_bbs/app/models/user"
+	"gin_bbs/pkg/ginutils"
 
 	"gin_bbs/app/controllers"
+	"gin_bbs/app/policies"
 	"gin_bbs/pkg/ginutils/validate"
 	"strconv"
 
@@ -69,5 +71,37 @@ func Store(c *gin.Context, currentUser *userModel.User) {
 
 // Destroy 删除回复
 func Destroy(c *gin.Context, currentUser *userModel.User) {
+	id, err := ginutils.GetIntParam(c, "id")
+	if err != nil {
+		controllers.Render404(c)
+		return
+	}
 
+	reply, err := replyModel.Get(id)
+	if err != nil {
+		controllers.Render404(c)
+		return
+	}
+
+	topic, err := topicModel.Get(int(reply.TopicID))
+	if err != nil {
+		controllers.Render404(c)
+		return
+	}
+
+	// 权限 (拥有删除回复权限的用户，应当是 "回复的作者" 或者 "回复话题的作者")
+	if !policies.CheckPolicy(c, func() bool {
+		return reply.UserID == currentUser.ID || topic.UserID == currentUser.ID
+	}) {
+		return
+	}
+
+	if err := replyModel.Delete(id); err != nil {
+		flash.NewDangerFlash(c, "评论删除失败: "+err.Error())
+		controllers.Redirect(c, topic.Link(), false)
+		return
+	}
+
+	flash.NewSuccessFlash(c, "评论删除成功")
+	controllers.Redirect(c, topic.Link(), false)
 }
