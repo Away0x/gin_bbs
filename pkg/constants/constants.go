@@ -2,7 +2,7 @@ package constants
 
 var (
 	// UploadImageMimetypes 项目支持上传的文件格式
-	UploadImageMimetypes = []string{"jpeg", "bmp", "png", "gif"}
+	UploadImageMimetypes = []string{"jpg", "jpeg", "bmp", "png", "gif"}
 )
 
 const (

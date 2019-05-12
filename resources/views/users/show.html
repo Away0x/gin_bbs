@@ -15,7 +15,7 @@
         <p>{{ user.Introduction }}</p>
         <hr>
         <h5><strong>注册于</strong></h5>
-        <p>{{ user.CreateAt }}</p>
+        <p>{{ user.CreatedAt }}</p>
       </div>
     </div>
   </div>
@@ -28,16 +28,46 @@
     <hr>
 
     <!-- 用户发布的内容 -->
-    <div class="card">
+    <div class="card ">
       <div class="card-body">
-        <ul class="nav nav-tabs">
-          <li class="nav-item"><a class="nav-link active bg-transparent" href="#">Ta 的话题</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Ta 的回复</a></li>
+        <ul class="nav nav-tabs JS-nav-wrapper">
+          <li class="nav-item">
+            <a class="nav-link bg-transparent link-one" href="{% route 'users.show' user.ID %}">
+              Ta 的话题
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link bg-transparent link-two" href="{% route 'users.show' user.ID %}?tab=replies">
+              Ta 的回复
+            </a>
+          </li>
         </ul>
-        {% include './_topics.html' %}
+
+        <div class="JS-nav-pan-one">
+          {% include './_topics.html' %}
+        </div>
+        <div class="JS-nav-pan-two" style="display:none">
+          {% include './_replies.html' %}
+        </div>
+
       </div>
     </div>
 
   </div>
 </div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+$(function () {
+  var href = window.location.href
+  var $nav_wrapper = $('.JS-nav-wrapper')
+  var is_replies = href.indexOf('tab=replies') !== -1
+
+  $nav_wrapper.find('.nav-link.link-' + (is_replies ? 'two' : 'one')).addClass('active')
+  $('.JS-nav-pan-one')[is_replies ? 'hide' : 'show']()
+  $('.JS-nav-pan-two')[is_replies ? 'show' : 'hide']()
+})
+</script>
 {% endblock %}

@@ -4,6 +4,7 @@ import (
 	"gin_bbs/app/controllers"
 
 	"gin_bbs/app/auth"
+	replyModel "gin_bbs/app/models/reply"
 	topicModel "gin_bbs/app/models/topic"
 	userModel "gin_bbs/app/models/user"
 	userRequest "gin_bbs/app/requests/user"
@@ -27,14 +28,28 @@ func Show(c *gin.Context) {
 		return
 	}
 
-	renderFunc, err := pagination.CreatePage(c, 30, "topics",
-		func() (int, error) { return topicModel.CountByUserID(int(user.ID)) },
-		func(offset, limit, _, _ int) (interface{}, error) {
-			return services.TopicListService(func() ([]*topicModel.Topic, error) {
-				return topicModel.GetByUserID(int(user.ID), offset, limit)
-			})
+	tab := c.DefaultQuery("tab", "")
+	// 列表数据，默认是 topics 列表
+	listKeyName := "topics"
+	fetchListFunc := func() (int, error) { return topicModel.CountByUserID(int(user.ID)) }
+	serviceFunc := func(offset, limit, _, _ int) (interface{}, error) {
+		return services.TopicListService(func() ([]*topicModel.Topic, error) {
+			return topicModel.GetByUserID(int(user.ID), offset, limit)
 		})
+	}
 
+	// 是回复列表
+	if tab == "replies" {
+		listKeyName = "replies"
+		fetchListFunc = func() (int, error) { return replyModel.CountByUserID(int(user.ID)) }
+		serviceFunc = func(offset, limit, _, _ int) (interface{}, error) {
+			return services.RpleyListService(func() ([]*replyModel.Reply, error) {
+				return replyModel.UserReplies(int(user.ID), offset, limit)
+			})
+		}
+	}
+
+	renderFunc, err := pagination.CreatePage(c, 30, listKeyName, fetchListFunc, serviceFunc)
 	if err != nil {
 		controllers.Render(c, "users/show", gin.H{
 			"user":  viewmodels.NewUserViewModelSerializer(user),

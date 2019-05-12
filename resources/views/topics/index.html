@@ -50,12 +50,12 @@
 
 {% block script %}
 <script>
-  var href = window.location.href
-  var $nav_wrapper = document.querySelector('.JS-nav-link-wrapper')
-  if (href.indexOf('order=recent') !== -1) {
-    $nav_wrapper.querySelector('.nav-link.link-two').className += ' active'
-  } else {
-    $nav_wrapper.querySelector('.nav-link.link-one').className += ' active'
-  }
+$(function () {
+  var is_recent = window.location.href.indexOf('order=recent') !== -1
+
+  $('.JS-nav-link-wrapper')
+    .find('.nav-link.link-' + (is_recent ? 'two' : 'one'))
+    .addClass('active')
+})
 </script>
 {% endblock %}

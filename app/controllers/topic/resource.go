@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	categoryModel "gin_bbs/app/models/category"
-	topicModel "gin_bbs/app/models/topic"
 	replyModel "gin_bbs/app/models/reply"
+	topicModel "gin_bbs/app/models/topic"
 	userModel "gin_bbs/app/models/user"
 
 	"gin_bbs/app/services"
@@ -66,7 +66,7 @@ func Show(c *gin.Context) {
 	})
 
 	controllers.Render(c, "topics/show", gin.H{
-		"topic": topicVM,
+		"topic":   topicVM,
 		"replies": replies,
 	})
 }

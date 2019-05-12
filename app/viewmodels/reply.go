@@ -12,6 +12,6 @@ func NewReplyViewModelSerializer(r *replyModel.Reply) map[string]interface{} {
 			"Content": r.Content,
 			"UserID": r.UserID,
 			"TopicID": r.TopicID,
-			"CreateAt": gintime.SinceForHuman(r.CreatedAt),
+			"CreatedAt": gintime.SinceForHuman(r.CreatedAt),
 	}
 }

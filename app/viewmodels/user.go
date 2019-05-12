@@ -12,7 +12,7 @@ type UserViewModel struct {
 	Email        string
 	Avatar       string
 	Introduction string
-	CreateAt     string
+	CreatedAt     string
 }
 
 // NewUserViewModelSerializer 用户数据展示
@@ -23,6 +23,6 @@ func NewUserViewModelSerializer(u *userModel.User) *UserViewModel {
 		Email:        u.Email,
 		Avatar:       u.Avatar,
 		Introduction: u.Introduction,
-		CreateAt:     gintime.SinceForHuman(u.CreatedAt),
+		CreatedAt:     gintime.SinceForHuman(u.CreatedAt),
 	}
 }
