@@ -6,7 +6,15 @@ import (
 	"gin_bbs/database"
 	"gin_bbs/pkg/ginutils/utils"
 	"regexp"
+	"strconv"
 	"strings"
+	"time"
+
+	"github.com/patrickmn/go-cache"
+)
+
+var (
+	topicCache = cache.New(10*time.Minute, 30*time.Minute)
 )
 
 // Topic 话题
@@ -50,6 +58,7 @@ func (t *Topic) AfterSave() error {
 	return nil
 }
 
+// ------------ private
 func makeExcerpt(value string, length int) string {
 	r := regexp.MustCompile(`\r\n|\r|\n+|\<[\S\s]+?\>`)
 	v := string(r.ReplaceAll([]byte(value), []byte("")))
@@ -60,4 +69,27 @@ func makeExcerpt(value string, length int) string {
 		return v
 	}
 	return string(ru[:length])
+}
+
+func setToCache(topic *Topic) {
+	key := strconv.Itoa(int(topic.ID))
+	topicCache.Set(key, topic, cache.DefaultExpiration)
+}
+
+func getFromCache(id int) (*Topic, bool) {
+	cachedTopic, ok := topicCache.Get(strconv.Itoa(id))
+	if !ok {
+		return nil, false
+	}
+
+	t, ok := cachedTopic.(*Topic)
+	if !ok {
+		return nil, false
+	}
+
+	return t, true
+}
+
+func delCache(id int) {
+	topicCache.Delete(strconv.Itoa(id))
 }

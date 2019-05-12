@@ -13,6 +13,7 @@ func (t *Topic) Create() (err error) {
 		return err
 	}
 
+	setToCache(t)
 	return nil
 }
 
@@ -23,6 +24,7 @@ func (t *Topic) Update() (err error) {
 		return err
 	}
 
+	setToCache(t)
 	return nil
 }
 
@@ -36,5 +38,6 @@ func Delete(id int) (err error) {
 		return err
 	}
 
+	delCache(id)
 	return nil
 }
