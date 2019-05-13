@@ -10,7 +10,7 @@ import (
 func Get(id int) (*Reply, error) {
 	r := &Reply{}
 	if err := database.DB.First(&r, id).Error; err != nil {
-		return r, nil
+		return r, err
 	}
 
 	return r, nil
@@ -44,7 +44,7 @@ func TopicReplies(topicID int) ([]*Reply, error) {
 		return rs, err
 	}
 
-	if err = database.DB.Where("topic_id = ?", t.ID).Find(&rs).Error; err != nil {
+	if err = database.DB.Where("topic_id = ?", t.ID).Order("id desc").Find(&rs).Error; err != nil {
 		return rs, err
 	}
 
@@ -52,16 +52,28 @@ func TopicReplies(topicID int) ([]*Reply, error) {
 }
 
 // UserReplies 获取用户的所有回复
-func UserReplies(userID int) ([]*Reply, error) {
+func UserReplies(userID, offset, limit int) ([]*Reply, error) {
 	rs := make([]*Reply, 0)
 	u, err := user.Get(userID)
 	if err != nil {
 		return rs, err
 	}
 
-	if err = database.DB.Where("user_id = ?", u.ID).Find(&rs).Error; err != nil {
+	if err = database.DB.Where("user_id = ?", u.ID).Offset(offset).Limit(limit).Order("id desc").Find(&rs).Error; err != nil {
 		return rs, err
 	}
 
 	return rs, nil
+}
+
+// CountByUserID -
+func CountByUserID(userID int) (count int, err error) {
+	err = database.DB.Model(&Reply{}).Where("user_id = ?", userID).Count(&count).Error
+	return
+}
+
+// CountByTopicID -
+func CountByTopicID(topicID int) (count int, err error) {
+	err = database.DB.Model(&Reply{}).Where("topic_id = ?", topicID).Count(&count).Error
+	return
 }

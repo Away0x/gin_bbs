@@ -14,10 +14,15 @@ const (
 
 // Get -
 func Get(id int) (*Topic, error) {
+	if cachedTopic, ok := getFromCache(id); ok {
+		return cachedTopic, nil
+	}
+
 	t := &Topic{}
 	if err := database.DB.First(&t, id).Error; err != nil {
-		return t, nil
+		return t, err
 	}
+	setToCache(t)
 
 	return t, nil
 }

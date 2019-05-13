@@ -7,10 +7,11 @@ import (
 	"strings"
 
 	categoryModel "gin_bbs/app/models/category"
-	topicModel "gin_bbs/app/models/topic"
 	replyModel "gin_bbs/app/models/reply"
+	topicModel "gin_bbs/app/models/topic"
 	userModel "gin_bbs/app/models/user"
 
+	"gin_bbs/app/auth"
 	"gin_bbs/app/services"
 	"gin_bbs/app/viewmodels"
 	"gin_bbs/pkg/ginutils/flash"
@@ -61,12 +62,13 @@ func Show(c *gin.Context) {
 	topicVM["User"] = viewmodels.NewUserViewModelSerializer(user)
 
 	// 获取回复
+	currentUser, _ := auth.GetCurrentUserFromContext(c) // 当前用户
 	replies, _ := services.RpleyListService(func() ([]*replyModel.Reply, error) {
 		return replyModel.TopicReplies(int(topic.ID))
-	})
+	}, currentUser)
 
 	controllers.Render(c, "topics/show", gin.H{
-		"topic": topicVM,
+		"topic":   topicVM,
 		"replies": replies,
 	})
 }
@@ -145,6 +147,11 @@ func Destroy(c *gin.Context, currentUser *userModel.User) {
 		flash.NewDangerFlash(c, "帖子删除失败: "+err.Error())
 		controllers.Redirect(c, topic.Link(), false)
 		return
+	}
+
+	// 删除帖子的评论
+	if err := replyModel.DeleteTopicReplies(id); err != nil {
+		flash.NewDangerFlash(c, "评论删除失败: "+err.Error())
 	}
 
 	flash.NewSuccessFlash(c, "帖子删除成功")

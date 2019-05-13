@@ -13,6 +13,7 @@ func (t *Topic) Create() (err error) {
 		return err
 	}
 
+	setToCache(t)
 	return nil
 }
 
@@ -23,18 +24,17 @@ func (t *Topic) Update() (err error) {
 		return err
 	}
 
+	setToCache(t)
 	return nil
 }
 
 // Delete -
 func Delete(id int) (err error) {
-	topic := &Topic{}
-	topic.ID = uint(id)
-
-	if err = database.DB.Delete(&topic).Error; err != nil {
+	if err = database.DB.Where("id = ?", id).Delete(&Topic{}).Error; err != nil {
 		log.Warnf("topic 删除失败: %v", err)
 		return err
 	}
 
+	delCache(id)
 	return nil
 }

@@ -6,12 +6,15 @@ import (
 	"gin_bbs/routes/middleware"
 	"gin_bbs/routes/wrapper"
 
+	// "gin_bbs/app/controllers/page"
 	"gin_bbs/app/controllers/auth/login"
 	"gin_bbs/app/controllers/auth/password"
 	"gin_bbs/app/controllers/auth/register"
 	"gin_bbs/app/controllers/auth/verification"
 	"gin_bbs/app/controllers/category"
-	"gin_bbs/app/controllers/page"
+	"gin_bbs/app/controllers/notification"
+
+	"gin_bbs/app/controllers/reply"
 	"gin_bbs/app/controllers/topic"
 	"gin_bbs/app/controllers/user"
 	"time"
@@ -22,7 +25,8 @@ import (
 func registerWeb(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	r = r.Middleware(middlewares...)
 
-	r.Register("GET", "root", "", page.Root)
+	// r.Register("GET", "root", "", page.Root)
+	r.Register("GET", "root", "", topic.Index)
 	r.Register("GET", "captcha", "captcha/:id", captcha.Handler) // 验证码
 
 	// ------------------------------------- Auth -------------------------------------
@@ -84,6 +88,7 @@ func registerWeb(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	topicRouter := r.Group("/topics")
 	{
 		topicRouter.Register("GET", "topics.index", "", topic.Index)
+		topicRouter.Register("GET", "topics.show_no_slug", "/show/:id", topic.Show)
 		topicRouter.Register("GET", "topics.show", "/show/:id/*slug", topic.Show)
 		topicRouter.Register("GET", "topics.create", "/create", middleware.Auth(), wrapper.GetUser(topic.Create))
 		topicRouter.Register("POST", "topics.store", "", middleware.Auth(), wrapper.GetUser(topic.Store))
@@ -98,5 +103,18 @@ func registerWeb(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	catRouter := r.Group("/categories")
 	{
 		catRouter.Register("GET", "categories.show", "/show/:id", category.Show)
+	}
+
+	// ------------------------------------- reply -------------------------------------
+	replyRouter := r.Group("/replies", middleware.Auth())
+	{
+		replyRouter.Register("POST", "replies.store", "", wrapper.GetUser(reply.Store))
+		replyRouter.Register("POST", "replies.destroy", "/destroy/:id", wrapper.GetUser(reply.Destroy))
+	}
+
+	// ------------------------------------- notification -------------------------------------
+	notificationRouter := r.Group("/notifications", middleware.Auth())
+	{
+		notificationRouter.Register("GET", "notifications.index", "", wrapper.GetUser(notification.Index))
 	}
 }

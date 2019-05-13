@@ -1,0 +1,28 @@
+{% if replies %}
+  <ul class="list-group mt-4 border-0">
+    {% for reply in replies %}
+      <li class="list-group-item pl-2 pr-2 border-right-0 border-left-0 {% ifequal reply.ID replies.0.ID %}border-top-0{% endifequal %}">
+        <a href="{{ reply.Topic.Link }}#reply{{ reply.ID }}">
+          {{ reply.Topic.Title }}
+        </a>
+
+        <div class="reply-content text-secondary mt-2 mb-2">
+          {{ reply.Content | safe }}
+        </div>
+
+        <div class="text-secondary" style="font-size:0.9em;">
+          <i class="far fa-clock"></i> 回复于 {{ reply.CreatedAt }}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <div class="empty-block" style="margin-top:20px">{% if error %}{{ error }}{% else %}暂无数据 ~_~ {% endif %}</div>
+{% endif %}
+
+<!-- 分页 -->
+{% if replies %}
+<div class="mt-4 pt-1">
+  {%  include '../shared/_pagination.html' %}
+</div>
+{% endif %}

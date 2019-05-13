@@ -2,13 +2,15 @@ package services
 
 import (
 	replyModel "gin_bbs/app/models/reply"
+	topicModel "gin_bbs/app/models/topic"
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/app/viewmodels"
 	"gin_bbs/database"
 	"gin_bbs/pkg/ginutils/utils"
 )
 
-func RpleyListService(getReplyFunc func() ([]*replyModel.Reply, error)) (interface{}, error) {
+// RpleyListService -
+func RpleyListService(getReplyFunc func() ([]*replyModel.Reply, error), currentUser *userModel.User) (interface{}, error) {
 	var (
 		result = make([]interface{}, 0) // 最终结果
 
@@ -17,6 +19,9 @@ func RpleyListService(getReplyFunc func() ([]*replyModel.Reply, error)) (interfa
 
 		usersIDs = make([]uint, 0) // 存储所有 user id
 		users    = make([]*userModel.User, 0)
+
+		topicsIDs = make([]uint, 0) // 存储所有 topic id
+		topics    = make([]*topicModel.Topic, 0)
 	)
 
 	// 获取 reply
@@ -29,10 +34,14 @@ func RpleyListService(getReplyFunc func() ([]*replyModel.Reply, error)) (interfa
 		replyIDMap[r.ID] = viewmodels.NewReplyViewModelSerializer(r)
 		replyIDs = append(replyIDs, r.ID)
 		usersIDs = append(usersIDs, r.UserID)
+		topicsIDs = append(topicsIDs, r.TopicID)
 	}
 
-	// 获取 user
+	// 获取 user 和 topic
 	if err = database.DB.Where("id in (?)", utils.UniqueUintSlice(usersIDs)).Find(&users).Error; err != nil {
+		return result, err
+	}
+	if err = database.DB.Where("id in (?)", utils.UniqueUintSlice(topicsIDs)).Find(&topics).Error; err != nil {
 		return result, err
 	}
 
@@ -43,6 +52,21 @@ func RpleyListService(getReplyFunc func() ([]*replyModel.Reply, error)) (interfa
 				replyIDMap[r.ID]["User"] = viewmodels.NewUserViewModelSerializer(u)
 			}
 		}
+		for _, t := range topics {
+			if r.TopicID == t.ID {
+				replyIDMap[r.ID]["Topic"] = viewmodels.NewTopicViewModelSerializer(t)
+				// 是否可删除
+				if currentUser != nil && t.UserID == currentUser.ID {
+					replyIDMap[r.ID]["CanDelete"] = true
+				}
+			}
+		}
+		// 是否可删除
+		if currentUser != nil {
+			if r.UserID == currentUser.ID {
+				replyIDMap[r.ID]["CanDelete"] = true
+			}
+		}
 	}
 
 	for _, id := range replyIDs {
@@ -50,4 +74,4 @@ func RpleyListService(getReplyFunc func() ([]*replyModel.Reply, error)) (interfa
 	}
 
 	return result, nil
-} 
+}
