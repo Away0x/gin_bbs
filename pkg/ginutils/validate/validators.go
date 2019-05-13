@@ -117,6 +117,9 @@ func UintRangeValidator(value uint, rg []uint) ValidatorFunc {
 // MimetypeValidator 文件 mimetype 校验
 func MimetypeValidator(f *multipart.FileHeader, mimes []string) ValidatorFunc {
 	return func() string {
+		if f == nil {
+			return ""
+		}
 		src, err := f.Open()
 		if err != nil {
 			return "$name 打开失败"
@@ -149,6 +152,9 @@ type DimensionsOptions struct {
 // ImageDimensionsValidator 图片分辨率校验
 func ImageDimensionsValidator(f *multipart.FileHeader, options DimensionsOptions) ValidatorFunc {
 	return func() string {
+		if f == nil {
+			return ""
+		}
 		src, err := f.Open()
 		if err != nil {
 			return "$name 打开失败"
