@@ -65,6 +65,7 @@ func Store(c *gin.Context, currentUser *userModel.User) {
 		return
 	}
 
+	replyModel.TopicRepliedNotify(reply, currentUser) // 通知
 	flash.NewSuccessFlash(c, "评论创建成功")
 	controllers.Redirect(c, topic.Link(), false)
 }

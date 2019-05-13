@@ -9,6 +9,7 @@ import (
 	"gin_bbs/pkg/ginutils/utils"
 )
 
+// RpleyListService -
 func RpleyListService(getReplyFunc func() ([]*replyModel.Reply, error), currentUser *userModel.User) (interface{}, error) {
 	var (
 		result = make([]interface{}, 0) // 最终结果
