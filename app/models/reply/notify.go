@@ -6,7 +6,7 @@ import (
 	topicModel "gin_bbs/app/models/topic"
 	userModel "gin_bbs/app/models/user"
 	"strconv"
-	"gin_bbs/app/helpers"
+	// "gin_bbs/app/helpers"
 )
 
 // TopicRepliedNotify 发送一条消息给 topic 作者 (告知其有新回复了)
