@@ -1,3 +1,5 @@
+<!-- 大于一页才显示分页组件 -->
+{% if pagination.Elements.1 %}
 <ul class="pagination" role="navigation">
 
   {% if pagination.OnFirstPage %}
@@ -29,3 +31,4 @@
   {% endif %}
 
 </ul>
+{% endif %}

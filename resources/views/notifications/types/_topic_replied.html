@@ -1,0 +1,26 @@
+<li class="media border-bottom">
+  <div class="media-left">
+    <a href="{% route 'users.show' notification.Data.user_id %}">
+      <img class="media-object img-thumbnail mr-3"
+        alt="{{ notification.Data.user_name }}"
+        src="{{ notification.Data.user_avatar }}" style="width:48px;height:48px;" />
+    </a>
+  </div>
+
+  <div class="media-body">
+    <div class="media-heading mt-0 mb-1 text-secondary">
+      <a href="{% route 'users.show' notification.Data.user_id %}">{{ notification.Data.user_name }}</a>
+      评论了
+      <a href="{{ notification.Data.topic_link }}">{{ notification.Data.topic_title }}</a>
+
+      <!-- 回复删除按钮 -->
+      <span class="meta float-right" title="{{ notification.CreatedAt }}">
+        <i class="far fa-clock"></i>
+        {{ notification.CreatedAt }}
+      </span>
+    </div>
+    <div class="reply-content">
+      {{ notification.Data.reply_content | safe }}
+    </div>
+  </div>
+</li>

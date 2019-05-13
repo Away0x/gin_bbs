@@ -11,6 +11,7 @@ import (
 	"gin_bbs/app/controllers/auth/register"
 	"gin_bbs/app/controllers/auth/verification"
 	"gin_bbs/app/controllers/category"
+	"gin_bbs/app/controllers/notification"
 	"gin_bbs/app/controllers/page"
 	"gin_bbs/app/controllers/reply"
 	"gin_bbs/app/controllers/topic"
@@ -106,5 +107,11 @@ func registerWeb(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	{
 		replyRouter.Register("POST", "replies.store", "", wrapper.GetUser(reply.Store))
 		replyRouter.Register("POST", "replies.destroy", "/destroy/:id", wrapper.GetUser(reply.Destroy))
+	}
+
+	// ------------------------------------- notification -------------------------------------
+	notificationRouter := r.Group("/notifications", middleware.Auth())
+	{
+		notificationRouter.Register("GET", "notifications.index", "", wrapper.GetUser(notification.Index))
 	}
 }

@@ -1,0 +1,41 @@
+{% extends "../layouts/app.html" %}
+
+{% block title %}我的通知{% endblock %}
+
+{% block style %}
+<style>
+.notification-list li:last-child {
+  border-bottom: none !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="col-md-10 offset-md-1">
+      <div class="card ">
+
+        <div class="card-body">
+
+          <h3 class="text-xs-center">
+            <i class="far fa-bell" aria-hidden="true"></i> 我的通知
+          </h3>
+          <hr>
+
+          {% if notifications %}
+            <div class="list-unstyled notification-list">
+              {% for notification in notifications %}
+                {% include './types/_topic_replied.html' %}
+              {% endfor %}
+
+              {% include '../shared/_pagination.html' %}
+            </div>
+          {% else %}
+            <div class="empty-block">没有消息通知！</div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

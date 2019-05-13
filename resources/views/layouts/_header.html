@@ -22,6 +22,17 @@
       <ul class="navbar-nav navbar-right">
         <!-- Authentication Links -->
         {% if currentUserData %}
+          <li class="nav-item">
+            <a class="nav-link mt-1 mr-3 font-weight-bold" href="{% route 'topics.create' %}">
+              <i class="fa fa-plus"></i>
+            </a>
+          </li>
+          <li class="nav-item notification-badge">
+            <a class="nav-link mr-3 badge badge-pill badge-{% ifequal currentUserData.NotificationCount 0 %}secondary{% else %}hint{% endifequal %} text-white"
+              href="{% route 'notifications.index' %}">
+              {{ currentUserData.NotificationCount }}
+            </a>
+          </li>
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="{{ currentUserData.Avatar }}" class="img-responsive img-circle" width="30px" height="30px">
