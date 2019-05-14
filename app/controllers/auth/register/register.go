@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 展示注册页面
+// ShowRegistrationForm 展示注册页面
 func ShowRegistrationForm(c *gin.Context) {
 	captcha := captcha.New("/captcha")
 
@@ -22,7 +22,7 @@ func ShowRegistrationForm(c *gin.Context) {
 	})
 }
 
-// 注册
+// Register 注册
 func Register(c *gin.Context) {
 	// 验证参数和创建用户
 	userCreateForm := &userRequest.UserCreateForm{
