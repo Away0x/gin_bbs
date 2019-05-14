@@ -6,6 +6,7 @@ import (
 	"gin_bbs/pkg/ginutils/oldvalue"
 	"gin_bbs/pkg/ginutils/session"
 
+	"gin_bbs/pkg/constants"
 	"gin_bbs/pkg/ginutils/router"
 	"gin_bbs/routes/middleware"
 
@@ -39,7 +40,7 @@ func Register(g *gin.Engine) *gin.Engine {
 		session.SessionMiddleware(),
 		// csrf
 		csrf.Middleware(func(c *gin.Context, _ bool) {
-			if c.GetHeader("X-Requested-With") == "XMLHttpRequest" {
+			if c.GetHeader(constants.HeaderRequestedWith) != "" {
 				c.JSON(403, gin.H{"msg": "很抱歉！您的 Session 已过期，请刷新后再试一次。"})
 			} else {
 				controllers.Render403(c, "很抱歉！您的 Session 已过期，请刷新后再试一次。")
@@ -59,14 +60,14 @@ func Register(g *gin.Engine) *gin.Engine {
 
 	// ---------------------------------- error ----------------------------------
 	g.NoRoute(func(c *gin.Context) {
-		if c.GetHeader("X-Requested-With") == "XMLHttpRequest" {
+		if c.GetHeader(constants.HeaderRequestedWith) != "" {
 			c.JSON(404, gin.H{"msg": "api not found"})
 		} else {
 			controllers.Render404(c)
 		}
 	})
 	g.NoMethod(func(c *gin.Context) {
-		if c.GetHeader("X-Requested-With") == "XMLHttpRequest" {
+		if c.GetHeader(constants.HeaderRequestedWith) != "" {
 			c.JSON(404, gin.H{"msg": "method not found"})
 		} else {
 			controllers.Render404(c)

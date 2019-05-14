@@ -2,6 +2,8 @@ package middleware
 
 import (
 	"gin_bbs/app/controllers"
+	"gin_bbs/pkg/constants"
+	"gin_bbs/pkg/errno"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +31,11 @@ func RateLimiter(duration time.Duration, n int) gin.HandlerFunc {
 
 		ok = limiter.(*rate.Limiter).Allow()
 		if !ok {
-			controllers.RenderTooManyRequests(c)
+			if c.GetHeader(constants.HeaderRequestedWith) != "" {
+				controllers.SendErrorResponse(c, errno.TooManyRequestError)
+			} else {
+				controllers.RenderTooManyRequests(c)
+			}
 			c.AbortWithStatus(429) // handle exceed rate limit request
 			return
 		}

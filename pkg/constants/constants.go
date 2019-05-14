@@ -12,4 +12,6 @@ const (
 	DateLayout = "2006-01-02"
 	// DateTimeLayout -
 	DateTimeLayout = "2006-01-02 15:04:05"
+	// HeaderRequestedWith : Async Request Header
+	HeaderRequestedWith = "X-Requested-With"
 )
