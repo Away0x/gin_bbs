@@ -39,6 +39,9 @@ type appConfig struct {
 	// 百度翻译
 	BaiduTranslateAppID string
 	BaiduTranslateKey   string
+
+	// 云片
+	YunPianApiKey string
 }
 
 func newAppConfig() *appConfig {
@@ -52,6 +55,7 @@ func newAppConfig() *appConfig {
 
 	viper.SetDefault("BAIDU_TRANSLATE.APPID", "")
 	viper.SetDefault("BAIDU_TRANSLATE.KEY", "")
+	viper.SetDefault("YUNPIAN_API_KEY", "")
 
 	return &appConfig{
 		Name:    viper.GetString("APP.NAME"),
@@ -73,5 +77,7 @@ func newAppConfig() *appConfig {
 
 		BaiduTranslateAppID: viper.GetString("BAIDU_TRANSLATE.APPID"),
 		BaiduTranslateKey:   viper.GetString("BAIDU_TRANSLATE.KEY"),
+
+		YunPianApiKey: viper.GetString("YUNPIAN_API_KEY"),
 	}
 }

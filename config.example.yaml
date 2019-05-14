@@ -38,3 +38,6 @@ LOG:
 BAIDU_TRANSLATE:
   APPID:
   KEY:
+
+# 短信-云片
+YUNPIAN_API_KEY:

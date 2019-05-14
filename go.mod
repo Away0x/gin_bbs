@@ -36,6 +36,7 @@ require (
 	github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf
 	github.com/tommy351/gin-sessions v0.0.0-20150617141853-353060947eb6
 	github.com/ugorji/go/codec v0.0.0-20190320090025-2dc34c0b8780 // indirect
+	github.com/yunpian/yunpian-go-sdk v0.0.0-20171206021512-2193bf8a7459
 	golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c
 	golang.org/x/net v0.0.0-20190320064053-1272bf9dcd53 // indirect
 	golang.org/x/text v0.3.2 // indirect
