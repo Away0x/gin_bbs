@@ -11,18 +11,21 @@ import (
 	"gin_bbs/routes/middleware"
 
 	"gin_bbs/app/controllers"
+	"gin_bbs/config"
 
 	"github.com/gin-gonic/gin"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 const (
-	// ApiRoot -
-	ApiRoot = "/api"
+	// APIRoot -
+	APIRoot = "/api"
 
 	// AdminWebRoot -
 	AdminWebRoot = "/admin"
-	// AdminApiRoot -
-	AdminApiRoot = "/admin-api"
+	// AdminAPIRoot -
+	AdminAPIRoot = "/admin-api"
 )
 
 // Register 注册路由和中间件
@@ -34,6 +37,13 @@ func Register(g *gin.Engine) *gin.Engine {
 
 	// ---------------------------------- 注册路由 ----------------------------------
 	r := &router.MyRoute{Router: g}
+
+	// +++++++++++++++++++ swagger +++++++++++++++++++
+	// 需全局安装 go get -u github.com/swaggo/swag/cmd/swag 然后 swag init 生成文档
+	if config.AppConfig.RunMode != config.RunmodeRelease {
+		g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
+
 	// +++++++++++++++++++ web +++++++++++++++++++
 	registerWeb(r,
 		// session

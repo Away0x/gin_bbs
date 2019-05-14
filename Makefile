@@ -10,6 +10,9 @@ install:
 dev:
 	fresh -c ./fresh.conf
 
+api-doc:
+	swag init
+
 mock:
 	go run ./main.go -m
 

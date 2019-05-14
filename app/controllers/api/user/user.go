@@ -11,8 +11,8 @@ import (
 // Store 用户注册
 func Store(c *gin.Context) {
 	var req request.User
-	if err := c.BindJSON(&req); err != nil {
-		controllers.SendErrorResponse(c, errno.ParamsError)
+	if err := c.ShouldBindJSON(&req); err != nil {
+		controllers.SendErrorResponse(c, errno.New(errno.ParamsError, err))
 		return
 	}
 
