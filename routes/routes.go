@@ -59,10 +59,18 @@ func Register(g *gin.Engine) *gin.Engine {
 
 	// ---------------------------------- error ----------------------------------
 	g.NoRoute(func(c *gin.Context) {
-		controllers.Render404(c)
+		if c.GetHeader("X-Requested-With") == "XMLHttpRequest" {
+			c.JSON(404, gin.H{"msg": "api not found"})
+		} else {
+			controllers.Render404(c)
+		}
 	})
 	g.NoMethod(func(c *gin.Context) {
-		controllers.Render404(c)
+		if c.GetHeader("X-Requested-With") == "XMLHttpRequest" {
+			c.JSON(404, gin.H{"msg": "method not found"})
+		} else {
+			controllers.Render404(c)
+		}
 	})
 
 	return g

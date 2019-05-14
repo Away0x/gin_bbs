@@ -7,4 +7,7 @@ var (
 	AuthError           = &Errno{Code: 1001, Message: "禁止访问"}
 	InternalServerError = &Errno{Code: 1002, Message: "服务器错误"}
 	ErrDatabase         = &Errno{Code: 1003, Message: "数据库错误"}
+
+	// 500x 第三方错误
+	SmsError = &Errno{Code: 5000, Message: "短信发送异常"}
 )

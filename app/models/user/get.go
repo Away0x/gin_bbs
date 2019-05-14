@@ -35,6 +35,13 @@ func GetByEmail(email string) (*User, error) {
 	return user, d.Error
 }
 
+// GetByPhone -
+func GetByPhone(phone string) (*User, error) {
+	user := &User{}
+	d := database.DB.Where("phone = ?", phone).First(&user)
+	return user, d.Error
+}
+
 // GetByActivationToken -
 func GetByActivationToken(token string) (*User, error) {
 	user := &User{}

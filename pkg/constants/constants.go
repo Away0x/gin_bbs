@@ -10,4 +10,6 @@ const (
 	UserNameRegex = `^[A-Za-z0-9\-\_]+$`
 	// DateLayout -
 	DateLayout = "2006-01-02"
+	// DateTimeLayout -
+	DateTimeLayout = "2006-01-02 15:04:05"
 )

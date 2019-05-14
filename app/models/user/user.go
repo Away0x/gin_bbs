@@ -24,9 +24,9 @@ var (
 // User 用户模型
 type User struct {
 	models.BaseModel
-	Name string `gorm:"column:name;type:varchar(255);not null"`
-	// Phone        string `gorm:"column:phone;type:varchar(255);unique"`
-	Email        string `gorm:"column:email;type:varchar(255);unique;not null"`
+	Name         string `gorm:"column:name;type:varchar(255);not null"`
+	Phone        string `gorm:"column:phone;type:varchar(255);unique"`
+	Email        string `gorm:"column:email;type:varchar(255);unique"`
 	Avatar       string `gorm:"column:avatar;type:varchar(255);not null"`
 	Introduction string `gorm:"column:introduction;type:varchar(255);not null"`
 	Password     string `gorm:"column:password;type:varchar(255);not null"`

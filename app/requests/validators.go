@@ -28,6 +28,16 @@ func EmailUniqueValidator(email string) validate.ValidatorFunc {
 	}
 }
 
+// PhoneUniqueValidator 手机号唯一
+func PhoneUniqueValidator(phone string) validate.ValidatorFunc {
+	return func() (msg string) {
+		if _, err := userModel.GetByPhone(phone); err != nil {
+			return ""
+		}
+		return "手机已经被注册过了"
+	}
+}
+
 // CaptchaValidator 验证码验证
 func CaptchaValidator(captchaID, captchaVal string) validate.ValidatorFunc {
 	return func() (msg string) {
