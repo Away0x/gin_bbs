@@ -15,7 +15,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Store 手机号码注册用户
+// Store 发送短信
 func Store(c *gin.Context) {
 	var p struct {
 		Phone string `json:"phone"`
@@ -50,10 +50,11 @@ func Store(c *gin.Context) {
 	// 存入缓存 (十分钟过期)
 	expiredAt := 10 * time.Minute
 	key := "verificationCode_" + string(utils.RandomCreateBytes(15))
-	cache.Put(key, map[string]interface{}{"phone": p.Phone, "code": code}, expiredAt)
+	cache.PutStringMap(key, map[string]string{"phone": p.Phone, "code": code}, expiredAt)
 
-	controllers.SendOKResponse(c, map[string]string{
-		"key":        key,
-		"expired_at": time.Now().Add(expiredAt).Format(constants.DateTimeLayout),
+	controllers.SendOKResponse(c, map[string]interface{}{
+		"key":              key,
+		"expired_at":       time.Now().Add(expiredAt).Format(constants.DateTimeLayout),
+		"debug_sms_result": result,
 	})
 }

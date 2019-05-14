@@ -91,6 +91,10 @@ func RunByParams(strict bool, validatorMap ValidatorMap, messageMap MessagesMap)
 				}
 			}
 		}
+
+		if len(errMap[key]) == 0 {
+			delete(errMap, key)
+		}
 	}
 
 	return

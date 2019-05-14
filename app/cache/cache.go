@@ -15,6 +15,11 @@ func Put(key string, val interface{}, expiration time.Duration) {
 	cacheInstance.Set(key, val, expiration)
 }
 
+// PutStringMap -
+func PutStringMap(key string, val map[string]string, expiration time.Duration) {
+	Put(key, val, expiration)
+}
+
 // Get -
 func Get(key string) (interface{}, bool) {
 	data, ok := cacheInstance.Get(key)
@@ -23,6 +28,19 @@ func Get(key string) (interface{}, bool) {
 	}
 
 	return data, true
+}
+
+// GetStringMap -
+func GetStringMap(key string) (map[string]string, bool) {
+	d, ok := Get(key)
+	if !ok {
+		return nil, false
+	}
+	if d, ok := d.(map[string]string); ok {
+		return d, true
+	}
+
+	return nil, false
 }
 
 // Del -

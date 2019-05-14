@@ -32,7 +32,7 @@ func (p *PassWordResetForm) RegisterValidators() validate.ValidatorMap {
 	return validate.ValidatorMap{
 		"password": {
 			validate.RequiredValidator(p.Password),
-			validate.MixLengthValidator(p.Password, 6),
+			validate.MinLengthValidator(p.Password, 6),
 			validate.EqualValidator(p.Password, p.PasswordConfirmation),
 		},
 		"token": {

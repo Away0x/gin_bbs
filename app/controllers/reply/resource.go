@@ -26,7 +26,7 @@ func Store(c *gin.Context, currentUser *userModel.User) {
 		validate.ValidatorMap{
 			"content": {
 				validate.RequiredValidator(content),
-				validate.MixLengthValidator(content, 2),
+				validate.MinLengthValidator(content, 2),
 			},
 			"topic_id": {
 				func() string {

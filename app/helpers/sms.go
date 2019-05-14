@@ -12,7 +12,7 @@ func SendSms(phone string, code string) *ypclnt.Result {
 	apiKey := config.AppConfig.YunPianApiKey
 	if apiKey == "" {
 		// debug 模式并且没配置云片 apiKey 不发送短信
-		if config.AppConfig.RunMode == config.RunmodeDebug {
+		if config.AppConfig.RunMode != config.RunmodeRelease {
 			return &ypclnt.Result{
 				Code:   200,
 				Msg:    "云片 apikey 未配置，请检查 config.yaml",

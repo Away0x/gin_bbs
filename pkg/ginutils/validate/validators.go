@@ -27,8 +27,8 @@ func RequiredValidator(value string) ValidatorFunc {
 	}
 }
 
-// MixLengthValidator -
-func MixLengthValidator(value string, minStrLen int) ValidatorFunc {
+// MinLengthValidator -
+func MinLengthValidator(value string, minStrLen int) ValidatorFunc {
 	return func() string {
 		l := len(value)
 
