@@ -7,6 +7,7 @@ import (
 	"gin_bbs/pkg/ginutils/session"
 
 	"gin_bbs/pkg/constants"
+	"gin_bbs/pkg/errno"
 	"gin_bbs/pkg/ginutils/router"
 	"gin_bbs/routes/middleware"
 
@@ -32,7 +33,9 @@ const (
 func Register(g *gin.Engine) *gin.Engine {
 	// ---------------------------------- 注册全局中间件 ----------------------------------
 	g.Use(gin.Recovery())
-	g.Use(gin.Logger())
+	if config.AppConfig.RunMode != config.RunmodeRelease {
+		g.Use(gin.Logger())
+	}
 	g.Use(last.LastMiddleware()) // 记录上一次请求信息
 
 	// ---------------------------------- 注册路由 ----------------------------------
@@ -51,7 +54,7 @@ func Register(g *gin.Engine) *gin.Engine {
 		// csrf
 		csrf.Middleware(func(c *gin.Context, _ bool) {
 			if c.GetHeader(constants.HeaderRequestedWith) != "" {
-				c.JSON(403, gin.H{"msg": "很抱歉！您的 Session 已过期，请刷新后再试一次。"})
+				controllers.SendErrorResponse(c, errno.SessionError)
 			} else {
 				controllers.Render403(c, "很抱歉！您的 Session 已过期，请刷新后再试一次。")
 			}
@@ -71,14 +74,14 @@ func Register(g *gin.Engine) *gin.Engine {
 	// ---------------------------------- error ----------------------------------
 	g.NoRoute(func(c *gin.Context) {
 		if c.GetHeader(constants.HeaderRequestedWith) != "" {
-			c.JSON(404, gin.H{"msg": "api not found"})
+			controllers.SendErrorResponse(c, errno.NotFoundError)
 		} else {
 			controllers.Render404(c)
 		}
 	})
 	g.NoMethod(func(c *gin.Context) {
 		if c.GetHeader(constants.HeaderRequestedWith) != "" {
-			c.JSON(404, gin.H{"msg": "method not found"})
+			controllers.SendErrorResponse(c, errno.NotFoundError)
 		} else {
 			controllers.Render404(c)
 		}

@@ -4,7 +4,7 @@ import (
 	"gin_bbs/app/cache"
 	"gin_bbs/app/controllers"
 	"gin_bbs/app/helpers"
-	"gin_bbs/app/requests"
+	vericode "gin_bbs/app/requests/api/verification_code"
 	"gin_bbs/pkg/constants"
 	"gin_bbs/pkg/errno"
 	"gin_bbs/pkg/ginutils/utils"
@@ -16,21 +16,28 @@ import (
 
 // Store 发送短信
 func Store(c *gin.Context) {
-	phone, ok := requests.RunPhoneValidate(c)
-	if !ok {
+	// 验证图片验证码
+	var req vericode.VerificationCode
+	if err := c.ShouldBind(&req); err != nil {
+		controllers.SendErrorResponse(c, errno.New(errno.ParamsError, err))
+		return
+	}
+	phone, err := req.Run()
+	if err != nil {
+		controllers.SendErrorResponse(c, err)
 		return
 	}
 
-	// 生成 4 位随机数，左侧补 0
-	code := strconv.Itoa(utils.RandInt(1, 9999))
+	// 发送短信
+	code := strconv.Itoa(utils.RandInt(1, 9999)) // 生成 4 位随机数，左侧补 0
 	code, _ = utils.LeftPad(code, 4, '0')
-	result := helpers.SendSms(phone, code) // 发送短信
+	result := helpers.SendSms(phone, code)
 	if result.Code == -1 {
 		controllers.SendErrorResponse(c, errno.New(errno.SmsError, result))
 		return
 	}
 
-	// 存入缓存 (十分钟过期)
+	// 短信 code 存入缓存 (十分钟过期)
 	expiredAt := 10 * time.Minute
 	key := "verificationCode_" + string(utils.RandomCreateBytes(15))
 	cache.PutStringMap(key, map[string]string{"phone": phone, "code": code}, expiredAt)
