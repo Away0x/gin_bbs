@@ -41,3 +41,9 @@ BAIDU_TRANSLATE:
 
 # 短信-云片
 YUNPIAN_API_KEY:
+
+# 微信
+WEIXIN:
+  APP_ID:
+  APP_SECRET:
+  REDIRECT_URL: # OAuth 授权后的跳转链接，默认为 APP.URL

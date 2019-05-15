@@ -56,6 +56,20 @@ func GetByRememberToken(token string) (*User, error) {
 	return user, d.Error
 }
 
+// GetByWeixinUnionID -
+func GetByWeixinUnionID(unionid string) (*User, error) {
+	user := &User{}
+	d := database.DB.Where("weixin_unionid = ?", unionid).First(&user)
+	return user, d.Error
+}
+
+// GetByWeixinOpenID -
+func GetByWeixinOpenID(openid string) (*User, error) {
+	user := &User{}
+	d := database.DB.Where("weixin_openid = ?", openid).First(&user)
+	return user, d.Error
+}
+
 // List 获取用户列表
 func List(offset, limit int) (users []*User, err error) {
 	users = make([]*User, 0)

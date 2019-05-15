@@ -14,3 +14,25 @@ func UniqueUintSlice(s []uint) []uint {
 
 	return result
 }
+
+// InStringSlice 是否存在于 slice 中
+func InStringSlice(s []string, o string) bool {
+	for _, v := range s {
+		if v == o {
+			return true
+		}
+	}
+
+	return false
+}
+
+// InIntSlice 是否存在于 slice 中
+func InIntSlice(s []int, o int) bool {
+	for _, v := range s {
+		if v == o {
+			return true
+		}
+	}
+
+	return false
+}

@@ -9,7 +9,7 @@ import (
 
 // SendSms 发送短信
 func SendSms(phone string, code string) *ypclnt.Result {
-	apiKey := config.AppConfig.YunPianApiKey
+	apiKey := config.AppConfig.YunPianAPIKey
 	if apiKey == "" {
 		// debug 模式并且没配置云片 apiKey 不发送短信
 		if config.AppConfig.RunMode != config.RunmodeRelease {

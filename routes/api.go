@@ -5,6 +5,7 @@ import (
 	"gin_bbs/routes/middleware"
 	"time"
 
+	"gin_bbs/app/controllers/api/authorization"
 	"gin_bbs/app/controllers/api/captcha"
 	"gin_bbs/app/controllers/api/user"
 	vericode "gin_bbs/app/controllers/api/verification_code"
@@ -16,15 +17,15 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	r = r.Group(APIRoot, middlewares...)
 
 	// 短信验证码
-	r.Register("POST", "api.verificationCodes.store", "verificationCodes",
+	r.Register("POST", "api.verificationCodes.store", "/verificationCodes",
 		middleware.RateLimiter(1*time.Minute, 10), // 1 分钟 10 次
 		vericode.Store)
 	// 用户注册
-	r.Register("POST", "api.users.store", "users",
+	r.Register("POST", "api.users.store", "/users",
 		middleware.RateLimiter(1*time.Minute, 10), // 1 分钟 10 次
 		user.Store)
 	// 图片验证码
-	r.Register("POST", "api.captchas.store", "captchas",
-		middleware.RateLimiter(1*time.Minute, 10), // 1 分钟 10 次
-		captcha.Store)
+	r.Register("POST", "api.captchas.store", "/captchas", captcha.Store)
+	// 第三方登录
+	r.Register("POST", "api.socials.authorizations.store", "/socials/authorizations/:social_type", authorization.Store)
 }

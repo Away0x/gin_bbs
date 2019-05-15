@@ -41,7 +41,12 @@ type appConfig struct {
 	BaiduTranslateKey   string
 
 	// 云片
-	YunPianApiKey string
+	YunPianAPIKey string
+
+	// 微信
+	WeixinAppID       string
+	WeixinAppSecret   string
+	WeixinRedirectURL string
 }
 
 func newAppConfig() *appConfig {
@@ -49,13 +54,8 @@ func newAppConfig() *appConfig {
 	viper.SetDefault("APP.NAME", "gin_bbs")
 	viper.SetDefault("APP.RUNMODE", "release")
 	viper.SetDefault("APP.ADDR", ":8080")
-	viper.SetDefault("APP.URL", "")
 	viper.SetDefault("APP.KEY", "base64:O+VQ74YEigLPDzLKnh2HW/yjCdU2ON9v7xuKBgSOEAo=")
 	viper.SetDefault("APP.ENABLE_CSRF", true)
-
-	viper.SetDefault("BAIDU_TRANSLATE.APPID", "")
-	viper.SetDefault("BAIDU_TRANSLATE.KEY", "")
-	viper.SetDefault("YUNPIAN_API_KEY", "")
 
 	return &appConfig{
 		Name:    viper.GetString("APP.NAME"),
@@ -78,6 +78,10 @@ func newAppConfig() *appConfig {
 		BaiduTranslateAppID: viper.GetString("BAIDU_TRANSLATE.APPID"),
 		BaiduTranslateKey:   viper.GetString("BAIDU_TRANSLATE.KEY"),
 
-		YunPianApiKey: viper.GetString("YUNPIAN_API_KEY"),
+		YunPianAPIKey: viper.GetString("YUNPIAN_API_KEY"),
+
+		WeixinAppID:       viper.GetString("WEIXIN.APP_ID"),
+		WeixinAppSecret:   viper.GetString("WEIXIN.APP_SECRET"),
+		WeixinRedirectURL: viper.GetString("WEIXIN.REDIRECT_URL"),
 	}
 }

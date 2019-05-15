@@ -25,9 +25,10 @@ var (
 )
 
 func userFactory(i int) *factory.Factory {
+	now := time.Now()
 	u := &userModel.User{
 		Password:        "123456",
-		EmailVerifiedAt: time.Now(),
+		EmailVerifiedAt: &now,
 		Activated:       models.TrueTinyint,
 		RememberToken:   string(utils.RandomCreateBytes(10)),
 	}

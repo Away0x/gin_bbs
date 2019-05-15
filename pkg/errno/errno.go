@@ -1,5 +1,9 @@
 package errno
 
+import (
+	"fmt"
+)
+
 // Errno -
 type Errno struct {
 	Code    int
@@ -8,13 +12,20 @@ type Errno struct {
 }
 
 // New -
-func New(err *Errno, errors interface{}) *Errno {
+func New(err *Errno, es interface{}) *Errno {
 	e := &Errno{
 		Code:    err.Code,
 		Message: err.Message,
 	}
-	if errors != nil {
-		e.Errors = errors
+	if es != nil {
+		switch typed := es.(type) {
+		case *Errno:
+			e.Errors = typed.Message
+		case error:
+			e.Errors = typed.Error()
+		default:
+			e.Errors = es
+		}
 	}
 	return e
 }
@@ -35,6 +46,8 @@ func Decode(err error) (int, string, interface{}) {
 		return typed.Code, typed.Message, typed.Errors
 	default:
 	}
+
+	fmt.Println(err.Error())
 
 	return InternalServerError.Code, InternalServerError.Message, err.Error()
 }

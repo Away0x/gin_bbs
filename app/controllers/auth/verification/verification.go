@@ -34,7 +34,8 @@ func Verify(c *gin.Context) {
 	// 更新用户
 	user.Activated = models.TrueTinyint
 	user.ActivationToken = ""
-	user.EmailVerifiedAt = time.Now()
+	now := time.Now()
+	user.EmailVerifiedAt = &now
 	if err = user.Update(); err != nil {
 		flash.NewSuccessFlash(c, "用户激活失败: "+err.Error())
 		controllers.RedirectRouter(c, "verification.notice")
