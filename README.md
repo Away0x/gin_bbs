@@ -1,5 +1,8 @@
 # Gin BBS App
 
+- [访问地址](http://www.frontendgo.com:8889)
+- [API 文档](http://www.frontendgo.com:8889/swagger/index.html)
+
 ## 项目目录结构
 <details>
 <summary>展开查看</summary>
@@ -18,6 +21,8 @@
 ├── pkg              项目依赖
 │
 ├── public           项目静态文件
+│
+├── docs             swagger api doc
 │
 ├── resources        前端源码
 │    └── view        go 模板文件
@@ -58,6 +63,7 @@
 - [x] 文件上传
 - [x] 发送短信
 - [x] 微信登录
+- [x] swagger api 文档
 - [ ] 基于 Vue 的管理员后台系统
 
 

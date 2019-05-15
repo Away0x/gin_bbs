@@ -15,6 +15,13 @@ import (
 )
 
 // Store 发送短信
+// @Summary 发送短信
+// @Tags verificationCodes
+// @Accept  json
+// @Produce  json
+// @Param req body vericode.VerificationCode true "req"
+// @Success 200 {object} controllers.Response "{"key": "verificationCode_xxxxx","debug_sms_result": "xxxx","expired_at": "2019-05-15 17:23:21"}"
+// @Router /api/verificationCodes [post]
 func Store(c *gin.Context) {
 	// 验证图片验证码
 	var req vericode.VerificationCode

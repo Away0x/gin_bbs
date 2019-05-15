@@ -1,6 +1,8 @@
 package routes
 
 import (
+	_ "gin_bbs/docs" // swagger docs
+
 	"gin_bbs/pkg/ginutils/csrf"
 	"gin_bbs/pkg/ginutils/last"
 	"gin_bbs/pkg/ginutils/oldvalue"

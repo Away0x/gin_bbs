@@ -8,9 +8,11 @@ install:
 	go mod download
 
 dev:
+  # go get github.com/pilu/fresh
 	fresh -c ./fresh.conf
 
 api-doc:
+  # go get -u github.com/swaggo/swag/cmd/swag
 	swag init
 
 mock:

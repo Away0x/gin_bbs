@@ -14,6 +14,14 @@ var (
 )
 
 // Store 第三方登录
+// @Summary 第三方登录
+// @Tags authorization
+// @Accept  json
+// @Produce  json
+// @Param social_type path string true "social_type in [weixin]"
+// @Param json body authorization.Authorization true "微信 access_token openid 和 code，要么传 access_token openid 要么只传 code"
+// @Success 200 {object} controllers.Response "{"token": 1}"
+// @Router /api/socials/authorizations/{social_type} [post]
 func Store(c *gin.Context) {
 	var req *authorizationRequest.Authorization
 	if err := c.ShouldBind(&req); err != nil {

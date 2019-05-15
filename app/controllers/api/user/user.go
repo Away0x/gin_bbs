@@ -9,6 +9,13 @@ import (
 )
 
 // Store 用户注册
+// @Summary 用户注册
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param req body user.User true "req"
+// @Success 200 {object} controllers.Response "{}"
+// @Router /api/users [post]
 func Store(c *gin.Context) {
 	var req request.User
 	if err := c.ShouldBindJSON(&req); err != nil {

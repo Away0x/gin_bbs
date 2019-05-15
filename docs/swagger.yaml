@@ -1,0 +1,163 @@
+basePath: '{{.BasePath}}'
+definitions:
+  authorization.Authorization:
+    properties:
+      access_token:
+        type: string
+      code:
+        type: string
+      openid:
+        type: string
+    type: object
+  captcha.storeParams:
+    properties:
+      phone:
+        type: string
+    type: object
+  controllers.Response:
+    properties:
+      code:
+        description: 自定义的异常码
+        type: integer
+      data:
+        description: |-
+          具体响应数据
+          - 无数据时，默认返回一个 {}
+          - 如果是列表数据建议使用 ListData 类型
+          - 不需分页的列表类型时，也建议 data.list 这样响应
+        type: object
+      errors:
+        description: |-
+          具体错误信息
+          - 只用于调试的，前端不应使用该值，因为其可能会不存在
+        type: object
+      message:
+        description: 错误描述
+        type: string
+    type: object
+  user.User:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      verification_code:
+        type: string
+      verification_key:
+        type: string
+    type: object
+  vericode.VerificationCode:
+    properties:
+      captcha_code:
+        type: string
+      captcha_key:
+        type: string
+    type: object
+host: '{{.Host}}'
+info:
+  contact: {}
+  description: '{{.Description}}'
+  license: {}
+  title: '{{.Title}}'
+  version: '{{.Version}}'
+paths:
+  /api/captchas:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 手机号
+        in: body
+        name: phone
+        required: true
+        schema:
+          $ref: '#/definitions/captcha.storeParams'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"captcha_image_content": "http://localhost:8889/captcha/izzUb7f1mYEsi5wModz5.png","captcha_key":
+            "captcha_W4PtXdQQ6KFXvs3","expired_at": "2019-05-15 17:23:21"}'
+          schema:
+            $ref: '#/definitions/controllers.Response'
+            type: object
+      summary: 图片验证码
+      tags:
+      - captchas
+  /api/socials/authorizations/{social_type}:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: social_type in [weixin]
+        in: path
+        name: social_type
+        required: true
+        type: string
+      - description: 微信 access_token openid 和 code，要么传 access_token openid 要么只传 code
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/authorization.Authorization'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"token": 1}'
+          schema:
+            $ref: '#/definitions/controllers.Response'
+            type: object
+      summary: 第三方登录
+      tags:
+      - authorization
+  /api/users:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: req
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.User'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{}'
+          schema:
+            $ref: '#/definitions/controllers.Response'
+            type: object
+      summary: 用户注册
+      tags:
+      - users
+  /api/verificationCodes:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: req
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/vericode.VerificationCode'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"key": "verificationCode_xxxxx","debug_sms_result": "xxxx","expired_at":
+            "2019-05-15 17:23:21"}'
+          schema:
+            $ref: '#/definitions/controllers.Response'
+            type: object
+      summary: 发送短信
+      tags:
+      - verificationCodes
+swagger: "2.0"

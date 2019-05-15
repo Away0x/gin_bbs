@@ -81,7 +81,7 @@ func (a *Authorization) RegisterValidators() validate.ValidatorMap {
 func (a *Authorization) Run() (*weixin.WeixinUserInfo, *errno.Errno) {
 	if config.AppConfig.WeixinAppID == "" || config.AppConfig.WeixinAppSecret == "" {
 		log.Warn("weixin config error: 未配置 WEIXIN CONFIG，请检查 config.yaml 配置")
-		return nil, errno.InternalServerError
+		return nil, errno.New(errno.InternalServerError, "weixin config error: 未配置 WEIXIN CONFIG，请检查 config.yaml 配置")
 	}
 	var (
 		err         error
