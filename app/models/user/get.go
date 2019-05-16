@@ -21,6 +21,13 @@ func Get(id int) (*User, error) {
 	return user, nil
 }
 
+// First -
+func First(query interface{}, args ...interface{}) (*User, error) {
+	user := &User{}
+	d := database.DB.Where(query, args...).First(&user)
+	return user, d.Error
+}
+
 // GetByName -
 func GetByName(name string) (*User, error) {
 	user := &User{}

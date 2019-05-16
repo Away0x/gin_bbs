@@ -10,7 +10,15 @@ var (
 	TooManyRequestError = &Errno{Code: 1004, Message: "发送了太多请求"}
 	SessionError        = &Errno{Code: 1005, Message: "您的 Session 已过期"}
 	NotFoundError       = &Errno{Code: 1006, Message: "Not Found"}
-	AuthorizationError  = &Errno{Code: 1007, Message: "第三方登录失败"}
+
+	// 200x auth 相关
+	SocialAuthorizationError = &Errno{Code: 2000, Message: "第三方登录失败"}
+	LoginError               = &Errno{Code: 2001, Message: "用户名或密码错误"}
+	TokenError               = &Errno{Code: 2002, Message: "token error"}
+	TokenExpireError         = &Errno{Code: 2002, Message: "token 已过期"}
+	TokenRefreshError        = &Errno{Code: 2003, Message: "token 不可刷新"}
+	TokenInBlackListError    = &Errno{Code: 2004, Message: "token 不可使用"}
+	TokenMissingError        = &Errno{Code: 2005, Message: "token missing"}
 
 	// 500x 第三方错误
 	SmsError = &Errno{Code: 5000, Message: "短信发送异常"}

@@ -22,7 +22,7 @@ type Response struct {
 	Data interface{} `json:"data"`
 }
 
-// ListResponse 带列表时的 data
+// ListData 带列表时的 data
 type ListData struct {
 	Page     int           `json:"page"`            // 当前页数
 	PageLine int           `json:"pageline"`        // 每页条数

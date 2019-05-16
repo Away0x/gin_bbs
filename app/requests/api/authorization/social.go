@@ -14,12 +14,12 @@ var (
 	types = []string{"weixin"}
 )
 
-// Authorization -
+// Social -
 // 要么传 OpenID 和 AccessToken，要么传 Code
 /*
 { "access_token": "xxx", "openid": "xxx" } 或者 { "code": "xxx" }
 */
-type Authorization struct {
+type Social struct {
 	validate.Validate
 	SocialType  string `json:"-"`
 	Code        string `json:"code"`
@@ -27,9 +27,9 @@ type Authorization struct {
 	OpenID      string `json:"openid"`
 }
 
-func (a *Authorization) socialTypeValidator() validate.ValidatorFunc {
+func (s *Social) socialTypeValidator() validate.ValidatorFunc {
 	return func() string {
-		if !utils.InStringSlice(types, a.SocialType) {
+		if !utils.InStringSlice(types, s.SocialType) {
 			return "social_type 错误"
 		}
 
@@ -38,15 +38,15 @@ func (a *Authorization) socialTypeValidator() validate.ValidatorFunc {
 }
 
 // RegisterValidators 注册验证器
-func (a *Authorization) RegisterValidators() validate.ValidatorMap {
+func (s *Social) RegisterValidators() validate.ValidatorMap {
 	return validate.ValidatorMap{
 		"social_type": {
-			a.socialTypeValidator(),
+			s.socialTypeValidator(),
 		},
 		"code": {
 			func() string {
-				// a.AccessToken 和 a.Code 是互斥关系
-				if a.AccessToken != "" && a.Code != "" {
+				// s.AccessToken 和 s.Code 是互斥关系
+				if s.AccessToken != "" && s.Code != "" {
 					return "code 传参错误"
 				}
 
@@ -55,8 +55,8 @@ func (a *Authorization) RegisterValidators() validate.ValidatorMap {
 		},
 		"access_token": {
 			func() string {
-				// a.AccessToken 和 a.Code 是互斥关系
-				if a.AccessToken != "" && a.Code != "" {
+				// s.AccessToken 和 s.Code 是互斥关系
+				if s.AccessToken != "" && s.Code != "" {
 					return "access_token 传参错误"
 				}
 
@@ -65,8 +65,8 @@ func (a *Authorization) RegisterValidators() validate.ValidatorMap {
 		},
 		"openid": {
 			func() string {
-				if a.SocialType == "weixin" && a.Code == "" {
-					if a.OpenID == "" {
+				if s.SocialType == "weixin" && s.Code == "" {
+					if s.OpenID == "" {
 						return "openid 传参错误"
 					}
 				}
@@ -78,7 +78,7 @@ func (a *Authorization) RegisterValidators() validate.ValidatorMap {
 }
 
 // Run -
-func (a *Authorization) Run() (*weixin.WeixinUserInfo, *errno.Errno) {
+func (s *Social) Run() (*weixin.WeixinUserInfo, *errno.Errno) {
 	if config.AppConfig.WeixinAppID == "" || config.AppConfig.WeixinAppSecret == "" {
 		log.Warn("weixin config error: 未配置 WEIXIN CONFIG，请检查 config.yaml 配置")
 		return nil, errno.New(errno.InternalServerError, "weixin config error: 未配置 WEIXIN CONFIG，请检查 config.yaml 配置")
@@ -90,24 +90,24 @@ func (a *Authorization) Run() (*weixin.WeixinUserInfo, *errno.Errno) {
 		userInfo    *weixin.WeixinUserInfo
 	)
 
-	if ok, _, errMap := validate.Run(a); !ok {
+	if ok, _, errMap := validate.Run(s); !ok {
 		return nil, errno.New(errno.ParamsError, errMap)
 	}
 
-	if a.Code != "" {
+	if s.Code != "" {
 		// 获取 accessToken
-		accessToken, openid, err = weixin.GetAccessToken(config.AppConfig.WeixinAppID, config.AppConfig.WeixinAppSecret, a.Code)
+		accessToken, openid, err = weixin.GetAccessToken(config.AppConfig.WeixinAppID, config.AppConfig.WeixinAppSecret, s.Code)
 		if err != nil {
-			return nil, errno.New(errno.AuthorizationError, err)
+			return nil, errno.New(errno.SocialAuthorizationError, err)
 		}
 	} else {
-		accessToken = a.AccessToken
-		openid = a.OpenID
+		accessToken = s.AccessToken
+		openid = s.OpenID
 	}
 
 	userInfo, err = weixin.UserFromToken(accessToken, openid)
 	if err != nil {
-		return nil, errno.New(errno.AuthorizationError, err)
+		return nil, errno.New(errno.SocialAuthorizationError, err)
 	}
 
 	return userInfo, nil

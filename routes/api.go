@@ -26,6 +26,13 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		user.Store)
 	// 图片验证码
 	r.Register("POST", "api.captchas.store", "/captchas", captcha.Store)
+
 	// 第三方登录
-	r.Register("POST", "api.socials.authorizations.store", "/socials/authorizations/:social_type", authorization.Store)
+	r.Register("POST", "api.socials.authorizations.store", "/socials/authorizations/:social_type", authorization.SocialStore)
+	// 登录 签发 token
+	r.Register("POST", "api.authorizations.store", "/authorizations", authorization.Store)
+	// 刷新 token
+	r.Register("PUT", "api.authorizations.update", "/authorizations/current", authorization.Update)
+	// 刷新 token
+	r.Register("DELETE", "api.authorizations.destroy", "/authorizations/current", authorization.Destroy)
 }
