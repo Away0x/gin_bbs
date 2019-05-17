@@ -24,11 +24,11 @@ type Response struct {
 
 // ListData 带列表时的 data
 type ListData struct {
-	Page     int           `json:"page"`            // 当前页数
-	PageLine int           `json:"pageline"`        // 每页条数
-	Total    int           `json:"total"`           // 总数
-	List     []interface{} `json:"list"`            // 列表数据 (无数据时，默认返回一个 [])
-	Other    interface{}   `json:"other,omitempty"` // 其他数据 (可选)
+	Page     int         `json:"page,omitempty"`     // 当前页数
+	PageLine int         `json:"pageline,omitempty"` // 每页条数
+	Total    int         `json:"total,omitempty"`    // 总数
+	List     interface{} `json:"list"`               // 列表数据 (无数据时，默认返回一个 [])
+	Other    interface{} `json:"other,omitempty"`    // 其他数据 (可选)
 }
 
 // SendResponse -
@@ -40,7 +40,14 @@ func SendResponse(c *gin.Context, err error, data interface{}) {
 		Message: message,
 	}
 
-	r.Data = data
+	if d, ok := data.(ListData); ok {
+		if d.List == nil {
+			d.List = make([]interface{}, 0)
+		}
+		r.Data = d
+	} else {
+		r.Data = data
+	}
 
 	if errors != nil {
 		r.Errors = errors

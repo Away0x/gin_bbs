@@ -8,6 +8,7 @@ import (
 
 	"gin_bbs/app/controllers/api/authorization"
 	"gin_bbs/app/controllers/api/captcha"
+	"gin_bbs/app/controllers/api/category"
 	"gin_bbs/app/controllers/api/image"
 	"gin_bbs/app/controllers/api/user"
 	vericode "gin_bbs/app/controllers/api/verification_code"
@@ -57,5 +58,11 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		userRouter.Register("POST", "api.images.store", "images", wrapper.GetToken(image.Store))
 		// 编辑用户信息
 		userRouter.Register("PATCH", "api.user.update", "", wrapper.GetToken(user.Update))
+	}
+
+	// ------------------------------------- category -------------------------------------
+	catRouter := r.Group("/categories")
+	{
+		catRouter.Register("GET", "api.categories.index", "", category.Index)
 	}
 }
