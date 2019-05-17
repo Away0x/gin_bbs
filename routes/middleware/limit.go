@@ -31,7 +31,7 @@ func RateLimiter(duration time.Duration, n int) gin.HandlerFunc {
 
 		ok = limiter.(*rate.Limiter).Allow()
 		if !ok {
-			if c.GetHeader(constants.HeaderRequestedWith) != "" {
+			if constants.IsApiRequest(c) {
 				controllers.SendErrorResponse(c, errno.TooManyRequestError)
 			} else {
 				controllers.RenderTooManyRequests(c)

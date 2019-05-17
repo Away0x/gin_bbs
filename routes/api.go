@@ -10,6 +10,7 @@ import (
 	"gin_bbs/app/controllers/api/captcha"
 	"gin_bbs/app/controllers/api/category"
 	"gin_bbs/app/controllers/api/image"
+	"gin_bbs/app/controllers/api/topic"
 	"gin_bbs/app/controllers/api/user"
 	vericode "gin_bbs/app/controllers/api/verification_code"
 
@@ -34,9 +35,11 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		r.Register("POST", "api.captchas.store", "/captchas", captcha.Store)
 
 		// 第三方登录
-		r.Register("POST", "api.socials.authorizations.store", "/socials/authorizations/:social_type", authorization.SocialStore)
+		r.Register("POST", "api.socials.authorizations.store", "/socials/authorizations/:social_type",
+			authorization.SocialStore)
 		// 登录 签发 token
-		r.Register("POST", "api.authorizations.store", "/authorizations", authorization.Store)
+		r.Register("POST", "api.authorizations.store", "/authorizations",
+			authorization.Store)
 
 		// 刷新 token
 		r.Register("PUT", "api.authorizations.update", "/authorizations/current",
@@ -63,6 +66,20 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	// ------------------------------------- category -------------------------------------
 	catRouter := r.Group("/categories")
 	{
+		// 分类列表
 		catRouter.Register("GET", "api.categories.index", "", category.Index)
+	}
+
+	// ------------------------------------- topic -------------------------------------
+	topicRouter := r.Group("/topics")
+	{
+		// 发布话题
+		topicRouter.Register("POST", "api.topics.store", "",
+			middleware.TokenAuth(),
+			wrapper.GetToken(topic.Store))
+		// 修改话题
+		topicRouter.Register("PATCH", "api.topics.update", "",
+			middleware.TokenAuth(),
+			wrapper.GetToken(topic.Update))
 	}
 }
