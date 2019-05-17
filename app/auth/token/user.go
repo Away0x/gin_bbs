@@ -1,38 +1,63 @@
 package token
 
-// // GetTokenFromRequest 从请求中获取 token
-// func GetTokenFromRequest(c *gin.Context) (string, *errno.Errno) {
-// 	header := c.Request.Header.Get("Authorization")
-// 	if header == "" {
-// 		return "", errno.TokenMissingError
-// 	}
+import (
+	"fmt"
+	userModel "gin_bbs/app/models/user"
+	"gin_bbs/pkg/errno"
 
-// 	var token string
-// 	fmt.Sscanf(header, tokenIdentification+" %s", &token)
-// 	return token, nil
-// }
+	"github.com/gin-gonic/gin"
+)
 
-// // ParseAndGetUser 解析 token 获取 user
-// func ParseAndGetUser(token string) (*userModel.User, *errno.Errno) {
-// 	claims, err := parse(token)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+const (
+	tokenHeaderKeyName          = "Authorization"
+	tokenInHeaderIdentification = "Bearer"
+)
 
-// 	// 判断是否过期
-// 	exp := claims["exp"].(int64)
-// 	if isExpire(exp) {
-// 		return nil, errno.TokenExpireError
-// 	}
+// GetTokenFromRequest 从请求中获取 token
+func GetTokenFromRequest(c *gin.Context) (string, *errno.Errno) {
+	header := c.Request.Header.Get(tokenHeaderKeyName)
+	if header == "" {
+		return "", errno.TokenMissingError
+	}
 
-// 	if id, ok := claims["userid"]; ok {
-// 		intid := id.(int)
-// 		u, err := userModel.Get(intid)
-// 		if err != nil {
-// 			return nil, errno.DatabaseError
-// 		}
-// 		return u, nil
-// 	}
+	var token string
+	fmt.Sscanf(header, tokenInHeaderIdentification+" %s", &token)
+	return token, nil
+}
 
-// 	return nil, errno.TokenError
-// }
+// ParseAndGetUser 解析 token 获取 user
+func ParseAndGetUser(c *gin.Context, token string) (*userModel.User, *errno.Errno) {
+	claims, err := Parse(token)
+	if err != nil {
+		return nil, err
+	}
+
+	user, e := userModel.Get(int(claims.UserID))
+	if e != nil {
+		return nil, errno.New(errno.DatabaseError, e)
+	}
+
+	c.Set(tokenHeaderKeyName+"User", user)
+	c.Set(tokenHeaderKeyName+"Token", token)
+	return user, nil
+}
+
+// GetTokenUserFromContext -
+func GetTokenUserFromContext(c *gin.Context) (string, *userModel.User, bool) {
+	user, ok := c.Get(tokenHeaderKeyName + "User")
+	if !ok {
+		return "", nil, false
+	}
+	t, ok := c.Get(tokenHeaderKeyName + "Token")
+	if !ok {
+		return "", nil, false
+	}
+
+	u, ok := user.(*userModel.User)
+	s, ok := t.(string)
+	if !ok {
+		return "", nil, false
+	}
+
+	return s, u, true
+}

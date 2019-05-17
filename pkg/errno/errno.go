@@ -20,13 +20,29 @@ func New(err *Errno, es interface{}) *Errno {
 	if es != nil {
 		switch typed := es.(type) {
 		case *Errno:
-			e.Errors = typed.Message
+			if typed != nil {
+				e.Errors = typed.Message
+			}
 		case error:
 			e.Errors = typed.Error()
 		default:
 			e.Errors = es
 		}
 	}
+	return e
+}
+
+// Base -
+func Base(err *Errno, msg string) *Errno {
+	e := &Errno{
+		Code:    err.Code,
+		Message: err.Message,
+	}
+
+	if msg != "" {
+		e.Message = msg
+	}
+
 	return e
 }
 

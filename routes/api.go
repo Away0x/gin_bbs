@@ -3,6 +3,7 @@ package routes
 import (
 	"gin_bbs/pkg/ginutils/router"
 	"gin_bbs/routes/middleware"
+	"gin_bbs/routes/wrapper"
 	"time"
 
 	"gin_bbs/app/controllers/api/authorization"
@@ -31,8 +32,18 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	r.Register("POST", "api.socials.authorizations.store", "/socials/authorizations/:social_type", authorization.SocialStore)
 	// 登录 签发 token
 	r.Register("POST", "api.authorizations.store", "/authorizations", authorization.Store)
+
 	// 刷新 token
-	r.Register("PUT", "api.authorizations.update", "/authorizations/current", authorization.Update)
-	// 刷新 token
-	r.Register("DELETE", "api.authorizations.destroy", "/authorizations/current", authorization.Destroy)
+	r.Register("PUT", "api.authorizations.update", "/authorizations/current",
+		middleware.TokenAuth(),
+		wrapper.GetToken(authorization.Update))
+	// 删除 token
+	r.Register("DELETE", "api.authorizations.destroy", "/authorizations/current",
+		middleware.TokenAuth(),
+		wrapper.GetToken(authorization.Destroy))
+
+	// 获取用户信息
+	r.Register("GET", "api.authorizations.index", "/authorizations",
+		middleware.TokenAuth(),
+		wrapper.GetToken(authorization.Index))
 }

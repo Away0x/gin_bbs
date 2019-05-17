@@ -2,6 +2,7 @@ package routes
 
 import (
 	_ "gin_bbs/docs" // swagger docs
+	"time"
 
 	"gin_bbs/pkg/ginutils/csrf"
 	"gin_bbs/pkg/ginutils/last"
@@ -71,7 +72,9 @@ func Register(g *gin.Engine) *gin.Engine {
 	registerAdmin(r)
 
 	// +++++++++++++++++++ api +++++++++++++++++++
-	registerAPI(r)
+	registerAPI(r,
+		middleware.RateLimiter(1*time.Minute, 60), // 1 分钟最多 60 次请求
+	)
 
 	// ---------------------------------- error ----------------------------------
 	g.NoRoute(func(c *gin.Context) {

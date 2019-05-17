@@ -1,9 +1,10 @@
 package token
 
 import (
-	"errors"
 	"gin_bbs/app/cache"
+	userModel "gin_bbs/app/models/user"
 	"gin_bbs/config"
+	"gin_bbs/pkg/errno"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -11,10 +12,14 @@ import (
 
 const (
 	cacheTokenKeyName   = "jwt_token_"
-	jwtTokenRefreshTime = 20160 * time.Minute // 允许刷新 token 的时间 (14 天)
-	jwtTokenExpiredTime = 1 * time.Minute     // token 60 分钟过期
-	tokenIdentification = "Bearer"
+	jwtTokenRefreshTime = 20160 * time.Minute // 允许刷新 token 的时间 (14 天); 期间内允许使用之前颁发的 token (即使过期)来获取新token
+	jwtTokenExpiredTime = 60 * time.Minute    // token 60 分钟过期
+	jwtTokenRemainTime  = 2 * time.Minute     // token 刷新后，旧的 token 还有 2 分钟的使用时间 (前提是旧 token 没过过期时间)
 )
+
+func getCacheKey(tokenString string) string {
+	return cacheTokenKeyName + tokenString
+}
 
 // CustomClaims -
 type CustomClaims struct {
@@ -23,7 +28,12 @@ type CustomClaims struct {
 	RefreshTime int64 `json:"refresh_time,omitempty"`
 }
 
-// SetExpiredAt 设置 token 有效期
+// SetUser 设置 token 有效期
+func (c *CustomClaims) SetUser(u *userModel.User) {
+	c.UserID = u.ID
+}
+
+// SetExpiredAt 设置 user data
 func (c *CustomClaims) SetExpiredAt() {
 	now := time.Now()
 	c.IssuedAt = now.Unix()
@@ -32,14 +42,9 @@ func (c *CustomClaims) SetExpiredAt() {
 }
 
 // Create 创建 token
-func Create(userid uint) (string, CustomClaims, error) {
-	if config.AppConfig.Key == "" {
-		return "", CustomClaims{}, errors.New("jwt secret 不能为空")
-	}
-
-	claims := CustomClaims{
-		UserID: userid,
-	}
+func Create(u *userModel.User) (string, CustomClaims, error) {
+	claims := CustomClaims{}
+	claims.SetUser(u)
 	claims.SetExpiredAt()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -47,63 +52,69 @@ func Create(userid uint) (string, CustomClaims, error) {
 	if err != nil {
 		return "", claims, err
 	}
-	return s, claims, err
+	return s, claims, nil
 }
 
 // Parse 解析 token
-func Parse(tokenString string) (*CustomClaims, error) {
+func Parse(tokenString string) (*CustomClaims, *errno.Errno) {
 	token, err := parse(tokenString)
 	if err != nil {
+		// token 过期
 		if isExpired(err) {
 			if claims, ok := token.Claims.(*CustomClaims); ok {
-				return claims, errors.New("token 过期了")
+				return claims, errno.TokenExpireError
 			}
 		}
-		return nil, err
+		if e, ok := err.(*errno.Errno); ok {
+			return nil, e
+		}
+		return nil, errno.New(errno.TokenError, err)
 	}
 
 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
 		return claims, nil
 	}
 
-	return nil, errors.New("jwt token parse error")
+	return nil, errno.New(errno.TokenError, "jwt token parse error")
 }
 
 // Refresh 刷新 token
-func Refresh(tokenString string, userid uint) (string, CustomClaims, error) {
+func Refresh(tokenString string) (string, CustomClaims, *errno.Errno) {
 	token, err := parse(tokenString)
 	if err != nil {
 		// 非过期错误
 		if !isExpired(err) {
-			return "", CustomClaims{}, err
+			return "", CustomClaims{}, errno.New(errno.TokenError, err)
 		}
 		// 判断是否过了可刷新时间
 		if claims, ok := token.Claims.(*CustomClaims); ok {
 			now := time.Now().Unix()
 			if now > claims.RefreshTime {
-				return "", CustomClaims{}, errors.New("token 过了刷新时间了")
+				return "", CustomClaims{}, errno.TokenExpireError
 			}
 		}
 	}
 
 	claims, ok := token.Claims.(*CustomClaims)
-	if ok && token.Valid {
-		return "", CustomClaims{}, err
+	if !ok {
+		return "", CustomClaims{}, errno.TokenError
 	}
 
-	Forget(tokenString) // 将之前的 token 加入黑名单使之失效
-	newToken, newClaims, err := Create(claims.UserID)
+	Forget(tokenString, jwtTokenRemainTime) // 将之前的 token 加入黑名单使之失效
+	u := &userModel.User{}
+	u.ID = claims.UserID
+	newToken, newClaims, err := Create(u)
 	if err != nil {
-		return "", CustomClaims{}, err
+		return "", CustomClaims{}, errno.New(errno.TokenError, err)
 	}
 
 	return newToken, newClaims, nil
 }
 
 // Forget 使 token 失效
-func Forget(tokenString string) {
-	key := cacheTokenKeyName + tokenString
-	cache.Put(key, "1", jwtTokenExpiredTime)
+func Forget(tokenString string, remainTime time.Duration) {
+	now := time.Now()
+	cache.PutInt64(getCacheKey(tokenString), now.Add(remainTime).Unix(), jwtTokenExpiredTime) // val 为 token 还可以使用的过渡时间
 }
 
 // ------------- private
@@ -124,10 +135,19 @@ func isExpired(err error) bool {
 	}
 }
 
-func parse(tokenString string) (token *jwt.Token, err error) {
-	token, err = jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+func parse(tokenString string) (*jwt.Token, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(config.AppConfig.Key), nil
 	})
 
-	return
+	// 在黑名单中
+	if t, ok := cache.GetInt64(getCacheKey(tokenString)); ok {
+		now := time.Now().Unix()
+		// 过了留存时间了
+		if now > t {
+			return nil, errno.TokenInBlackListError
+		}
+	}
+
+	return token, err
 }

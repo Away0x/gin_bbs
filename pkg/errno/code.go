@@ -16,9 +16,9 @@ var (
 	LoginError               = &Errno{Code: 2001, Message: "用户名或密码错误"}
 	TokenError               = &Errno{Code: 2002, Message: "token error"}
 	TokenExpireError         = &Errno{Code: 2002, Message: "token 已过期"}
-	TokenRefreshError        = &Errno{Code: 2003, Message: "token 不可刷新"}
-	TokenInBlackListError    = &Errno{Code: 2004, Message: "token 不可使用"}
-	TokenMissingError        = &Errno{Code: 2005, Message: "token missing"}
+	TokenRefreshError        = &Errno{Code: 2003, Message: "token 已过期(已过刷新时间)"}
+	TokenInBlackListError    = &Errno{Code: 2004, Message: "token 不可使用(已加入黑名单)"}
+	TokenMissingError        = &Errno{Code: 2005, Message: "token 没有找到"}
 
 	// 500x 第三方错误
 	SmsError = &Errno{Code: 5000, Message: "短信发送异常"}

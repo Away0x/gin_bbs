@@ -54,7 +54,7 @@ func newAppConfig() *appConfig {
 	viper.SetDefault("APP.NAME", "gin_bbs")
 	viper.SetDefault("APP.RUNMODE", "release")
 	viper.SetDefault("APP.ADDR", ":8080")
-	viper.SetDefault("APP.KEY", "base64:O+VQ74YEigLPDzLKnh2HW/yjCdU2ON9v7xuKBgSOEAo=")
+	viper.SetDefault("APP.KEY", "Rtg8BPKNEf2mB4mgvKONGPZZQSaJWNLijxR42qRgq0iBb5")
 	viper.SetDefault("APP.ENABLE_CSRF", true)
 
 	return &appConfig{

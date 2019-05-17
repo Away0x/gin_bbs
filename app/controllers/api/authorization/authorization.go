@@ -6,6 +6,7 @@ import (
 	userModel "gin_bbs/app/models/user"
 	authorizationRequest "gin_bbs/app/requests/api/authorization"
 	"gin_bbs/pkg/errno"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -91,7 +92,7 @@ func Store(c *gin.Context) {
 	}
 
 	// 签发 token
-	t, claims, e := token.Create(user.ID)
+	t, claims, e := token.Create(user)
 	if e != nil {
 		controllers.SendErrorResponse(c, e)
 		return
@@ -104,32 +105,29 @@ func Store(c *gin.Context) {
 }
 
 // Update 刷新 token
-func Update(c *gin.Context) {
-	// t, err := token.GetTokenFromRequest(c)
-	// if err != nil {
-	// 	controllers.SendErrorResponse(c, err)
-	// 	return
-	// }
-
-	// tokenInfo, err := token.Refresh(t)
-	// if err != nil {
-	// 	controllers.SendErrorResponse(c, err)
-	// 	return
-	// }
-
-	claims, err := token.Parse(c.Query("token"))
+func Update(c *gin.Context, currentUser *userModel.User, tokenString string) {
+	t, claims, err := token.Refresh(tokenString)
 	if err != nil {
-		controllers.SendOKResponse(c, map[string]interface{}{
-			"err":    err.Error(),
-			"claims": claims,
-		})
+		controllers.SendErrorResponse(c, err)
 		return
 	}
+
 	controllers.SendOKResponse(c, map[string]interface{}{
 		"claims": claims,
-		"a":      "123",
+		"t":      t,
 	})
 }
 
 // Destroy 删除 token
-func Destroy(c *gin.Context) {}
+func Destroy(c *gin.Context, currentUser *userModel.User, tokenString string) {
+	token.Forget(tokenString, time.Duration(0))
+	controllers.SendOKResponse(c, nil)
+}
+
+// Index -
+func Index(c *gin.Context, currentUser *userModel.User, tokenString string) {
+	controllers.SendOKResponse(c, map[string]interface{}{
+		"user":        currentUser,
+		"tokenString": tokenString,
+	})
+}

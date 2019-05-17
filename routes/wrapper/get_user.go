@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 获取用户
+// GetUser 获取用户
 func GetUser(handler func(*gin.Context, *userModel.User)) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		currentUser, err := auth.GetCurrentUserFromContext(c)
