@@ -17,33 +17,39 @@ import (
 func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	r = r.Group(APIRoot, middlewares...)
 
-	// 短信验证码
-	r.Register("POST", "api.verificationCodes.store", "/verificationCodes",
-		middleware.RateLimiter(1*time.Minute, 10), // 1 分钟 10 次
-		vericode.Store)
-	// 用户注册
-	r.Register("POST", "api.users.store", "/users",
-		middleware.RateLimiter(1*time.Minute, 10), // 1 分钟 10 次
-		user.Store)
-	// 图片验证码
-	r.Register("POST", "api.captchas.store", "/captchas", captcha.Store)
+	// ------------------------------------- Auth -------------------------------------
+	// +++++++++++++++ 注册、登录、token 相关 +++++++++++++++
+	{
+		// 短信验证码
+		r.Register("POST", "api.verificationCodes.store", "/verificationCodes",
+			middleware.RateLimiter(1*time.Minute, 10), // 1 分钟 10 次
+			vericode.Store)
+		// 用户注册
+		r.Register("POST", "api.users.store", "/users",
+			middleware.RateLimiter(1*time.Minute, 10), // 1 分钟 10 次
+			user.Store)
+		// 图片验证码
+		r.Register("POST", "api.captchas.store", "/captchas", captcha.Store)
 
-	// 第三方登录
-	r.Register("POST", "api.socials.authorizations.store", "/socials/authorizations/:social_type", authorization.SocialStore)
-	// 登录 签发 token
-	r.Register("POST", "api.authorizations.store", "/authorizations", authorization.Store)
+		// 第三方登录
+		r.Register("POST", "api.socials.authorizations.store", "/socials/authorizations/:social_type", authorization.SocialStore)
+		// 登录 签发 token
+		r.Register("POST", "api.authorizations.store", "/authorizations", authorization.Store)
 
-	// 刷新 token
-	r.Register("PUT", "api.authorizations.update", "/authorizations/current",
-		middleware.TokenAuth(),
-		wrapper.GetToken(authorization.Update))
-	// 删除 token
-	r.Register("DELETE", "api.authorizations.destroy", "/authorizations/current",
-		middleware.TokenAuth(),
-		wrapper.GetToken(authorization.Destroy))
+		// 刷新 token
+		r.Register("PUT", "api.authorizations.update", "/authorizations/current",
+			middleware.TokenAuth(),
+			wrapper.GetToken(authorization.Update))
+		// 删除 token
+		r.Register("DELETE", "api.authorizations.destroy", "/authorizations/current",
+			middleware.TokenAuth(),
+			wrapper.GetToken(authorization.Destroy))
+	}
 
-	// 获取用户信息
-	r.Register("GET", "api.authorizations.index", "/authorizations",
-		middleware.TokenAuth(),
-		wrapper.GetToken(authorization.Index))
+	// +++++++++++++++ 用户相关 +++++++++++++++
+	userRouter := r.Group("/user", middleware.TokenAuth())
+	{
+		// 获取用户信息
+		userRouter.Register("GET", "api.user.show", "", wrapper.GetToken(user.Show))
+	}
 }

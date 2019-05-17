@@ -5,7 +5,9 @@ import (
 	"gin_bbs/app/controllers"
 	userModel "gin_bbs/app/models/user"
 	authorizationRequest "gin_bbs/app/requests/api/authorization"
+	"gin_bbs/app/viewmodels"
 	"gin_bbs/pkg/errno"
+	"gin_bbs/pkg/ginutils/utils"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -74,7 +76,10 @@ func SocialStore(c *gin.Context) {
 		return
 	}
 
-	controllers.SendOKResponse(c, tokenInfo)
+	uvw := viewmodels.NewUserAPISerializer(user)
+	controllers.SendOKResponse(c, utils.MergeMap(uvw, map[string]interface{}{
+		"meta": tokenInfo,
+	}))
 }
 
 // Store 登录 (获取 token)
@@ -98,7 +103,10 @@ func Store(c *gin.Context) {
 		return
 	}
 
-	controllers.SendOKResponse(c, tokenInfo)
+	uvw := viewmodels.NewUserAPISerializer(user)
+	controllers.SendOKResponse(c, utils.MergeMap(uvw, map[string]interface{}{
+		"meta": tokenInfo,
+	}))
 }
 
 // Update 刷新 token
@@ -116,12 +124,4 @@ func Update(c *gin.Context, currentUser *userModel.User, tokenString string) {
 func Destroy(c *gin.Context, currentUser *userModel.User, tokenString string) {
 	token.Forget(tokenString, time.Duration(0))
 	controllers.SendOKResponse(c, nil)
-}
-
-// Index -
-func Index(c *gin.Context, currentUser *userModel.User, tokenString string) {
-	controllers.SendOKResponse(c, map[string]interface{}{
-		"user":        currentUser,
-		"tokenString": tokenString,
-	})
 }

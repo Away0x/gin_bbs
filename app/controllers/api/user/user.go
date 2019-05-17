@@ -2,7 +2,9 @@ package user
 
 import (
 	"gin_bbs/app/controllers"
+	userModel "gin_bbs/app/models/user"
 	request "gin_bbs/app/requests/api/user"
+	"gin_bbs/app/viewmodels"
 	"gin_bbs/pkg/errno"
 
 	"github.com/gin-gonic/gin"
@@ -29,4 +31,10 @@ func Store(c *gin.Context) {
 	}
 
 	controllers.SendOKResponse(c, nil)
+}
+
+// Show 获取用户信息
+func Show(c *gin.Context, currentUser *userModel.User, tokenString string) {
+	u := viewmodels.NewUserAPISerializer(currentUser)
+	controllers.SendOKResponse(c, u)
 }
