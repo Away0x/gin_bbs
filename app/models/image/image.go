@@ -4,9 +4,16 @@ import (
 	"time"
 )
 
+const (
+	// TypeAvatar -
+	TypeAvatar = "avatar"
+	// TypeTopic -
+	TypeTopic = "topic"
+)
+
 var (
 	// Types image type
-	Types = []string{"avatar", "topic"}
+	Types = []string{TypeAvatar, TypeTopic}
 )
 
 // Image -

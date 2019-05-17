@@ -9,8 +9,8 @@ import (
 	"gin_bbs/pkg/ginutils/validate"
 )
 
-// UserRegister -
-type UserRegister struct {
+// Register -
+type Register struct {
 	validate.Validate
 	Name             string `json:"name"`
 	Password         string `json:"password"`
@@ -19,7 +19,7 @@ type UserRegister struct {
 }
 
 // RegisterValidators 注册验证器
-func (u *UserRegister) RegisterValidators() validate.ValidatorMap {
+func (u *Register) RegisterValidators() validate.ValidatorMap {
 	return validate.ValidatorMap{
 		"name": {
 			validate.RequiredValidator(u.Name),
@@ -41,7 +41,7 @@ func (u *UserRegister) RegisterValidators() validate.ValidatorMap {
 }
 
 // RegisterMessages 注册错误信息
-func (*UserRegister) RegisterMessages() validate.MessagesMap {
+func (*Register) RegisterMessages() validate.MessagesMap {
 	return validate.MessagesMap{
 		"name": {
 			"用户名不能为空",
@@ -57,7 +57,7 @@ func (*UserRegister) RegisterMessages() validate.MessagesMap {
 }
 
 // ValidateAndCreateUser -
-func (u *UserRegister) ValidateAndCreateUser() *errno.Errno {
+func (u *Register) ValidateAndCreateUser() *errno.Errno {
 	ok, _, errMap := validate.Run(u)
 	if !ok {
 		return errno.New(errno.ParamsError, errMap)
