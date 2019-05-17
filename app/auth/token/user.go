@@ -9,20 +9,21 @@ import (
 )
 
 const (
+	tokenParamsKeyName          = "token"
 	tokenHeaderKeyName          = "Authorization"
 	tokenInHeaderIdentification = "Bearer"
 )
 
 // GetTokenFromRequest 从请求中获取 token
 func GetTokenFromRequest(c *gin.Context) (string, *errno.Errno) {
-	header := c.Request.Header.Get(tokenHeaderKeyName)
-	if header == "" {
-		return "", errno.TokenMissingError
+	if token, ok := getTokenFromHeader(c); ok {
+		return token, nil
+	}
+	if token, ok := getTokenFromParams(c); ok {
+		return token, nil
 	}
 
-	var token string
-	fmt.Sscanf(header, tokenInHeaderIdentification+" %s", &token)
-	return token, nil
+	return "", errno.TokenMissingError
 }
 
 // ParseAndGetUser 解析 token 获取 user
@@ -60,4 +61,32 @@ func GetTokenUserFromContext(c *gin.Context) (string, *userModel.User, bool) {
 	}
 
 	return s, u, true
+}
+
+// ---------------- private
+func getTokenFromHeader(c *gin.Context) (string, bool) {
+	header := c.Request.Header.Get(tokenHeaderKeyName)
+	if header == "" {
+		return "", false
+	}
+
+	var token string
+	fmt.Sscanf(header, tokenInHeaderIdentification+" %s", &token)
+	if token == "" {
+		return "", false
+	}
+	return token, true
+}
+
+func getTokenFromParams(c *gin.Context) (string, bool) {
+	token := c.Query(tokenParamsKeyName)
+	if token != "" {
+		return token, true
+	}
+	token = c.PostForm(tokenParamsKeyName)
+	if token != "" {
+		return token, true
+	}
+
+	return "", false
 }

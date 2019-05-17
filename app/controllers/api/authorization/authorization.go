@@ -68,13 +68,13 @@ func SocialStore(c *gin.Context) {
 	}
 
 	// 签发 token
-	// tokenInfo, err := token.Sign(int(user.ID))
-	// if err != nil {
-	// 	controllers.SendErrorResponse(c, err)
-	// 	return
-	// }
+	tokenInfo, e := token.Sign(user)
+	if e != nil {
+		controllers.SendErrorResponse(c, e)
+		return
+	}
 
-	// controllers.SendOKResponse(c, tokenInfo)
+	controllers.SendOKResponse(c, tokenInfo)
 }
 
 // Store 登录 (获取 token)

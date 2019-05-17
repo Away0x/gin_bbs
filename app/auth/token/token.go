@@ -2,6 +2,7 @@ package token
 
 import (
 	userModel "gin_bbs/app/models/user"
+	"gin_bbs/pkg/constants"
 	"gin_bbs/pkg/errno"
 	"time"
 )
@@ -10,7 +11,7 @@ import (
 type Info struct {
 	Token     string `json:"token"`
 	Type      string `json:"type"`
-	ExpiresIn int64  `json:"expires_in"`
+	ExpiresIn string `json:"expires_in"`
 }
 
 // Sign 签发 token
@@ -23,7 +24,7 @@ func Sign(u *userModel.User) (*Info, *errno.Errno) {
 	return &Info{
 		Token:     t,
 		Type:      tokenInHeaderIdentification,
-		ExpiresIn: claims.ExpiresAt,
+		ExpiresIn: time.Unix(claims.ExpiresAt, 0).Format(constants.DateTimeLayout),
 	}, nil
 }
 
@@ -37,7 +38,7 @@ func Refresh(tokenString string) (*Info, *errno.Errno) {
 	return &Info{
 		Token:     t,
 		Type:      tokenInHeaderIdentification,
-		ExpiresIn: claims.ExpiresAt,
+		ExpiresIn: time.Unix(claims.ExpiresAt, 0).Format(constants.DateTimeLayout),
 	}, nil
 }
 
