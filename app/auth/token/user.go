@@ -27,7 +27,7 @@ func GetTokenFromRequest(c *gin.Context) (string, *errno.Errno) {
 
 // ParseAndGetUser 解析 token 获取 user
 func ParseAndGetUser(c *gin.Context, token string) (*userModel.User, *errno.Errno) {
-	claims, err := Parse(token)
+	claims, err := parseToken(token)
 	if err != nil {
 		return nil, err
 	}

@@ -92,30 +92,24 @@ func Store(c *gin.Context) {
 	}
 
 	// 签发 token
-	t, claims, e := token.Create(user)
+	tokenInfo, e := token.Sign(user)
 	if e != nil {
 		controllers.SendErrorResponse(c, e)
 		return
 	}
 
-	controllers.SendOKResponse(c, map[string]interface{}{
-		"token":  t,
-		"claims": claims,
-	})
+	controllers.SendOKResponse(c, tokenInfo)
 }
 
 // Update 刷新 token
 func Update(c *gin.Context, currentUser *userModel.User, tokenString string) {
-	t, claims, err := token.Refresh(tokenString)
+	tokenInfo, err := token.Refresh(tokenString)
 	if err != nil {
 		controllers.SendErrorResponse(c, err)
 		return
 	}
 
-	controllers.SendOKResponse(c, map[string]interface{}{
-		"claims": claims,
-		"t":      t,
-	})
+	controllers.SendOKResponse(c, tokenInfo)
 }
 
 // Destroy 删除 token

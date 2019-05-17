@@ -41,8 +41,8 @@ func (c *CustomClaims) SetExpiredAt() {
 	c.RefreshTime = now.Add(jwtTokenRefreshTime).Unix()
 }
 
-// Create 创建 token
-func Create(u *userModel.User) (string, CustomClaims, error) {
+// create 创建 token
+func create(u *userModel.User) (string, CustomClaims, error) {
 	claims := CustomClaims{}
 	claims.SetUser(u)
 	claims.SetExpiredAt()
@@ -55,8 +55,8 @@ func Create(u *userModel.User) (string, CustomClaims, error) {
 	return s, claims, nil
 }
 
-// Parse 解析 token
-func Parse(tokenString string) (*CustomClaims, *errno.Errno) {
+// parseToken 解析 token
+func parseToken(tokenString string) (*CustomClaims, *errno.Errno) {
 	token, err := parse(tokenString)
 	if err != nil {
 		// token 过期
@@ -78,8 +78,8 @@ func Parse(tokenString string) (*CustomClaims, *errno.Errno) {
 	return nil, errno.New(errno.TokenError, "jwt token parse error")
 }
 
-// Refresh 刷新 token
-func Refresh(tokenString string) (string, CustomClaims, *errno.Errno) {
+// refresh 刷新 token
+func refresh(tokenString string) (string, CustomClaims, *errno.Errno) {
 	token, err := parse(tokenString)
 	if err != nil {
 		// 非过期错误
@@ -100,10 +100,10 @@ func Refresh(tokenString string) (string, CustomClaims, *errno.Errno) {
 		return "", CustomClaims{}, errno.TokenError
 	}
 
-	Forget(tokenString, jwtTokenRemainTime) // 将之前的 token 加入黑名单使之失效
+	forget(tokenString, jwtTokenRemainTime) // 将之前的 token 加入黑名单使之失效
 	u := &userModel.User{}
 	u.ID = claims.UserID
-	newToken, newClaims, err := Create(u)
+	newToken, newClaims, err := create(u)
 	if err != nil {
 		return "", CustomClaims{}, errno.New(errno.TokenError, err)
 	}
@@ -111,8 +111,8 @@ func Refresh(tokenString string) (string, CustomClaims, *errno.Errno) {
 	return newToken, newClaims, nil
 }
 
-// Forget 使 token 失效
-func Forget(tokenString string, remainTime time.Duration) {
+// forget 使 token 失效
+func forget(tokenString string, remainTime time.Duration) {
 	now := time.Now()
 	cache.PutInt64(getCacheKey(tokenString), now.Add(remainTime).Unix(), jwtTokenExpiredTime) // val 为 token 还可以使用的过渡时间
 }

@@ -65,7 +65,9 @@
 - [x] 微信登录
 - [x] swagger api 文档
 - [x] JWT (刷新、黑名单)
-- [ ] 基于 Vue 的管理员后台系统
+- [ ] Vue 管理员后台系统
+- [ ] taro web 移动端
+- [ ] flutter 移动端 app
 
 
 ### 角色

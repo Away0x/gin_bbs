@@ -17,7 +17,7 @@ func TokenAuth() gin.HandlerFunc {
 			return
 		}
 
-		_, err = token.ParseAndGetUser(c, tokenStr)
+		_, err = token.ParseAndGetUser(c, tokenStr) // 会将用户数据和 token 存到 gin.Context 中
 		if err != nil {
 			controllers.SendErrorResponse(c, err)
 			c.Abort()
