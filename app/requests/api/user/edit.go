@@ -2,8 +2,10 @@ package user
 
 import (
 	imageModel "gin_bbs/app/models/image"
+	userModel "gin_bbs/app/models/user"
 	"gin_bbs/app/requests"
 	"gin_bbs/pkg/constants"
+	"gin_bbs/pkg/errno"
 	"gin_bbs/pkg/ginutils/validate"
 )
 
@@ -14,7 +16,7 @@ type Edit struct {
 	Name          string `json:"name"`
 	Email         string `json:"email"`
 	Introduction  string `json:"introduction"`
-	AvatarImageID uint   `json:"avatar_image_id"`
+	AvatarImageID int    `json:"avatar_image_id"`
 }
 
 func (e *Edit) imageIDValidator() validate.ValidatorFunc {
@@ -71,4 +73,30 @@ func (*Edit) RegisterMessages() validate.MessagesMap {
 			"用户名已被占用，请重新填写",
 		},
 	}
+}
+
+// Run -
+func (e *Edit) Run(user *userModel.User) *errno.Errno {
+	ok, _, errMap := validate.Run(e)
+	if !ok {
+		return errno.New(errno.ParamsError, errMap)
+	}
+
+	user.Name = e.Name
+	user.Introduction = e.Introduction
+	if e.Email != "" {
+		user.Email = e.Email
+	}
+	if e.AvatarImageID != 0 {
+		img, err := imageModel.Get(e.AvatarImageID)
+		if err == nil {
+			user.Avatar = img.Path
+		}
+	}
+
+	if err := user.Update(); err != nil {
+		return errno.New(errno.DatabaseError, err)
+	}
+
+	return nil
 }

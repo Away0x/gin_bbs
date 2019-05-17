@@ -35,6 +35,22 @@ func Store(c *gin.Context) {
 
 // Show 获取用户信息
 func Show(c *gin.Context, currentUser *userModel.User, tokenString string) {
-	u := viewmodels.NewUserAPISerializer(currentUser)
-	controllers.SendOKResponse(c, u)
+	controllers.SendOKResponse(c, viewmodels.NewUserAPISerializer(currentUser))
+}
+
+// Update 编辑用户信息
+func Update(c *gin.Context, currentUser *userModel.User, tokenString string) {
+	var req request.Edit
+	if err := c.ShouldBind(&req); err != nil {
+		controllers.SendErrorResponse(c, errno.New(errno.ParamsError, err))
+		return
+	}
+	req.UserID = currentUser.ID
+
+	if err := req.Run(currentUser); err != nil {
+		controllers.SendErrorResponse(c, err)
+		return
+	}
+
+	controllers.SendOKResponse(c, viewmodels.NewUserAPISerializer(currentUser))
 }

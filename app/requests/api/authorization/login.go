@@ -1,7 +1,6 @@
 package authorization
 
 import (
-	"fmt"
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/pkg/errno"
 	"gin_bbs/pkg/ginutils/validate"
@@ -68,7 +67,7 @@ func (l *Login) Run() (*userModel.User, *errno.Errno) {
 	}
 
 	// 用户可以使用邮箱或者手机号登录
-	fmt.Println(l.userFindKey, l.Username)
+	// fmt.Println(l.userFindKey, l.Username)
 	user, err := userModel.First(l.userFindKey+"= ?", l.Username)
 	if err != nil {
 		return nil, errno.New(errno.DatabaseError, "没有找到该用户")

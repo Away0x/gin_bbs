@@ -20,6 +20,9 @@ var (
 	TokenInBlackListError    = &Errno{Code: 2004, Message: "token 不可使用(已加入黑名单)"}
 	TokenMissingError        = &Errno{Code: 2005, Message: "token 没有找到"}
 
+	// 300x 存储相关
+	UploadError = &Errno{Code: 3000, Message: "上传失败"}
+
 	// 500x 第三方错误
 	SmsError = &Errno{Code: 5000, Message: "短信发送异常"}
 )

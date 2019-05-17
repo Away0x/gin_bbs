@@ -54,6 +54,8 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		// 获取当前登录用户信息
 		userRouter.Register("GET", "api.user.show", "", wrapper.GetToken(user.Show))
 		// 图片资源
-		userRouter.Register("POST", "api.images.store", "", wrapper.GetToken(image.Store))
+		userRouter.Register("POST", "api.images.store", "images", wrapper.GetToken(image.Store))
+		// 编辑用户信息
+		userRouter.Register("PATCH", "api.user.update", "", wrapper.GetToken(user.Update))
 	}
 }
