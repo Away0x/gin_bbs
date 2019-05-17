@@ -8,6 +8,7 @@ import (
 
 	"gin_bbs/app/controllers/api/authorization"
 	"gin_bbs/app/controllers/api/captcha"
+	"gin_bbs/app/controllers/api/image"
 	"gin_bbs/app/controllers/api/user"
 	vericode "gin_bbs/app/controllers/api/verification_code"
 
@@ -39,6 +40,7 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		// 刷新 token
 		r.Register("PUT", "api.authorizations.update", "/authorizations/current",
 			middleware.TokenAuth(),
+			middleware.RateLimiter(1*time.Minute, 3), // 1 分钟 3 次
 			wrapper.GetToken(authorization.Update))
 		// 删除 token
 		r.Register("DELETE", "api.authorizations.destroy", "/authorizations/current",
@@ -49,7 +51,9 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	// +++++++++++++++ 用户相关 +++++++++++++++
 	userRouter := r.Group("/user", middleware.TokenAuth())
 	{
-		// 获取用户信息
+		// 获取当前登录用户信息
 		userRouter.Register("GET", "api.user.show", "", wrapper.GetToken(user.Show))
+		// 图片资源
+		userRouter.Register("POST", "api.images.store", "", wrapper.GetToken(image.Store))
 	}
 }

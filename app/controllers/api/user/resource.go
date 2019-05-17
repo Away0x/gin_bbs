@@ -19,7 +19,7 @@ import (
 // @Success 200 {object} controllers.Response "{}"
 // @Router /api/users [post]
 func Store(c *gin.Context) {
-	var req request.User
+	var req request.UserRegister
 	if err := c.ShouldBindJSON(&req); err != nil {
 		controllers.SendErrorResponse(c, errno.New(errno.ParamsError, err))
 		return
