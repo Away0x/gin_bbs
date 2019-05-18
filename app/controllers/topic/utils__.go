@@ -47,7 +47,7 @@ func validateCreateOrUpdateTopic(c *gin.Context, currentUser *userModel.User, to
 		validate.ValidatorMap{
 			"title": {
 				validate.RequiredValidator(title),
-				validate.MixLengthValidator(title, 2),
+				validate.MinLengthValidator(title, 2),
 			},
 			"category_id": {
 				validate.RequiredValidator(catIDStr),
@@ -55,7 +55,7 @@ func validateCreateOrUpdateTopic(c *gin.Context, currentUser *userModel.User, to
 			},
 			"body": {
 				validate.RequiredValidator(body),
-				validate.MixLengthValidator(body, 3),
+				validate.MinLengthValidator(body, 3),
 			},
 		},
 		validate.MessagesMap{

@@ -24,17 +24,21 @@ var (
 // User 用户模型
 type User struct {
 	models.BaseModel
-	Name         string `gorm:"column:name;type:varchar(255);not null"`
-	Email        string `gorm:"column:email;type:varchar(255);unique;not null"`
+	Name         string `gorm:"column:name;type:varchar(255);not null" sql:"index"`
+	Phone        string `gorm:"column:phone;type:varchar(255);unique;default:NULL" sql:"index"`
+	Email        string `gorm:"column:email;type:varchar(255);unique;default:NULL" sql:"index"`
 	Avatar       string `gorm:"column:avatar;type:varchar(255);not null"`
 	Introduction string `gorm:"column:introduction;type:varchar(255);not null"`
-	Password     string `gorm:"column:password;type:varchar(255);not null"`
+	Password     string `gorm:"column:password;type:varchar(255)"` // 可使用微信登录，所以可以为空
+	// 微信
+	WeixinOpenID  string `gorm:"column:weixin_openid;type:varchar(255);unique;default:NULL"`
+	WeixinUnionID string `gorm:"column:weixin_unionid;type:varchar(255);unique;default:NULL"` // 在用户将公众号绑定到微信开放平台帐号后，才会出现 unionid 字段
 	// 是否为管理员
 	IsAdmin uint `gorm:"column:is_admin;type:tinyint(1)"`
 	// 用户激活
-	ActivationToken string    `gorm:"column:activation_token;type:varchar(255)"`
-	Activated       uint      `gorm:"column:activated;type:tinyint(1);not null"`
-	EmailVerifiedAt time.Time `gorm:"column:email_verified_at"` // 激活时间
+	ActivationToken string     `gorm:"column:activation_token;type:varchar(255)"`
+	Activated       uint       `gorm:"column:activated;type:tinyint(1);not null"`
+	EmailVerifiedAt *time.Time `gorm:"column:email_verified_at"` // 激活时间
 
 	RememberToken     string `gorm:"column:remember_token;type:varchar(100)"`      // 用于实现记住我功能，存入 cookie 中，下次带上时，即可直接登录
 	NotificationCount int    `gorm:"column:notification_count;not null;default:0"` // 未读通知数
@@ -47,13 +51,11 @@ func (User) TableName() string {
 
 // BeforeCreate - hook
 func (u *User) BeforeCreate() (err error) {
-	if u.Password == "" {
-		return errors.New("User Model 创建失败")
-	}
-
-	if isEncrypted := passwordEncrypted(u.Password); !isEncrypted {
-		if err = u.Encrypt(); err != nil {
-			return errors.New("User Model 创建失败")
+	if u.Password != "" {
+		if isEncrypted := passwordEncrypted(u.Password); !isEncrypted {
+			if err = u.Encrypt(); err != nil {
+				return errors.New("User Model 创建失败: passwordEncrypted")
+			}
 		}
 	}
 

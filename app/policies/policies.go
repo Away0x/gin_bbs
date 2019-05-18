@@ -2,12 +2,19 @@ package policies
 
 import (
 	"gin_bbs/app/controllers"
+	"gin_bbs/pkg/constants"
+	"gin_bbs/pkg/errno"
 
 	"github.com/gin-gonic/gin"
 )
 
 // Unauthorized : 无权限时
 func Unauthorized(c *gin.Context) {
+	if constants.IsApiRequest(c) {
+		controllers.SendErrorResponse(c, errno.AuthError)
+		return
+	}
+
 	controllers.RenderUnauthorized(c)
 }
 

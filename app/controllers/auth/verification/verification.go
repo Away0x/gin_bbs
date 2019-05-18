@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 展示发送激活邮件的页面
+// Show 展示发送激活邮件的页面
 func Show(c *gin.Context, currentUser *userModel.User) {
 	if currentUser.IsActivated() {
 		controllers.RedirectBack(c, "root")
@@ -22,7 +22,7 @@ func Show(c *gin.Context, currentUser *userModel.User) {
 	}
 }
 
-// 激活
+// Verify 激活
 func Verify(c *gin.Context) {
 	token := c.Param("token")
 	user, err := userModel.GetByActivationToken(token)
@@ -34,7 +34,8 @@ func Verify(c *gin.Context) {
 	// 更新用户
 	user.Activated = models.TrueTinyint
 	user.ActivationToken = ""
-	user.EmailVerifiedAt = time.Now()
+	now := time.Now()
+	user.EmailVerifiedAt = &now
 	if err = user.Update(); err != nil {
 		flash.NewSuccessFlash(c, "用户激活失败: "+err.Error())
 		controllers.RedirectRouter(c, "verification.notice")
@@ -46,7 +47,7 @@ func Verify(c *gin.Context) {
 	controllers.RedirectRouter(c, "root")
 }
 
-// 重新发送激活邮件
+// Resend 重新发送激活邮件
 func Resend(c *gin.Context, currentUser *userModel.User) {
 	if currentUser.IsActivated() {
 		controllers.RedirectBack(c, "root")

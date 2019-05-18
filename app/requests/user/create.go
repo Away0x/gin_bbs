@@ -36,7 +36,7 @@ func (u *UserCreateForm) RegisterValidators() validate.ValidatorMap {
 		},
 		"password": {
 			validate.RequiredValidator(u.Password),
-			validate.MixLengthValidator(u.Password, 6),
+			validate.MinLengthValidator(u.Password, 6),
 			validate.EqualValidator(u.Password, u.PasswordConfirmation),
 		},
 		"captcha": {

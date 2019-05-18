@@ -21,6 +21,13 @@ func Get(id int) (*User, error) {
 	return user, nil
 }
 
+// First -
+func First(query interface{}, args ...interface{}) (*User, error) {
+	user := &User{}
+	d := database.DB.Where(query, args...).First(&user)
+	return user, d.Error
+}
+
 // GetByName -
 func GetByName(name string) (*User, error) {
 	user := &User{}
@@ -35,6 +42,13 @@ func GetByEmail(email string) (*User, error) {
 	return user, d.Error
 }
 
+// GetByPhone -
+func GetByPhone(phone string) (*User, error) {
+	user := &User{}
+	d := database.DB.Where("phone = ?", phone).First(&user)
+	return user, d.Error
+}
+
 // GetByActivationToken -
 func GetByActivationToken(token string) (*User, error) {
 	user := &User{}
@@ -46,6 +60,20 @@ func GetByActivationToken(token string) (*User, error) {
 func GetByRememberToken(token string) (*User, error) {
 	user := &User{}
 	d := database.DB.Where("remember_token = ?", token).First(&user)
+	return user, d.Error
+}
+
+// GetByWeixinUnionID -
+func GetByWeixinUnionID(unionid string) (*User, error) {
+	user := &User{}
+	d := database.DB.Where("weixin_unionid = ?", unionid).First(&user)
+	return user, d.Error
+}
+
+// GetByWeixinOpenID -
+func GetByWeixinOpenID(openid string) (*User, error) {
+	user := &User{}
+	d := database.DB.Where("weixin_openid = ?", openid).First(&user)
 	return user, d.Error
 }
 

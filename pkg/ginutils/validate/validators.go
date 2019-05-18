@@ -5,8 +5,16 @@ import (
 	"mime/multipart"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"gin_bbs/pkg/mimetype"
+)
+
+var (
+	// 匹配电子邮箱
+	emailReg = regexp.MustCompile(`\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*`)
+	// 匹配手机
+	phoneReg = regexp.MustCompile(`^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199)\d{8}$`)
 )
 
 // RequiredValidator : value 必须存在
@@ -20,8 +28,8 @@ func RequiredValidator(value string) ValidatorFunc {
 	}
 }
 
-// MixLengthValidator -
-func MixLengthValidator(value string, minStrLen int) ValidatorFunc {
+// MinLengthValidator -
+func MinLengthValidator(value string, minStrLen int) ValidatorFunc {
 	return func() string {
 		l := len(value)
 
@@ -62,6 +70,9 @@ func BetweenValidator(value string, minStrLen, maxStrLen int) ValidatorFunc {
 // RegexpValidator 正则验证
 func RegexpValidator(value string, regexpStr string) ValidatorFunc {
 	return func() string {
+		if value == "" {
+			return ""
+		}
 		ok, err := regexp.MatchString(regexpStr, value)
 		if !ok || err != nil {
 			return "$name 格式错误"
@@ -89,9 +100,10 @@ func EqualValidator(v1, v2 string, other ...string) ValidatorFunc {
 // EmailValidator 验证邮箱格式
 func EmailValidator(value string) ValidatorFunc {
 	return func() string {
-		pattern := `\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*` // 匹配电子邮箱
-		reg := regexp.MustCompile(pattern)
-		status := reg.MatchString(value)
+		if value == "" {
+			return ""
+		}
+		status := emailReg.MatchString(value)
 
 		if !status {
 			return "$name 邮箱格式错误"
@@ -101,8 +113,37 @@ func EmailValidator(value string) ValidatorFunc {
 	}
 }
 
+// PhoneValidator 验证手机格式
+func PhoneValidator(value string) ValidatorFunc {
+	return func() string {
+		if value == "" {
+			return ""
+		}
+		status := phoneReg.MatchString(value)
+
+		if !status {
+			return "$name 手机格式错误"
+		}
+
+		return ""
+	}
+}
+
 // UintRangeValidator value 是否存在于指定的 range 范围内
 func UintRangeValidator(value uint, rg []uint) ValidatorFunc {
+	return func() string {
+		for _, r := range rg {
+			if r == value {
+				return ""
+			}
+		}
+
+		return "$name 不存在于指定范围内"
+	}
+}
+
+// StringRangeValidator value 是否存在于指定的 range 范围内
+func StringRangeValidator(value string, rg []string) ValidatorFunc {
 	return func() string {
 		for _, r := range rg {
 			if r == value {
@@ -137,7 +178,7 @@ func MimetypeValidator(f *multipart.FileHeader, mimes []string) ValidatorFunc {
 			}
 		}
 
-		return "$name 格式错误"
+		return "$name 格式错误，支持的格式为 " + strings.Join(mimes, ",")
 	}
 }
 

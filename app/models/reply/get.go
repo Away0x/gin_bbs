@@ -59,8 +59,14 @@ func UserReplies(userID, offset, limit int) ([]*Reply, error) {
 		return rs, err
 	}
 
-	if err = database.DB.Where("user_id = ?", u.ID).Offset(offset).Limit(limit).Order("id desc").Find(&rs).Error; err != nil {
-		return rs, err
+	if offset == 0 || limit == 0 {
+		if err = database.DB.Where("user_id = ?", u.ID).Order("id desc").Find(&rs).Error; err != nil {
+			return rs, err
+		}
+	} else {
+		if err = database.DB.Where("user_id = ?", u.ID).Offset(offset).Limit(limit).Order("id desc").Find(&rs).Error; err != nil {
+			return rs, err
+		}
 	}
 
 	return rs, nil

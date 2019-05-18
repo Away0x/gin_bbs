@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	adminFeDistFilePath = "admin-fe/dist"
+	adminFeDistFilePath = "vue-admin-app/dist"
 )
 
 // RenderAdminIndexPage 渲染管理员后台 index.html
@@ -53,7 +53,7 @@ func registerAdmin(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 	// 可参考 gin.Context 的 File 方法 (内部是 http.ServeFile)
 
 	// 管理员后台 api
-	rapi := r.Group(AdminApiRoot, middlewares...)
+	rapi := r.Group(AdminAPIRoot, middlewares...)
 	rapi.Register("GET", "admin.api.test", "test", func(c *gin.Context) {
 		c.JSON(200, gin.H{"msg": "admin api test"})
 	})

@@ -106,10 +106,16 @@ func GetByCategoryID(categoryID, offset, limit int, order string) (topics []*Top
 }
 
 // GetByUserID -
-func GetByUserID(userID, offset, limit int) (topics []*Topic, err error) {
+func GetByUserID(userID, offset, limit int, order string) (topics []*Topic, err error) {
 	topics = make([]*Topic, 0)
 
-	if err = database.DB.Where("user_id = ?", userID).Offset(offset).Limit(limit).Order("created_at desc").Find(&topics).Error; err != nil {
+	if order == orderRecent {
+		order = "created_at"
+	} else {
+		order = "updated_at"
+	}
+
+	if err = database.DB.Where("user_id = ?", userID).Offset(offset).Limit(limit).Order(order + " desc").Find(&topics).Error; err != nil {
 		return topics, err
 	}
 

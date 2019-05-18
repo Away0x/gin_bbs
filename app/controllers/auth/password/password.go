@@ -12,12 +12,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 展示发送密码重置链接的页面
+// ShowLinkRequestForm 展示发送密码重置链接的页面
 func ShowLinkRequestForm(c *gin.Context) {
 	controllers.Render(c, "auth/password/email", gin.H{})
 }
 
-// 发送密码重置链接
+// SendResetLinkEmail 发送密码重置链接
 func SendResetLinkEmail(c *gin.Context) {
 	email := c.PostForm("email")
 	ok, errArr, errMap := validate.RunSingle("email",
@@ -27,8 +27,7 @@ func SendResetLinkEmail(c *gin.Context) {
 			validate.EmailValidator(email),
 			emailExistValidator(email),
 		},
-		[]string{"邮箱不能为空", "邮箱长度不能大于 255 个字符", "邮箱格式错误"},
-	)
+		[]string{"邮箱不能为空", "邮箱长度不能大于 255 个字符", "邮箱格式错误"})
 
 	if !ok {
 		validate.SaveValidateMessage(c, errArr, errMap)
@@ -54,7 +53,7 @@ func SendResetLinkEmail(c *gin.Context) {
 	controllers.RedirectRouter(c, "password.request")
 }
 
-// 重置密码页面
+// ShowResetForm 重置密码页面
 func ShowResetForm(c *gin.Context) {
 	token := c.Param("token")
 	p, err := passwordResetModel.GetByToken(token)
@@ -69,7 +68,7 @@ func ShowResetForm(c *gin.Context) {
 	})
 }
 
-// 重置密码
+// Reset 重置密码
 func Reset(c *gin.Context) {
 	token := c.PostForm("token")
 	form := passowordRequest.PassWordResetForm{

@@ -19,10 +19,23 @@ func (u *User) Create() (err error) {
 
 // Update 更新用户
 func (u *User) Update() (err error) {
-	if err = database.DB.Save(&u).Error; err != nil {
+	if err = database.DB.Model(&User{}).Updates(&u).Error; err != nil {
 		log.Warnf("用户更新失败: %v", err)
 		return err
 	}
+
+	setToCache(u)
+	return nil
+}
+
+// Notification 更新用户通知
+func (u *User) Notification(count int) (err error) {
+	if err = database.DB.Model(&User{}).Updates(map[string]interface{}{
+		"notification_count": count,
+	}).Error; err != nil {
+		return err
+	}
+	u.NotificationCount = 0
 
 	setToCache(u)
 	return nil
