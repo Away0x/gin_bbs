@@ -89,5 +89,7 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 			wrapper.GetToken(topic.Destroy))
 		// 话题列表
 		topicRouter.Register("GET", "api.topics.index", "", topic.Index)
+		// 话题详情
+		topicRouter.Register("GET", "api.topics.show", "/:id", topic.Show)
 	}
 }

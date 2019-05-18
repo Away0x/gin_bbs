@@ -35,6 +35,16 @@ func UserIndex(c *gin.Context, currentUser *userModel.User, tokenString string) 
 		})
 }
 
+// Show topic detail
+func Show(c *gin.Context) {
+	topic, _, ok := getTopic(c, nil)
+	if !ok {
+		return
+	}
+
+	controllers.SendOKResponse(c, viewmodels.TopicApi(topic))
+}
+
 // Store 发布 topic
 func Store(c *gin.Context, currentUser *userModel.User, tokenString string) {
 	var req request.Store
