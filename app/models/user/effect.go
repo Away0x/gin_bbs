@@ -28,6 +28,19 @@ func (u *User) Update() (err error) {
 	return nil
 }
 
+// Notification 更新用户通知
+func (u *User) Notification(count int) (err error) {
+	if err = database.DB.Model(&User{}).Updates(map[string]interface{}{
+		"notification_count": count,
+	}).Error; err != nil {
+		return err
+	}
+	u.NotificationCount = 0
+
+	setToCache(u)
+	return nil
+}
+
 // Delete -
 func Delete(id int) (err error) {
 	user := &User{}

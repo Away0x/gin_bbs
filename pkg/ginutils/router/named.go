@@ -74,6 +74,8 @@ func getRoute(name string, values ...interface{}) string {
 			val = v
 		} else if v, ok := values[0].(int); ok {
 			val = strconv.Itoa(v)
+		} else if v, ok := values[0].(float64); ok {
+			val = strconv.Itoa(int(v))
 		} else {
 			return path
 		}

@@ -1,13 +1,14 @@
 package notification
 
 import (
+	"gin_bbs/app/controllers"
 	notificationModel "gin_bbs/app/models/notification"
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/pkg/ginutils/pagination"
-	"gin_bbs/app/controllers"
+
+	"gin_bbs/pkg/ginutils/flash"
 
 	"github.com/gin-gonic/gin"
-	"gin_bbs/pkg/ginutils/flash"
 )
 
 // Index 消息列表
@@ -22,8 +23,7 @@ func Index(c *gin.Context, currentUser *userModel.User) {
 		return
 	}
 
-	currentUser.NotificationCount = 0
-	if err = currentUser.Update(); err != nil {
+	if err = currentUser.Notification(0); err != nil {
 		flash.NewDangerFlash(c, "NotificationCount 更新失败！")
 	}
 	if err = notificationModel.Read(userModel.TableName, currentUser.ID); err != nil {
