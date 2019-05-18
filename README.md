@@ -73,8 +73,8 @@
 - [x] JWT (刷新、黑名单)
 - [x] 接口测试
 - [ ] vue 管理员后台系统
-- [ ] taro web 移动端
-- [ ] flutter 移动端 app
+- [ ] taro web 移动端 (小程序 ... 端)
+- [ ] flutter 移动端 app (Android iOS 端)
 
 
 ### 角色
