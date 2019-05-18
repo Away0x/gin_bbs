@@ -1,7 +1,6 @@
 package topic
 
 import (
-	catModel "gin_bbs/app/models/category"
 	topicModel "gin_bbs/app/models/topic"
 	"gin_bbs/pkg/errno"
 	"gin_bbs/pkg/ginutils/validate"
@@ -25,17 +24,7 @@ func (s *Store) RegisterValidators() validate.ValidatorMap {
 			validate.RequiredValidator(s.Body),
 		},
 		"category_id": {
-			func() string {
-				if s.CategoryID == 0 {
-					return "分类 id 不可为空"
-				}
-				_, err := catModel.Get(int(s.CategoryID))
-				if err != nil {
-					return "该分类不存在"
-				}
-
-				return ""
-			},
+			categoryIDValidator(s.CategoryID),
 		},
 	}
 }

@@ -78,8 +78,12 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 			middleware.TokenAuth(),
 			wrapper.GetToken(topic.Store))
 		// 修改话题
-		topicRouter.Register("PATCH", "api.topics.update", "",
+		topicRouter.Register("PATCH", "api.topics.update", "/:id",
 			middleware.TokenAuth(),
 			wrapper.GetToken(topic.Update))
+		// 删除话题
+		topicRouter.Register("DELETE", "api.topics.destroy", "/:id",
+			middleware.TokenAuth(),
+			wrapper.GetToken(topic.Destroy))
 	}
 }
