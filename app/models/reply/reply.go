@@ -3,6 +3,7 @@ package reply
 import (
 	"gin_bbs/app/models"
 	"gin_bbs/app/models/topic"
+	"gin_bbs/database"
 	"gin_bbs/pkg/ginutils/utils"
 )
 
@@ -55,9 +56,7 @@ func updateTopicReplyCount(r *Reply, num int) (err error) {
 	}
 
 	t.ReplyCount = newCount + num
-	if err := t.Update(); err != nil {
-		return err
-	}
+	database.DB.Model(&t).UpdateColumn("reply_count", newCount+num) // 不触发 topic hook
 
 	return nil
 }

@@ -9,6 +9,7 @@ import (
 	"gin_bbs/app/services"
 	"gin_bbs/app/viewmodels"
 	"gin_bbs/pkg/errno"
+	"gin_bbs/pkg/ginutils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,11 +27,27 @@ func Index(c *gin.Context) {
 
 // UserIndex topic list
 func UserIndex(c *gin.Context, currentUser *userModel.User, tokenString string) {
+	var user *userModel.User
+	id, err := ginutils.GetIntParam(c, "user_id")
+	if err != nil {
+		controllers.SendErrorResponse(c, errno.ResourceNotFoundError)
+		return
+	}
+	if id == int(currentUser.ID) {
+		user = currentUser
+	} else {
+		user, err = userModel.Get(id)
+		if err != nil {
+			controllers.SendErrorResponse(c, errno.New(errno.DatabaseError, err))
+			return
+		}
+	}
+
 	controllers.SendListResponse(c, 20, nil,
-		func() (int, error) { return topicModel.CountByUserID(int(currentUser.ID)) },
+		func() (int, error) { return topicModel.CountByUserID(int(user.ID)) },
 		func(offset, limit, _, _ int) (interface{}, error) {
 			return services.TopicListAPIService(func() ([]*topicModel.Topic, error) {
-				return topicModel.GetByUserID(int(currentUser.ID), offset, limit, c.DefaultQuery("order", "default"))
+				return topicModel.GetByUserID(int(user.ID), offset, limit, c.DefaultQuery("order", "default"))
 			})
 		})
 }

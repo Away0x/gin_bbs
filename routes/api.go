@@ -10,6 +10,7 @@ import (
 	"gin_bbs/app/controllers/api/captcha"
 	"gin_bbs/app/controllers/api/category"
 	"gin_bbs/app/controllers/api/image"
+	"gin_bbs/app/controllers/api/reply"
 	"gin_bbs/app/controllers/api/topic"
 	"gin_bbs/app/controllers/api/user"
 	vericode "gin_bbs/app/controllers/api/verification_code"
@@ -62,7 +63,7 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		// 编辑用户信息
 		userRouter.Register("PATCH", "api.user.update", "", wrapper.GetToken(user.Update))
 		// 用户话题列表
-		userRouter.Register("GET", "api.users.topics.index", "/topics/:id", wrapper.GetToken(topic.UserIndex))
+		userRouter.Register("GET", "api.users.topics.index", "/topics/:user_id", wrapper.GetToken(topic.UserIndex))
 	}
 
 	// ------------------------------------- category -------------------------------------
@@ -91,5 +92,11 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		topicRouter.Register("GET", "api.topics.index", "", topic.Index)
 		// 话题详情
 		topicRouter.Register("GET", "api.topics.show", "/:id", topic.Show)
+		// 发表回复
+		topicRouter.Register("POST", "api.topics.replies.store", "/replies/:topic_id",
+			middleware.TokenAuth(),
+			wrapper.GetToken(reply.Store))
 	}
+
+	// ------------------------------------- reply -------------------------------------
 }
