@@ -37,15 +37,19 @@
 │
 ├── storage          存放日志等文件
 │
-├── admin-fe         管理员后台前端源码
-│
 ├── main.go          项目入口
 │
 ├── config.yaml      项目配置
 │
 ├── deploy.sh        部署脚本
 │
-└── Makefile         Makefile 文件
+├──Makefile          Makefile 文件
+│
+├── admin-fe         vue 管理员后台前端源码
+│
+├── taro-app         taro web app 源码(小程序 ... 端)
+│
+└── flutter_app      flutter app 源码(Android iOS 端)
 </code></pre>
 </details>
 
@@ -67,6 +71,7 @@
 - [x] 微信登录
 - [x] swagger api 文档
 - [x] JWT (刷新、黑名单)
+- [x] 接口测试
 - [ ] Vue 管理员后台系统
 - [ ] taro web 移动端
 - [ ] flutter 移动端 app

@@ -1,1 +1,6 @@
 go 12.5
+node 10.13.0
+vue 3.1.3
+taro 1.3.0-beta.3
+Flutter 1.5.4
+Dart 2.3.0
