@@ -35,9 +35,12 @@ var (
 )
 
 // InitConfig 初始化配置
-func InitConfig() {
+func InitConfig(c string) {
+	if c == "" {
+		c = configFilePath
+	}
 	// 初始化 viper 配置
-	viper.SetConfigFile(configFilePath)
+	viper.SetConfigFile(c)
 	viper.SetConfigType(configFileType)
 
 	if err := viper.ReadInConfig(); err != nil {

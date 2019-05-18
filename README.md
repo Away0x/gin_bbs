@@ -24,6 +24,8 @@
 │
 ├── docs             swagger api doc
 │
+├── test             测试文件
+│
 ├── resources        前端源码
 │    └── view        go 模板文件
 │
