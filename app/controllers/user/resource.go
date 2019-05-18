@@ -34,7 +34,7 @@ func Show(c *gin.Context) {
 	fetchListFunc := func() (int, error) { return topicModel.CountByUserID(int(user.ID)) }
 	serviceFunc := func(offset, limit, _, _ int) (interface{}, error) {
 		return services.TopicListService(func() ([]*topicModel.Topic, error) {
-			return topicModel.GetByUserID(int(user.ID), offset, limit)
+			return topicModel.GetByUserID(int(user.ID), offset, limit, c.DefaultQuery("order", "default"))
 		})
 	}
 

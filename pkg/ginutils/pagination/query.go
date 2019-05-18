@@ -37,3 +37,13 @@ func GetPageQuery(c *gin.Context, defaultPageLine, totalCount int) (offset, limi
 
 	return
 }
+
+// GetPageLine
+func GetPageLine(c *gin.Context, defaultPageLine int) int {
+	pageline, err := strconv.Atoi(c.Query(PageLineQueryName))
+	if err != nil {
+		pageline = defaultPageLine
+	}
+
+	return pageline
+}

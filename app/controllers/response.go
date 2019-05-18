@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"gin_bbs/pkg/errno"
+	"gin_bbs/pkg/ginutils/pagination"
 
 	"github.com/gin-gonic/gin"
 )
@@ -64,4 +65,43 @@ func SendOKResponse(c *gin.Context, data interface{}) {
 // SendErrorResponse 带错误的响应
 func SendErrorResponse(c *gin.Context, err error) {
 	SendResponse(c, err, nil)
+}
+
+// SendListResponse 分页数据
+func SendListResponse(c *gin.Context, defaultPageLine int, other interface{},
+	getTotalFunc func() (int, error),
+	returnDataFunc func(int, int, int, int) (interface{}, error)) {
+
+	// 获取数据总数
+	totalCount, err := getTotalFunc()
+	if err != nil {
+		SendOKResponse(c, errno.New(errno.DatabaseError, err))
+		return
+	}
+
+	// 从 request query 中获取分页参数
+	offset, limit, currentPage, totalPage := pagination.GetPageQuery(c, defaultPageLine, totalCount)
+	if currentPage > totalPage {
+		SendOKResponse(c, errno.Base(errno.ParamsError, "没有那么多数据"))
+		return
+	}
+
+	// 得到列表数据
+	items, err := returnDataFunc(offset, limit, currentPage, totalPage)
+	if err != nil {
+		SendOKResponse(c, errno.New(errno.DatabaseError, err))
+		return
+	}
+
+	listData := ListData{
+		Page:     currentPage,
+		PageLine: pagination.GetPageLine(c, defaultPageLine),
+		Total:    totalCount,
+		List:     items,
+	}
+	if other != nil {
+		listData.Other = other
+	}
+
+	SendOKResponse(c, listData)
 }

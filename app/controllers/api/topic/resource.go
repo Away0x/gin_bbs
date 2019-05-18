@@ -6,11 +6,34 @@ import (
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/app/policies"
 	request "gin_bbs/app/requests/api/topic"
+	"gin_bbs/app/services"
 	"gin_bbs/app/viewmodels"
 	"gin_bbs/pkg/errno"
 
 	"github.com/gin-gonic/gin"
 )
+
+// Index topic list
+func Index(c *gin.Context) {
+	controllers.SendListResponse(c, 20, nil,
+		topicModel.Count,
+		func(offset, limit, _, _ int) (interface{}, error) {
+			return services.TopicListAPIService(func() ([]*topicModel.Topic, error) {
+				return topicModel.List(offset, limit, c.DefaultQuery("order", "default"))
+			})
+		})
+}
+
+// UserIndex topic list
+func UserIndex(c *gin.Context, currentUser *userModel.User, tokenString string) {
+	controllers.SendListResponse(c, 20, nil,
+		func() (int, error) { return topicModel.CountByUserID(int(currentUser.ID)) },
+		func(offset, limit, _, _ int) (interface{}, error) {
+			return services.TopicListAPIService(func() ([]*topicModel.Topic, error) {
+				return topicModel.GetByUserID(int(currentUser.ID), offset, limit, c.DefaultQuery("order", "default"))
+			})
+		})
+}
 
 // Store 发布 topic
 func Store(c *gin.Context, currentUser *userModel.User, tokenString string) {
