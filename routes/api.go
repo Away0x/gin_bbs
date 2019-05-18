@@ -123,5 +123,9 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		notificationRouter.Register("GET", "api.user.notifications.stats", "/stats",
 			middleware.TokenAuth(),
 			wrapper.GetToken(notification.Stats))
+		// 标记消息通知为已读
+		notificationRouter.Register("PATCH", "api.user.notifications.read", "/read",
+			middleware.TokenAuth(),
+			wrapper.GetToken(notification.Read))
 	}
 }

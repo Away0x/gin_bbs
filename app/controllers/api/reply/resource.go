@@ -70,6 +70,7 @@ func Store(c *gin.Context, currentUser *userModel.User, tokenString string) {
 		return
 	}
 
+	replyModel.TopicRepliedNotify(reply, currentUser) // 通知
 	controllers.SendOKResponse(c, viewmodels.ReplyApi(reply))
 }
 
