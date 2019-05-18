@@ -26,21 +26,17 @@ func Index(c *gin.Context) {
 }
 
 // UserIndex topic list
-func UserIndex(c *gin.Context, currentUser *userModel.User, tokenString string) {
-	var user *userModel.User
+func UserIndex(c *gin.Context) {
 	id, err := ginutils.GetIntParam(c, "user_id")
 	if err != nil {
-		controllers.SendErrorResponse(c, errno.ResourceNotFoundError)
+		controllers.SendErrorResponse(c, errno.New(errno.ParamsError, err))
 		return
 	}
-	if id == int(currentUser.ID) {
-		user = currentUser
-	} else {
-		user, err = userModel.Get(id)
-		if err != nil {
-			controllers.SendErrorResponse(c, errno.New(errno.DatabaseError, err))
-			return
-		}
+
+	user, err := userModel.Get(id)
+	if err != nil {
+		controllers.SendErrorResponse(c, errno.New(errno.ResourceNotFoundError, err))
+		return
 	}
 
 	controllers.SendListResponse(c, 20, nil,

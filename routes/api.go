@@ -62,8 +62,6 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		userRouter.Register("POST", "api.images.store", "images", wrapper.GetToken(image.Store))
 		// 编辑用户信息
 		userRouter.Register("PATCH", "api.user.update", "", wrapper.GetToken(user.Update))
-		// 用户话题列表
-		userRouter.Register("GET", "api.users.topics.index", "/topics/:user_id", wrapper.GetToken(topic.UserIndex))
 	}
 
 	// ------------------------------------- category -------------------------------------
@@ -90,8 +88,10 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 			wrapper.GetToken(topic.Destroy))
 		// 话题列表
 		topicRouter.Register("GET", "api.topics.index", "", topic.Index)
+		// 用户话题列表
+		topicRouter.Register("GET", "api.users.topics.index", "/user/:user_id", topic.UserIndex)
 		// 话题详情
-		topicRouter.Register("GET", "api.topics.show", "/:id", topic.Show)
+		topicRouter.Register("GET", "api.topics.show", "/show/:id", topic.Show)
 	}
 
 	// ------------------------------------- reply -------------------------------------
@@ -105,5 +105,9 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		replyRouter.Register("DELETE", "api.replies.destroy", "/:id",
 			middleware.TokenAuth(),
 			wrapper.GetToken(reply.Destroy))
+		// 话题回复列表
+		replyRouter.Register("GET", "api.topic.replies", "/topic/:topic_id", reply.TopicReplies)
+		// 用户回复列表
+		replyRouter.Register("GET", "api.user.replies", "/user/:user_id", reply.UserReplies)
 	}
 }
