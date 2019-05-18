@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	adminFeDistFilePath = "admin-fe/dist"
+	adminFeDistFilePath = "vue-admin-app/dist"
 )
 
 // RenderAdminIndexPage 渲染管理员后台 index.html

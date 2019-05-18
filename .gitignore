@@ -23,7 +23,7 @@ npm-debug.log
 yarn-error.log
 config.yaml
 /public/uploads
-/admin-fe/node_modules
+/vue-admin-app/node_modules
 /taro-app/node_modules
 
 npm-debug.log*

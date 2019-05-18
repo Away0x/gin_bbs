@@ -1,4 +1,4 @@
-# admin-fe gin_bbs 管理员后台
+# vue-admin-app gin_bbs 管理员后台
 
 ## Project setup
 ```

@@ -43,9 +43,9 @@
 │
 ├── deploy.sh        部署脚本
 │
-├──Makefile          Makefile 文件
+├── Makefile         Makefile 文件
 │
-├── admin-fe         vue 管理员后台前端源码
+├── vue-admin-app    vue 管理员后台前端源码
 │
 ├── taro-app         taro web app 源码(小程序 ... 端)
 │
@@ -72,7 +72,7 @@
 - [x] swagger api 文档
 - [x] JWT (刷新、黑名单)
 - [x] 接口测试
-- [ ] Vue 管理员后台系统
+- [ ] vue 管理员后台系统
 - [ ] taro web 移动端
 - [ ] flutter 移动端 app
 
