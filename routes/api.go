@@ -10,6 +10,7 @@ import (
 	"gin_bbs/app/controllers/api/captcha"
 	"gin_bbs/app/controllers/api/category"
 	"gin_bbs/app/controllers/api/image"
+	"gin_bbs/app/controllers/api/notification"
 	"gin_bbs/app/controllers/api/reply"
 	"gin_bbs/app/controllers/api/topic"
 	"gin_bbs/app/controllers/api/user"
@@ -109,5 +110,14 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		replyRouter.Register("GET", "api.topic.replies", "/topic/:topic_id", reply.TopicReplies)
 		// 用户回复列表
 		replyRouter.Register("GET", "api.user.replies", "/user/:user_id", reply.UserReplies)
+	}
+
+	// ------------------------------------- notification -------------------------------------
+	notificationRouter := r.Group("/notifications", middleware.TokenAuth())
+	{
+		// 用户通知列表
+		notificationRouter.Register("GET", "api.user.notifications.index", "",
+			middleware.TokenAuth(),
+			wrapper.GetToken(notification.Index))
 	}
 }

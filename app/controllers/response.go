@@ -27,7 +27,7 @@ type Response struct {
 type ListData struct {
 	Page     int         `json:"page,omitempty"`     // 当前页数
 	PageLine int         `json:"pageline,omitempty"` // 每页条数
-	Total    int         `json:"total,omitempty"`    // 总数
+	Total    int         `json:"total"`              // 总数
 	List     interface{} `json:"list"`               // 列表数据 (无数据时，默认返回一个 [])
 	Other    interface{} `json:"other,omitempty"`    // 其他数据 (可选)
 }
