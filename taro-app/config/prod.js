@@ -14,5 +14,6 @@ module.exports = {
      *     .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin, [])
      * }
      */
+    esnextModules: ['taro-ui']
   }
 }
