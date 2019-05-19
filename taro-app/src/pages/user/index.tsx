@@ -3,18 +3,18 @@ import { View } from '@tarojs/components'
 
 import './index.scss'
 
-class Index extends Component {
+class User extends Component {
   config: Config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '我的'
   }
 
-  render () {
+  render() {
     return (
       <View className="container">
-        首页话题列表
+        我的页面
       </View>
     )
   }
 }
 
-export default Index
+export default User
