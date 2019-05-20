@@ -1,16 +1,32 @@
 package permission
 
-// Role 角色的模型表
-type Role struct {
-}
+import (
+	"gin_bbs/app/models"
+	userModel "gin_bbs/app/models/user"
+	"gin_bbs/database"
 
-// TableName 表名
-func (Role) TableName() string {
-	return "roles"
-}
+	"github.com/lexkong/log"
+)
+
+const (
+	// GuardNameWeb 用户组
+	GuardNameWeb = "web"
+)
+
+const (
+	// PermissionNameManageContents 管理站点内容
+	PermissionNameManageContents = "manage_contents"
+	// PermissionNameManageUsers 管理用户
+	PermissionNameManageUsers = "manage_users"
+	// PermissionNameEditSettings 管理站点设置
+	PermissionNameEditSettings = "edit_settings"
+)
 
 // Permission 权限的模型表
 type Permission struct {
+	models.BaseModel
+	Name      string `gorm:"column:name;type:varchar(255);not null"`
+	GuardName string `gorm:"column:guard_name;type:varchar(255);not null"`
 }
 
 // TableName 表名
@@ -18,29 +34,75 @@ func (Permission) TableName() string {
 	return "permissions"
 }
 
-// ModelHasRole 模型与角色的关联表，用户拥有什么角色在此表中定义，一个用户能拥有多个角色
-type ModelHasRole struct {
+// Create 创建权限
+func (p *Permission) Create() (err error) {
+	if err = database.DB.Create(&p).Error; err != nil {
+		log.Warnf("Permission 创建失败: %v", err)
+		return err
+	}
+
+	return nil
 }
 
-// TableName 表名
-func (ModelHasRole) TableName() string {
-	return "model_has_roles"
+// GetPermissionByName -
+func GetPermissionByName(permissionName string) (*Permission, error) {
+	p := &Permission{}
+	if err := database.DB.Where("name = ?", permissionName).First(&p).Error; err != nil {
+		return nil, err
+	}
+
+	return p, nil
 }
 
-// RoleHasPermission 角色拥有的权限关联表，如管理员拥有查看后台的权限都是在此表定义，一个角色能拥有多个权限
-type RoleHasPermission struct {
+// AssignPermission 赋予用户权限
+func (p *Permission) AssignPermission(u *userModel.User) (err error) {
+	mhp := &ModelHasPermission{
+		PermissionID: p.ID,
+		ModelType:    u.TableName(),
+		ModelID:      u.ID,
+	}
+	if err := mhp.Create(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-// TableName 表名
-func (RoleHasPermission) TableName() string {
-	return "role_has_permissions"
+// UserHasPermission 用户是否拥有某权限
+func UserHasPermission(u *userModel.User, permissionName string) bool {
+	p, err := GetPermissionByName(permissionName)
+	if err != nil {
+		return false
+	}
+
+	mhp := &ModelHasPermission{}
+	err = database.DB.Where("permission_id = ? AND model_type = ? AND model_id = ?", p.ID, u.TableName(), u.ID).First(&mhp).Error
+	if err != nil || mhp == nil {
+		return false
+	}
+
+	return true
 }
 
-// ModelHasPermission 模型与权限关联表，一个模型能拥有多个权限
-type ModelHasPermission struct {
-}
+// GetUserAllPermission 获取用户所有权限
+func GetUserAllPermission(u *userModel.User) ([]*Permission, error) {
+	var (
+		modelPs = make([]*ModelHasPermission, 0)
+		ps      = make([]*Permission, 0)
+		ids     = make([]uint, 0)
+	)
 
-// TableName 表名
-func (ModelHasPermission) TableName() string {
-	return "model_has_permissions"
+	if err := database.DB.Where("model_type = ? AND model_id = ?", u.TableName(), u.ID).First(&modelPs).Error; err != nil {
+		return ps, err
+	}
+
+	for _, v := range modelPs {
+		ids = append(ids, v.PermissionID)
+	}
+
+	if err := database.DB.Where("id in (?)", ids).First(&ps).Error; err != nil {
+		return ps, err
+	}
+
+	return ps, nil
 }

@@ -45,7 +45,7 @@ class Index extends Component {
                   key={t.id}
                   title={t.title}
                   note={t.body}
-                  thumb='https://iocaffcdn.phphub.org/uploads/avatars/3995_1516760409.jpg?imageView2/1/w/200/h/200" '
+                  thumb='https://iocaffcdn.phphub.org/uploads/avatars/3995_1516760409.jpg?imageView2/1/w/200/h/200'
                 />
               )
             })

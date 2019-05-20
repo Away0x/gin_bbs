@@ -33,8 +33,6 @@ type User struct {
 	// 微信
 	WeixinOpenID  string `gorm:"column:weixin_openid;type:varchar(255);unique;default:NULL"`
 	WeixinUnionID string `gorm:"column:weixin_unionid;type:varchar(255);unique;default:NULL"` // 在用户将公众号绑定到微信开放平台帐号后，才会出现 unionid 字段
-	// 是否为管理员
-	IsAdmin uint `gorm:"column:is_admin;type:tinyint(1)"`
 	// 用户激活
 	ActivationToken string     `gorm:"column:activation_token;type:varchar(255)"`
 	Activated       uint       `gorm:"column:activated;type:tinyint(1);not null"`
