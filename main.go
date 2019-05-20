@@ -24,7 +24,7 @@ func main() {
 	// 解析命令行参数
 	pflag.Parse()
 	// 初始化配置
-	config.InitConfig("")
+	config.InitConfig("", true)
 
 	// gin setup
 	g := gin.New()

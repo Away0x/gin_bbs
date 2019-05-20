@@ -10,6 +10,9 @@ install:
 c-test:
 	go test -v ./test/controllers/...
 
+m-test:
+	go test -v ./test/models/...
+
 dev:
   # go get github.com/pilu/fresh
 	fresh -c ./fresh.conf
@@ -28,6 +31,7 @@ help:
 	@echo "make - compile the source code"
 	@echo "make install - install dep"
 	@echo "make c-test - controllers test"
+	@echo "make m-test - models test"
 	@echo "make dev - run go fresh"
 	@echo "make api-doc - generate swagger api docs"
 	@echo "make mock - mock data"

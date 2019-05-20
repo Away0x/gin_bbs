@@ -75,34 +75,71 @@ func UserHasPermission(u *userModel.User, permissionName string) bool {
 		return false
 	}
 
-	mhp := &ModelHasPermission{}
-	err = database.DB.Where("permission_id = ? AND model_type = ? AND model_id = ?", p.ID, u.TableName(), u.ID).First(&mhp).Error
-	if err != nil || mhp == nil {
+	mhrs := make([]*ModelHasRole, 0)
+	err = database.DB.Where("model_type = ? AND model_id = ?", u.TableName(), u.ID).Find(&mhrs).Error
+	if err != nil {
 		return false
 	}
+
+	roids := make([]uint, 0)
+	for _, v := range mhrs {
+		roids = append(roids, v.RoleID)
+	}
+	rhp := &RoleHasPermission{}
+	err = database.DB.Where("permission_id = ? AND role_id in (?)", p.ID, roids).First(&rhp).Error
+	if err != nil || rhp == nil {
+		return false
+	}
+
+	// mhp := &ModelHasPermission{}
+	// err = database.DB.Where("permission_id = ? AND model_type = ? AND model_id = ?", p.ID, u.TableName(), u.ID).First(&mhp).Error
+	// if err != nil || mhp == nil {
+	// 	return false
+	// }
 
 	return true
 }
 
 // GetUserAllPermission 获取用户所有权限
-func GetUserAllPermission(u *userModel.User) ([]*Permission, error) {
+func GetUserAllPermission(u *userModel.User) ([]*RoleHasPermission, error) {
+	// var (
+	// 	modelPs = make([]*ModelHasPermission, 0)
+	// 	ps      = make([]*Permission, 0)
+	// 	ids     = make([]uint, 0)
+	// )
+
+	// if err := database.DB.Where("model_type = ? AND model_id = ?", u.TableName(), u.ID).First(&modelPs).Error; err != nil {
+	// 	return ps, err
+	// }
+
+	// for _, v := range modelPs {
+	// 	ids = append(ids, v.PermissionID)
+	// }
+
+	// if err := database.DB.Where("id in (?)", ids).First(&ps).Error; err != nil {
+	// 	return ps, err
+	// }
+
+	// return ps, nil
+
 	var (
-		modelPs = make([]*ModelHasPermission, 0)
-		ps      = make([]*Permission, 0)
-		ids     = make([]uint, 0)
+		modelRs = make([]*ModelHasRole, 0)
+		rhpS    = make([]*RoleHasPermission, 0)
+		roleIDs = make([]uint, 0) // 存储所有角色 id
 	)
 
-	if err := database.DB.Where("model_type = ? AND model_id = ?", u.TableName(), u.ID).First(&modelPs).Error; err != nil {
-		return ps, err
+	// 获取用户所有角色
+	if err := database.DB.Where("model_type = ? AND model_id = ?", u.TableName(), u.ID).Find(&modelRs).Error; err != nil {
+		return rhpS, err
 	}
 
-	for _, v := range modelPs {
-		ids = append(ids, v.PermissionID)
+	for _, v := range modelRs {
+		roleIDs = append(roleIDs, v.RoleID)
 	}
 
-	if err := database.DB.Where("id in (?)", ids).First(&ps).Error; err != nil {
-		return ps, err
+	if err := database.DB.Where("role_id in (?)", roleIDs).Find(&rhpS).Error; err != nil {
+		return rhpS, err
 	}
 
-	return ps, nil
+	return rhpS, nil
 }
