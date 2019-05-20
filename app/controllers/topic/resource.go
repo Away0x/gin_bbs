@@ -12,6 +12,7 @@ import (
 	userModel "gin_bbs/app/models/user"
 
 	"gin_bbs/app/auth"
+	"gin_bbs/app/policies"
 	"gin_bbs/app/services"
 	"gin_bbs/app/viewmodels"
 	"gin_bbs/pkg/ginutils/flash"
@@ -68,8 +69,9 @@ func Show(c *gin.Context) {
 	}, currentUser)
 
 	controllers.Render(c, "topics/show", gin.H{
-		"topic":   topicVM,
-		"replies": replies,
+		"topic":          topicVM,
+		"replies":        replies,
+		"canDeleteTopic": policies.CheckTopicPolicyOwner(currentUser, int(topic.UserID)),
 	})
 }
 

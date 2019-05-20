@@ -44,7 +44,7 @@
         </div>
 
         {% if currentUserData %}
-          {% ifequal topic.User.ID currentUserData.ID %}
+          {% if canDeleteTopic %}
             <div class="operate">
               <hr>
               <a href="{% route 'topics.edit' topic.ID %}" class="btn btn-outline-secondary btn-sm" role="button">
@@ -59,7 +59,7 @@
                 </button>
               </form>
             </div>
-          {% endifequal %}
+          {% endif %}
         {% endif %}
 
       </div>

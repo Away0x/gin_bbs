@@ -70,14 +70,20 @@ func (p *Permission) AssignPermission(u *userModel.User) (err error) {
 
 // UserHasPermission 用户是否拥有某权限
 func UserHasPermission(u *userModel.User, permissionName string) bool {
+	if val, ok := GetUserPermissionCache(u.ID, permissionName); ok {
+		return val
+	}
+
 	p, err := GetPermissionByName(permissionName)
 	if err != nil {
+		SetUserPermissionCache(u.ID, permissionName, false)
 		return false
 	}
 
 	mhrs := make([]*ModelHasRole, 0)
 	err = database.DB.Where("model_type = ? AND model_id = ?", u.TableName(), u.ID).Find(&mhrs).Error
 	if err != nil {
+		SetUserPermissionCache(u.ID, permissionName, false)
 		return false
 	}
 
@@ -88,6 +94,7 @@ func UserHasPermission(u *userModel.User, permissionName string) bool {
 	rhp := &RoleHasPermission{}
 	err = database.DB.Where("permission_id = ? AND role_id in (?)", p.ID, roids).First(&rhp).Error
 	if err != nil || rhp == nil {
+		SetUserPermissionCache(u.ID, permissionName, false)
 		return false
 	}
 
@@ -97,6 +104,7 @@ func UserHasPermission(u *userModel.User, permissionName string) bool {
 	// 	return false
 	// }
 
+	SetUserPermissionCache(u.ID, permissionName, true)
 	return true
 }
 
