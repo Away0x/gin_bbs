@@ -42,18 +42,21 @@ func NewUserViewModelSerializer(u *userModel.User) *UserViewModel {
 // NewUserAPISerializer api data
 func NewUserAPISerializer(u *userModel.User) map[string]interface{} {
 	r := map[string]interface{}{
-		"id":              u.ID,
-		"name":            u.Name,
-		"email":           u.Email,
-		"avatar":          u.Avatar,
-		"introduction":    u.Introduction,
-		"bound_phone":     false,
-		"bound_wechat":    false,
-		"last_actived_at": helpers.GetUserActivedLastActivedAt(u).Format(constants.DateTimeLayout),
-		"created_at":      u.CreatedAt.Format(constants.DateTimeLayout),
-		"updated_at":      u.UpdatedAt.Format(constants.DateTimeLayout),
+		"id":           u.ID,
+		"name":         u.Name,
+		"email":        u.Email,
+		"avatar":       u.Avatar,
+		"introduction": u.Introduction,
+		"bound_phone":  false,
+		"bound_wechat": false,
+		"created_at":   u.CreatedAt.Format(constants.DateTimeLayout),
+		"updated_at":   u.UpdatedAt.Format(constants.DateTimeLayout),
 	}
 
+	t := helpers.GetUserActivedLastActivedAt(u)
+	if t != nil {
+		r["last_actived_at"] = t.Format(constants.DateTimeLayout)
+	}
 	if u.Phone != "" {
 		r["bound_phone"] = true
 	}

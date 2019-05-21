@@ -56,6 +56,8 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 			wrapper.GetToken(authorization.Destroy))
 	}
 
+	// 获取活跃用户列表
+	r.Register("GET", "api.users.actived", "/users/actived", user.ActivedIndex)
 	// +++++++++++++++ 用户相关 +++++++++++++++
 	userRouter := r.Group("/user", middleware.TokenAuth())
 	{

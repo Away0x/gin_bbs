@@ -43,6 +43,8 @@ type User struct {
 
 	RememberToken     string `gorm:"column:remember_token;type:varchar(100)"`      // 用于实现记住我功能，存入 cookie 中，下次带上时，即可直接登录
 	NotificationCount int    `gorm:"column:notification_count;not null;default:0"` // 未读通知数
+
+	RegistrationID uint `gorm:"column:registration_id;unique;default:NULL"` // Jpush 中的唯一标识
 }
 
 // TableName 表名

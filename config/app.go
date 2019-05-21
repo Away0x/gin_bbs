@@ -47,6 +47,10 @@ type appConfig struct {
 	WeixinAppID       string
 	WeixinAppSecret   string
 	WeixinRedirectURL string
+
+	// 极光推送
+	JPushKey    string
+	JPushSecret string
 }
 
 func newAppConfig() *appConfig {
@@ -83,5 +87,8 @@ func newAppConfig() *appConfig {
 		WeixinAppID:       viper.GetString("WEIXIN.APP_ID"),
 		WeixinAppSecret:   viper.GetString("WEIXIN.APP_SECRET"),
 		WeixinRedirectURL: viper.GetString("WEIXIN.REDIRECT_URL"),
+
+		JPushKey:    viper.GetString("JPUSH.KEY"),
+		JPushSecret: viper.GetString("JPUSH.SECRET"),
 	}
 }
