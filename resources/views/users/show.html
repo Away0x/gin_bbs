@@ -16,6 +16,11 @@
         <hr>
         <h5><strong>注册于</strong></h5>
         <p>{{ user.CreatedAt }}</p>
+        <hr>
+        {% if user.LastActivedAt %}
+          <h5><strong>最后活跃</strong></h5>
+          <p title="{{ user.LastActivedAt }}">{{ user.LastActivedAt }}</p>
+        {% endif %}
       </div>
     </div>
   </div>

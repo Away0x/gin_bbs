@@ -1,6 +1,7 @@
 package viewmodels
 
 import (
+	"gin_bbs/app/helpers"
 	permissionModel "gin_bbs/app/models/permission"
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/pkg/constants"
@@ -15,12 +16,13 @@ type UserViewModel struct {
 	Avatar            string
 	Introduction      string
 	CreatedAt         string
+	LastActivedAt     string
 	NotificationCount int
 }
 
 // NewUserViewModelSerializer 用户数据展示
 func NewUserViewModelSerializer(u *userModel.User) *UserViewModel {
-	return &UserViewModel{
+	data := &UserViewModel{
 		ID:                int(u.ID),
 		Name:              u.Name,
 		Email:             u.Email,
@@ -29,6 +31,12 @@ func NewUserViewModelSerializer(u *userModel.User) *UserViewModel {
 		NotificationCount: u.NotificationCount,
 		CreatedAt:         gintime.SinceForHuman(u.CreatedAt),
 	}
+	t := helpers.GetUserActivedLastActivedAt(u)
+	if t != nil {
+		data.LastActivedAt = gintime.SinceForHuman(*t)
+	}
+
+	return data
 }
 
 // NewUserAPISerializer api data
@@ -41,7 +49,7 @@ func NewUserAPISerializer(u *userModel.User) map[string]interface{} {
 		"introduction":    u.Introduction,
 		"bound_phone":     false,
 		"bound_wechat":    false,
-		"last_actived_at": u.LastActivedAt.Format(constants.DateTimeLayout),
+		"last_actived_at": helpers.GetUserActivedLastActivedAt(u).Format(constants.DateTimeLayout),
 		"created_at":      u.CreatedAt.Format(constants.DateTimeLayout),
 		"updated_at":      u.UpdatedAt.Format(constants.DateTimeLayout),
 	}

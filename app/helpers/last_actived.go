@@ -42,3 +42,21 @@ func SyncUserActivedAtToDatabase() {
 		}
 	}
 }
+
+// GetUserActivedLastActivedAt 获取用户最后登录时间
+func GetUserActivedLastActivedAt(u *userModel.User) *time.Time {
+	key := strconv.Itoa(int(u.ID))
+	t, ok := lacache.Get(key)
+	if ok {
+		if tt, ok := t.(int64); ok {
+			ttime := time.Unix(tt, 0)
+			return &ttime
+		}
+	}
+
+	if u.LastActivedAt != nil {
+		return u.LastActivedAt
+	}
+
+	return nil
+}
