@@ -17,4 +17,5 @@ func Mock() {
 	CategoryTableSeeder(true)
 	TopicTableSeeder(true)
 	ReplyTableSeeder(true)
+	LinksTableSeeder(true)
 }

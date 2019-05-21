@@ -24,3 +24,19 @@
     </div>
   </div>
 {% endif %}
+
+{% if links %}
+  <div class="card mt-4">
+    <div class="card-body pt-2">
+      <div class="text-center mt-1 mb-0 text-muted">资源推荐</div>
+      <hr class="mt-2 mb-3">
+      {% for l in links %}
+        <a class="media mt-1" href="{{ l.Link }}">
+          <div class="media-body">
+            <span class="media-heading text-muted">{{ l.Title }}</span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gin_bbs/app/models/category"
 	"gin_bbs/app/models/image"
+	"gin_bbs/app/models/link"
 	"gin_bbs/app/models/notification"
 	passwordreset "gin_bbs/app/models/password_reset"
 	"gin_bbs/app/models/permission"
@@ -38,6 +39,7 @@ func SetupDB(needMock bool) (*gorm.DB, error) {
 		&reply.Reply{},
 		&notification.Notification{},
 		&image.Image{},
+		&link.Link{},
 	)
 
 	// 只有非 release 时才可 mock
