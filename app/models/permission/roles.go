@@ -1,6 +1,7 @@
 package permission
 
 import (
+	"fmt"
 	"gin_bbs/app/models"
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/database"
@@ -77,6 +78,23 @@ func (r *Role) AssignRole(u *userModel.User) (err error) {
 	}
 
 	return nil
+}
+
+// UserRoles 获取用户的所有角色
+func UserRoles(u *userModel.User) ([]*Role, error) {
+	result := make([]*Role, 0)
+	joinSQL := fmt.Sprintf(`INNER JOIN %s as m ON m.model_type = '%s'
+    AND m.model_id = %d
+    AND roles.id = m.role_id`,
+		(ModelHasRole{}).TableName(),
+		(userModel.User{}).TableName(),
+		u.ID)
+	d := database.DB.Joins(joinSQL).Find(&result)
+	if err := d.Error; err != nil {
+		return result, err
+	}
+
+	return result, nil
 }
 
 // UserHasRole 用户是否是某个角色

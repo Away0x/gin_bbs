@@ -1,6 +1,7 @@
 package viewmodels
 
 import (
+	permissionModel "gin_bbs/app/models/permission"
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/pkg/constants"
 	gintime "gin_bbs/pkg/ginutils/time"
@@ -53,4 +54,12 @@ func NewUserAPISerializer(u *userModel.User) map[string]interface{} {
 	}
 
 	return r
+}
+
+// NewUserAPIHasRoles -
+func NewUserAPIHasRoles(u *userModel.User, rs []*permissionModel.Role) map[string]interface{} {
+	uvm := NewUserAPISerializer(u)
+	uvm["roles"] = RoleAPIList(rs)
+
+	return uvm
 }

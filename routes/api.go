@@ -11,6 +11,7 @@ import (
 	"gin_bbs/app/controllers/api/category"
 	"gin_bbs/app/controllers/api/image"
 	"gin_bbs/app/controllers/api/notification"
+	"gin_bbs/app/controllers/api/permission"
 	"gin_bbs/app/controllers/api/reply"
 	"gin_bbs/app/controllers/api/topic"
 	"gin_bbs/app/controllers/api/user"
@@ -127,5 +128,14 @@ func registerAPI(r *router.MyRoute, middlewares ...gin.HandlerFunc) {
 		notificationRouter.Register("PATCH", "api.user.notifications.read", "/read",
 			middleware.TokenAuth(),
 			wrapper.GetToken(notification.Read))
+	}
+
+	// ------------------------------------- permission -------------------------------------
+	permissionRouter := r.Group("/permissions", middleware.TokenAuth())
+	{
+		// 当前登录用户权限
+		permissionRouter.Register("GET", "api.user.permissions.index", "",
+			middleware.TokenAuth(),
+			wrapper.GetToken(permission.Index))
 	}
 }
