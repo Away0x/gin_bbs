@@ -3,6 +3,7 @@ package middleware
 import (
 	"gin_bbs/app/auth/token"
 	"gin_bbs/app/controllers"
+	"gin_bbs/app/helpers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,13 +18,14 @@ func TokenAuth() gin.HandlerFunc {
 			return
 		}
 
-		_, err = token.ParseAndGetUser(c, tokenStr) // 会将用户数据和 token 存到 gin.Context 中
+		currentUser, err := token.ParseAndGetUser(c, tokenStr) // 会将用户数据和 token 存到 gin.Context 中
 		if err != nil {
 			controllers.SendErrorResponse(c, err)
 			c.Abort()
 			return
 		}
 
+		helpers.RecordLastActivedAt(currentUser)
 		c.Next()
 	}
 }

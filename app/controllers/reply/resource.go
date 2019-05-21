@@ -91,9 +91,7 @@ func Destroy(c *gin.Context, currentUser *userModel.User) {
 	}
 
 	// 权限 (拥有删除回复权限的用户，应当是 "回复的作者" 或者 "回复话题的作者")
-	if !policies.CheckPolicy(c, func() bool {
-		return reply.UserID == currentUser.ID || topic.UserID == currentUser.ID
-	}) {
+	if !policies.ReplyPolicy(c, currentUser, reply, topic) {
 		return
 	}
 

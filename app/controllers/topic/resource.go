@@ -7,11 +7,14 @@ import (
 	"strings"
 
 	categoryModel "gin_bbs/app/models/category"
+	linkModel "gin_bbs/app/models/link"
 	replyModel "gin_bbs/app/models/reply"
 	topicModel "gin_bbs/app/models/topic"
 	userModel "gin_bbs/app/models/user"
 
 	"gin_bbs/app/auth"
+	"gin_bbs/app/helpers"
+	"gin_bbs/app/policies"
 	"gin_bbs/app/services"
 	"gin_bbs/app/viewmodels"
 	"gin_bbs/pkg/ginutils/flash"
@@ -33,7 +36,19 @@ func Index(c *gin.Context) {
 		return
 	}
 
-	controllers.Render(c, "topics/index", renderFunc(gin.H{}))
+	// 资源推荐
+	links, _ := linkModel.All()
+	// 活跃用户
+	activeUsersVM := make([]*viewmodels.UserViewModel, 0)
+	activeUsers := helpers.NewActiveUser().GetActiveUsers()
+	for _, v := range activeUsers {
+		activeUsersVM = append(activeUsersVM, viewmodels.NewUserViewModelSerializer(v))
+	}
+
+	controllers.Render(c, "topics/index", renderFunc(gin.H{
+		"active_users": activeUsersVM,
+		"links":        links,
+	}))
 }
 
 // Show topic 详情
@@ -68,8 +83,9 @@ func Show(c *gin.Context) {
 	}, currentUser)
 
 	controllers.Render(c, "topics/show", gin.H{
-		"topic":   topicVM,
-		"replies": replies,
+		"topic":          topicVM,
+		"replies":        replies,
+		"canDeleteTopic": policies.CheckTopicPolicyOwner(currentUser, int(topic.UserID)),
 	})
 }
 

@@ -2,6 +2,7 @@ package user
 
 import (
 	"gin_bbs/app/controllers"
+	permissionModel "gin_bbs/app/models/permission"
 	userModel "gin_bbs/app/models/user"
 	request "gin_bbs/app/requests/api/user"
 	"gin_bbs/app/viewmodels"
@@ -35,7 +36,8 @@ func Store(c *gin.Context) {
 
 // Show 获取用户信息
 func Show(c *gin.Context, currentUser *userModel.User, tokenString string) {
-	controllers.SendOKResponse(c, viewmodels.NewUserAPISerializer(currentUser))
+	roles, _ := permissionModel.UserRoles(currentUser)
+	controllers.SendOKResponse(c, viewmodels.NewUserAPIHasRoles(currentUser, roles))
 }
 
 // Update 编辑用户信息

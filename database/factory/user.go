@@ -3,6 +3,7 @@ package factory
 import (
 	"fmt"
 	"gin_bbs/app/models"
+	permissionModel "gin_bbs/app/models/permission"
 	userModel "gin_bbs/app/models/user"
 	"gin_bbs/pkg/ginutils/utils"
 
@@ -32,11 +33,6 @@ func userFactory(i int) *factory.Factory {
 		Activated:       models.TrueTinyint,
 		RememberToken:   string(utils.RandomCreateBytes(10)),
 	}
-	// 第一个用户是管理员
-	if i == 0 {
-		u.IsAdmin = models.TrueTinyint
-	}
-
 	r := utils.RandInt(0, len(avatars)-1)
 
 	return factory.NewFactory(
@@ -56,6 +52,9 @@ func userFactory(i int) *factory.Factory {
 		if i == 0 {
 			return "1@test.com", nil
 		}
+		if i == 1 {
+			return "2@test.com", nil
+		}
 		return randomdata.Email(), nil
 	})
 }
@@ -71,5 +70,23 @@ func UsersTableSeeder(needCleanTable bool) {
 		if err := user.Create(); err != nil {
 			fmt.Printf("mock user error： %v\n", err)
 		}
+
+		// 1号用户指派为 "站长"
+		if i == 0 {
+			r, err := permissionModel.GetRoleByName(permissionModel.RoleNameFounder)
+			if err != nil {
+				panic(err)
+			}
+			r.AssignRole(user)
+		}
+		// 2号用户指派为 "管理员"
+		if i == 1 {
+			r, err := permissionModel.GetRoleByName(permissionModel.RoleNameMaintainer)
+			if err != nil {
+				panic(err)
+			}
+			r.AssignRole(user)
+		}
 	}
+
 }

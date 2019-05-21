@@ -12,8 +12,10 @@ func dropAndCreateTable(table interface{}) {
 
 // Mock -
 func Mock() {
+	PermissionTableSeeder(true)
 	UsersTableSeeder(true)
 	CategoryTableSeeder(true)
 	TopicTableSeeder(true)
 	ReplyTableSeeder(true)
+	LinksTableSeeder(true)
 }

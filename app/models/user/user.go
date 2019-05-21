@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/jinzhu/gorm"
 	"github.com/patrickmn/go-cache"
 )
 
@@ -33,15 +34,17 @@ type User struct {
 	// 微信
 	WeixinOpenID  string `gorm:"column:weixin_openid;type:varchar(255);unique;default:NULL"`
 	WeixinUnionID string `gorm:"column:weixin_unionid;type:varchar(255);unique;default:NULL"` // 在用户将公众号绑定到微信开放平台帐号后，才会出现 unionid 字段
-	// 是否为管理员
-	IsAdmin uint `gorm:"column:is_admin;type:tinyint(1)"`
 	// 用户激活
 	ActivationToken string     `gorm:"column:activation_token;type:varchar(255)"`
 	Activated       uint       `gorm:"column:activated;type:tinyint(1);not null"`
 	EmailVerifiedAt *time.Time `gorm:"column:email_verified_at"` // 激活时间
+	// 用户最后登录时间
+	LastActivedAt *time.Time `gorm:"column:last_actived_at"`
 
 	RememberToken     string `gorm:"column:remember_token;type:varchar(100)"`      // 用于实现记住我功能，存入 cookie 中，下次带上时，即可直接登录
 	NotificationCount int    `gorm:"column:notification_count;not null;default:0"` // 未读通知数
+
+	RegistrationID uint `gorm:"column:registration_id;unique;default:NULL"` // Jpush 中的唯一标识
 }
 
 // TableName 表名
@@ -85,6 +88,16 @@ func (u *User) BeforeUpdate() (err error) {
 			return errors.New("User Model 更新失败")
 		}
 	}
+
+	return
+}
+
+// BeforeDelete - hook
+func (u *User) BeforeDelete(tx *gorm.DB) (err error) {
+	// 当用户删除时，删除其发布的话题
+	tx.Exec("delete from topics where user_id = ?", u.ID)
+	// 当用户删除时，删除其发布的回复
+	tx.Exec("delete from replies where user_id = ?", u.ID)
 
 	return
 }

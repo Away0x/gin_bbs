@@ -4,6 +4,7 @@ import (
 	replyModel "gin_bbs/app/models/reply"
 	topicModel "gin_bbs/app/models/topic"
 	userModel "gin_bbs/app/models/user"
+	"gin_bbs/app/policies"
 	"gin_bbs/app/viewmodels"
 	"gin_bbs/database"
 	"gin_bbs/pkg/ginutils/utils"
@@ -56,17 +57,12 @@ func RpleyListService(getReplyFunc func() ([]*replyModel.Reply, error), currentU
 			if r.TopicID == t.ID {
 				replyIDMap[r.ID]["Topic"] = viewmodels.NewTopicViewModelSerializer(t)
 				// 是否可删除
-				if currentUser != nil && t.UserID == currentUser.ID {
+				if policies.CheckReplyPolicy(currentUser, r, t) {
 					replyIDMap[r.ID]["CanDelete"] = true
 				}
 			}
 		}
-		// 是否可删除
-		if currentUser != nil {
-			if r.UserID == currentUser.ID {
-				replyIDMap[r.ID]["CanDelete"] = true
-			}
-		}
+
 	}
 
 	for _, id := range replyIDs {

@@ -3,6 +3,7 @@ package middleware
 import (
 	"gin_bbs/app/auth"
 	"gin_bbs/app/controllers"
+	"gin_bbs/app/helpers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,6 +18,7 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 
+		helpers.RecordLastActivedAt(currentUser)
 		c.Next()
 	}
 }

@@ -47,3 +47,8 @@ WEIXIN:
   APP_ID:
   APP_SECRET:
   REDIRECT_URL: # OAuth 授权后的跳转链接，默认为 APP.URL
+
+# 极光推送
+JPUSH:
+  KEY:
+  SECRET:

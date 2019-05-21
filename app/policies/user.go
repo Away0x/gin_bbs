@@ -8,6 +8,14 @@ import (
 
 // UserPolicyUpdate : 是否有更新目标 user 的权限
 func UserPolicyUpdate(c *gin.Context, currentUser *userModel.User, targetUserID int) bool {
+  if currentUser == nil {
+    return false
+  }
+
+  if before(currentUser) {
+		return true
+	}
+
 	if currentUser.ID != uint(targetUserID) {
 		Unauthorized(c)
 		return false

@@ -35,7 +35,7 @@ var (
 )
 
 // InitConfig 初始化配置
-func InitConfig(c string) {
+func InitConfig(c string, hasLog bool) {
 	if c == "" {
 		c = configFilePath
 	}
@@ -48,16 +48,17 @@ func InitConfig(c string) {
 	}
 
 	// 初始化日志
-	initLog()
+	if hasLog {
+		initLog()
+		// 热更新配置文件
+		watchConfig()
+	}
 	// 初始化 app 配置
 	AppConfig = newAppConfig()
 	// 初始化数据库配置
 	DBConfig = newDBConfig()
 	// 初始化邮件配置
 	MailConfig = newMailConfig()
-
-	// 热更新配置文件
-	watchConfig()
 }
 
 // 监控配置文件变化

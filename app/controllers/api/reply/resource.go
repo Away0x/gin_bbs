@@ -95,9 +95,7 @@ func Destroy(c *gin.Context, currentUser *userModel.User, tokenString string) {
 	}
 
 	// 权限
-	if !policies.CheckPolicy(c, func() bool {
-		return reply.UserID == currentUser.ID || topic.UserID == currentUser.ID
-	}) {
+	if !policies.ReplyPolicy(c, currentUser, reply, topic) {
 		return
 	}
 

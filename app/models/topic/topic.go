@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jinzhu/gorm"
 	"github.com/patrickmn/go-cache"
 )
 
@@ -56,6 +57,14 @@ func (t *Topic) AfterSave() error {
 	// }
 
 	return nil
+}
+
+// BeforeDelete - hook
+func (t *Topic) BeforeDelete(tx *gorm.DB) (err error) {
+	// 话题删除时，删除其所属的回复
+	tx.Exec("delete from replies where topic_id = ?", t.ID)
+
+	return
 }
 
 // ------------ private

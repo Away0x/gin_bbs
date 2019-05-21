@@ -25,6 +25,8 @@ config.yaml
 /public/uploads
 /vue-admin-app/node_modules
 /taro-app/node_modules
+/taro-app/dist
+/taro-app/.temp
 
 npm-debug.log*
 yarn-debug.log*

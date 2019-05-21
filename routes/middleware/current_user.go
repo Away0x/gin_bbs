@@ -3,6 +3,7 @@ package middleware
 import (
 	"gin_bbs/app/auth"
 	"gin_bbs/app/controllers"
+	"gin_bbs/app/helpers"
 
 	"strings"
 
@@ -18,6 +19,9 @@ var whitePathList = [...]string{
 func CurrentUserMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user := auth.SaveCurrentUserToContext(c)
+		if user != nil {
+			helpers.RecordLastActivedAt(user)
+		}
 
 		// 如果用户已经登录，并且未有耨恒 email
 		// 并且访问的不是 email 验证或退出的 url，会重定向到激活页
