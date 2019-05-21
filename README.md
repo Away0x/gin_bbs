@@ -1,7 +1,6 @@
 # Gin BBS App
 
 - [访问地址](http://www.frontendgo.com:8889)
-- [API 文档](http://www.frontendgo.com:8889/swagger/index.html)
 
 ## 项目目录结构
 <details>
@@ -10,6 +9,14 @@
 ├── app              项目核心逻辑代码
 │    ├── controllers 控制器
 │    ├── models      模型
+│    ├── auth        用户相关
+│    ├── cache       缓存
+│    ├── cron        定时任务
+│    ├── helpers     帮助方法
+│    ├── policies    权限
+│    ├── requests    参数验证
+│    ├── services    复杂查询
+│    └── viewmodels  数据转换
 │
 ├── bootstrap        各组件初始化
 │
