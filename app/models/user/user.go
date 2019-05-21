@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/jinzhu/gorm"
 	"github.com/patrickmn/go-cache"
 )
 
@@ -83,6 +84,16 @@ func (u *User) BeforeUpdate() (err error) {
 			return errors.New("User Model 更新失败")
 		}
 	}
+
+	return
+}
+
+// BeforeDelete - hook
+func (u *User) BeforeDelete(tx *gorm.DB) (err error) {
+	// 当用户删除时，删除其发布的话题
+	tx.Exec("delete from topics where user_id = ?", u.ID)
+	// 当用户删除时，删除其发布的回复
+	tx.Exec("delete from replies where user_id = ?", u.ID)
 
 	return
 }
