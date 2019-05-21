@@ -5,3 +5,22 @@
     </a>
   </div>
 </div>
+
+{% if active_users %}
+  <div class="card mt-4">
+    <div class="card-body active-users pt-2">
+      <div class="text-center mt-1 mb-0 text-muted">活跃用户</div>
+      <hr class="mt-2">
+      {% for u in active_users %}
+        <a class="media mt-2" href="{% route 'users.show' u.ID %}">
+          <div class="media-left media-middle mr-2 ml-1">
+            <img src="{{ u.Avatar }}" width="24px" height="24px" class="media-object">
+          </div>
+          <div class="media-body">
+            <small class="media-heading text-secondary">{{ u.Name }}</small>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

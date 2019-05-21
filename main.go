@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gin_bbs/app/cron"
 	"net/http"
 
 	"github.com/lexkong/log"
@@ -39,6 +40,9 @@ func main() {
 
 	// router setup
 	bootstrap.SetupRouter(g)
+
+	// cron
+	cron.New().Start()
 
 	// 启动
 	fmt.Printf("\n\n-------------------------------------------------- Start to listening the incoming requests on http address: %s --------------------------------------------------\n\n", config.AppConfig.Addr)

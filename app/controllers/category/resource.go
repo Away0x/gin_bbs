@@ -2,9 +2,11 @@ package category
 
 import (
 	"gin_bbs/app/controllers"
+	"gin_bbs/app/helpers"
 	categoryModel "gin_bbs/app/models/category"
 	topicModel "gin_bbs/app/models/topic"
 	"gin_bbs/app/services"
+	"gin_bbs/app/viewmodels"
 	"gin_bbs/pkg/ginutils"
 	"gin_bbs/pkg/ginutils/pagination"
 
@@ -38,7 +40,15 @@ func Show(c *gin.Context) {
 		return
 	}
 
+	// 活跃用户列表
+	activeUsersVM := make([]*viewmodels.UserViewModel, 0)
+	activeUsers := helpers.NewActiveUser().GetActiveUsers()
+	for _, v := range activeUsers {
+		activeUsersVM = append(activeUsersVM, viewmodels.NewUserViewModelSerializer(v))
+	}
+
 	controllers.Render(c, "topics/index", renderFunc(gin.H{
-		"category": cat,
+		"category":     cat,
+		"active_users": activeUsersVM,
 	}))
 }
