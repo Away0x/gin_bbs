@@ -41,7 +41,7 @@ func NewUserAPISerializer(u *userModel.User) map[string]interface{} {
 		"introduction":    u.Introduction,
 		"bound_phone":     false,
 		"bound_wechat":    false,
-		"last_actived_at": u.EmailVerifiedAt.Format(constants.DateTimeLayout),
+		"last_actived_at": u.LastActivedAt.Format(constants.DateTimeLayout),
 		"created_at":      u.CreatedAt.Format(constants.DateTimeLayout),
 		"updated_at":      u.UpdatedAt.Format(constants.DateTimeLayout),
 	}

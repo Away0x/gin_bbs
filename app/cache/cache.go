@@ -20,6 +20,16 @@ func PutStringMap(key string, val map[string]string, expiration time.Duration) {
 	Put(key, val, expiration)
 }
 
+// PutString -
+func PutString(key string, val string, expiration time.Duration) {
+	Put(key, val, expiration)
+}
+
+// PutTime -
+func PutTime(key string, val time.Time, expiration time.Duration) {
+	Put(key, val, expiration)
+}
+
 // PutInt64 -
 func PutInt64(key string, val int64, expiration time.Duration) {
 	Put(key, val, expiration)
@@ -59,6 +69,32 @@ func GetInt64(key string) (int64, bool) {
 	}
 
 	return 0, false
+}
+
+// GetString -
+func GetString(key string) (string, bool) {
+	d, ok := Get(key)
+	if !ok {
+		return "", false
+	}
+	if d, ok := d.(string); ok {
+		return d, true
+	}
+
+	return "", false
+}
+
+// GetTime -
+func GetTime(key string) (time.Time, bool) {
+	d, ok := Get(key)
+	if !ok {
+		return time.Time{}, false
+	}
+	if d, ok := d.(time.Time); ok {
+		return d, true
+	}
+
+	return time.Time{}, false
 }
 
 // Del -

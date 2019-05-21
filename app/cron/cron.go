@@ -11,6 +11,8 @@ var (
 func init() {
 	// 记录活跃用户
 	cronActionMap["0 0 0/1 * * *"] = ActiveUser
+	// 用户最后登录时间
+	cronActionMap["0 0 0/1 * * *"] = LastActivedUser
 }
 
 // New -

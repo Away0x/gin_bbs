@@ -38,6 +38,8 @@ type User struct {
 	ActivationToken string     `gorm:"column:activation_token;type:varchar(255)"`
 	Activated       uint       `gorm:"column:activated;type:tinyint(1);not null"`
 	EmailVerifiedAt *time.Time `gorm:"column:email_verified_at"` // 激活时间
+	// 用户最后登录时间
+	LastActivedAt *time.Time `gorm:"column:last_actived_at"`
 
 	RememberToken     string `gorm:"column:remember_token;type:varchar(100)"`      // 用于实现记住我功能，存入 cookie 中，下次带上时，即可直接登录
 	NotificationCount int    `gorm:"column:notification_count;not null;default:0"` // 未读通知数
