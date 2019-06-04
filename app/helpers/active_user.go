@@ -63,7 +63,9 @@ func (a *ActiveUser) calculateActiveUsers() []*userModel.User {
 
 	// 数组按得分排序 (倒序，高分靠前)
 	scoreUsersIDs := scoreSort(a.tempUsers)
-	scoreUsersIDs = scoreUsersIDs[:a.userNumber]
+  if len(scoreUsersIDs) > a.userNumber {
+	  scoreUsersIDs = scoreUsersIDs[:a.userNumber]
+  }
 
 	activeUsers := make([]*userModel.User, 0)
 	for _, v := range scoreUsersIDs {

@@ -27,6 +27,7 @@ config.yaml
 /taro-app/node_modules
 /taro-app/dist
 /taro-app/.temp
+/gin_bbs
 
 npm-debug.log*
 yarn-debug.log*
