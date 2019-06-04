@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "admin:serve": "echo 'open admin-fe serve (development)' && cd admin-fe && yarn serve",
-    "admin:build": "echo 'admin-fe build (production)' && cd admin-fe && yarn build",
+    "admin:serve": "echo 'open vue-admin-app serve (development)' && cd vue-admin-app && yarn serve",
+    "admin:build": "echo 'vue-admin-app build (production)' && cd vue-admin-app && yarn build",
     "dev": "npm run development",
     "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "watch": "npm run development -- --watch",
