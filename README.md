@@ -60,6 +60,31 @@
 </code></pre>
 </details>
 
+## 启动
+```
+# 需先安装 fresh (https://github.com/gravityblast/fresh)
+# go get github.com/pilu/fresh
+
+# 启动前建议配置环境变量: GOPROXY=https://goproxy.io
+
+cd gin_bbs
+cp ./config.example.yaml ./config.yaml
+make dev # 或者也可直接 fresh -c ./fresh.conf
+# 项目相关命令参见 Makefile
+```
+
+数据库配置需要修改 `config.yaml`：
+```
+DB:
+  CONNECTION: mysql
+  HOST: 127.0.0.1
+  PORT: 3306
+  DATABASE: gin_bbs
+  USERNAME: your_username
+  PASSWORD: your_password
+```
+如果运行的是 debug 模式，数据库名应该为 `gin_bbs_debug`。
+
 ## 实现功能
 - [x] CSRF 验证
 - [x] flash 消息闪现
