@@ -2846,9 +2846,9 @@ faye-websocket@~0.11.1:
     websocket-driver ">=0.5.1"
 
 figgy-pudding@^3.5.1:
-  version "3.5.1"
-  resolved "http://registry.npm.taobao.org/figgy-pudding/download/figgy-pudding-3.5.1.tgz#862470112901c727a0e495a80744bd5baa1d6790"
-  integrity sha1-hiRwESkBxyeg5JWoB0S9W6odZ5A=
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.2.tgz#b4eee8148abb01dcf1d1ac34367d59e12fa61d6e"
+  integrity sha512-0btnI/H8f2pavGMN8w40mlSKOfTK2SVJmBfBeVIj3kNw0swwgzyRq0d5TJVOwodFmtvpPeWPN/MCcfuWF0Ezbw==
 
 file-loader@^2.0.0:
   version "2.0.0"
@@ -5121,14 +5121,9 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-popper.js@^1.14.1:
+popper.js@^1.14.1, popper.js@^1.15.0:
   version "1.15.0"
   resolved "http://registry.npm.taobao.org/popper.js/download/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
-  integrity sha1-VWC5m7rXZH6fqkdca4BWYh9aT/I=
-
-popper.js@^1.15.0:
-  version "1.15.0"
-  resolved "https://registry.npm.taobao.org/popper.js/download/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
   integrity sha1-VWC5m7rXZH6fqkdca4BWYh9aT/I=
 
 portfinder@^1.0.20:
@@ -6429,9 +6424,9 @@ sprintf-js@~1.0.2:
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
 ssri@^6.0.1:
-  version "6.0.1"
-  resolved "http://registry.npm.taobao.org/ssri/download/ssri-6.0.1.tgz#2a3c41b28dd45b62b63676ecb74001265ae9edd8"
-  integrity sha1-KjxBso3UW2K2Nnbst0ABJlrp7dg=
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/ssri/-/ssri-6.0.2.tgz#157939134f20464e7301ddba3e90ffa8f7728ac5"
+  integrity sha512-cepbSq/neFK7xB6A50KHN0xHDotYzq58wWCa5LeWqnPrHG8GzfEjO/4O8kpmcGW+oaxkvhEJCWgbgNk4/ZV93Q==
   dependencies:
     figgy-pudding "^3.5.1"
 
