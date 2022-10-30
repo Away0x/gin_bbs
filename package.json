@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@types/node": "^11.13.4",
-    "browser-sync": "^2.26.5",
+    "browser-sync": "^2.27.10",
     "browser-sync-webpack-plugin": "^2.0.1",
     "cross-env": "^5.2.0",
     "laravel-mix": "^4.0.15",
